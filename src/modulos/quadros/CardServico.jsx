@@ -1,14 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function CardServico({ servico, provided, snapshot }) {
+export default function CardServico({ servico, provided, snapshot, turno }) {
   const [comentarios, setComentarios] = useState(servico.comentarios || []);
   const [adicionandoComentario, setAdicionandoComentario] = useState(false);
   const [novoComentario, setNovoComentario] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mostrarTodos, setMostrarTodos] = useState(false);
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
+
+  const capitalizar = (texto) =>
+    texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
 
   const adicionarComentario = async () => {
     if (!novoComentario.trim()) return;
@@ -21,12 +25,12 @@ export default function CardServico({ servico, provided, snapshot }) {
         {
           servicoId: servico.id,
           texto: novoComentario.trim(),
-          feitoPor: "Ed", // você pode alterar isso dinamicamente no futuro
-          setor: "gestao",
+          feitoPor: capitalizar(turno),
+          setor: turno,
         }
       );
 
-      setComentarios((prev) => [...prev, comentarioCriado]);
+      setComentarios((prev) => [comentarioCriado, ...prev]);
       setNovoComentario("");
       setAdicionandoComentario(false);
     } catch (err) {
@@ -36,6 +40,23 @@ export default function CardServico({ servico, provided, snapshot }) {
       setLoading(false);
     }
   };
+
+  const formatarDataHora = (dataISO) => {
+    const data = new Date(dataISO);
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const ano = data.getFullYear();
+    const hora = String(data.getHours()).padStart(2, "0");
+    const min = String(data.getMinutes()).padStart(2, "0");
+    return `${dia}/${mes}/${ano} às ${hora}:${min}h`;
+  };
+
+  const comentariosOrdenados = [...comentarios].sort(
+    (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
+  );
+
+  const comentarioMaisRecente = comentariosOrdenados[0];
+  const comentariosRestantes = comentariosOrdenados.slice(1);
 
   return (
     <div
@@ -122,19 +143,49 @@ export default function CardServico({ servico, provided, snapshot }) {
       )}
 
       <div className="mt-3">
-        {comentarios.length > 0 ? (
-          <ul className="space-y-1 text-sm text-gray-700">
-            {comentarios
-              .sort((a, b) => new Date(a.criadoEm) - new Date(b.criadoEm))
-              .map((comentario) => (
-                <li key={comentario.id} className="pt-1 border-t">
-                  <span className="font-semibold">{comentario.feitoPor}:</span>{" "}
-                  {comentario.texto}
-                </li>
-              ))}
-          </ul>
+        {comentarioMaisRecente ? (
+          <div className="pt-2 text-sm text-gray-700 border-t">
+            <p>{comentarioMaisRecente.texto}</p>
+            <p className="mt-1 text-xs text-gray-500">
+              {capitalizar(comentarioMaisRecente.setor)} -{" "}
+              {formatarDataHora(comentarioMaisRecente.criadoEm)}
+            </p>
+          </div>
         ) : (
           <p className="text-sm italic text-gray-500">Sem comentários ainda.</p>
+        )}
+
+        {comentariosRestantes.length > 0 && (
+          <div className="mt-2">
+            {!mostrarTodos ? (
+              <button
+                onClick={() => setMostrarTodos(true)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Ver todos
+              </button>
+            ) : (
+              <>
+                <ul className="mt-2 space-y-2 text-sm text-gray-700">
+                  {comentariosRestantes.map((comentario) => (
+                    <li key={comentario.id} className="pt-2 border-t">
+                      <p>{comentario.texto}</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        {capitalizar(comentario.setor)} -{" "}
+                        {formatarDataHora(comentario.criadoEm)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => setMostrarTodos(false)}
+                  className="mt-2 text-sm text-blue-600 hover:underline"
+                >
+                  Ocultar
+                </button>
+              </>
+            )}
+          </div>
         )}
       </div>
     </div>

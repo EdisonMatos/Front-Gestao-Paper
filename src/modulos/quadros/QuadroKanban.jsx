@@ -230,9 +230,9 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                         {(provided, snapshot) => (
                           <CardServico
                             servico={servico}
-                            comentario={comentario}
                             provided={provided}
                             snapshot={snapshot}
+                            turno={turno}
                           />
                         )}
                       </Draggable>
