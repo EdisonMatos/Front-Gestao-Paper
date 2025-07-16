@@ -3,9 +3,9 @@ import QuadroKanban from "./QuadroKanban";
 export default function QuadroSuporte() {
   const colunas = {
     backlog: "Backlog",
-    pausadas: "Pausadas",
-    urgentes: "Urgentes",
-    emProgresso: "Em Progresso",
+    emAtendimento: "Em Atendimento",
+    infoColetadas: "Info Coletadas",
+    gerandoDoc: "Gerando Doc",
     concluido: "Concluído",
   };
 

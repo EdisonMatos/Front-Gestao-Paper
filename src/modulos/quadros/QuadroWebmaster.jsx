@@ -3,9 +3,10 @@ import QuadroKanban from "./QuadroKanban";
 export default function QuadroWebmaster() {
   const colunas = {
     backlog: "Backlog",
-    pausadas: "Pausadas",
-    urgentes: "Urgentes",
-    emProgresso: "Em Progresso",
+    comprarDominio: "Comprar Domínio",
+    apontarDns: "Apontar DNS",
+    criarEmailBlog: "Criar Email Blog",
+    deploy: "Deploy",
     concluido: "Concluído",
   };
 

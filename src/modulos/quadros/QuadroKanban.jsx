@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardServico from "./CardServico";
 
-const opcoesSetores = ["dev", "suporte", "webmaster"];
+const opcoesSetores = ["dev", "suporte", "webmaster", "feedbacks"];
 
 export default function QuadroKanban({ titulo, turno, colunas }) {
   // Inicializa o estado com as chaves das colunas recebidas
