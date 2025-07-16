@@ -11,7 +11,7 @@ export default function Feedbacks() {
 
   const fetchServicos = async () => {
     setLoading(true);
-    const loadingToast = toast.loading("Carregando serviços...");
+
     try {
       const res = await axios.get(API_URL);
       setServicos(res.data);
@@ -72,7 +72,6 @@ export default function Feedbacks() {
     <div className="p-6">
       <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold">Feedbacks dos Serviços</h2>
-      {loading && <p>Carregando...</p>}
 
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left border">

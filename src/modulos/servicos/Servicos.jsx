@@ -26,7 +26,6 @@ export default function Servicos() {
   });
 
   const fetchServicos = async () => {
-    const loadingToast = toast.loading("Carregando serviços...");
     try {
       const res = await axios.get(API_URL);
       setServicos(res.data);

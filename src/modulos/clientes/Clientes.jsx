@@ -19,7 +19,6 @@ export default function Clientes() {
   });
 
   const fetchClientes = async () => {
-    const loadingToast = toast.loading("Carregando clientes...");
     try {
       const res = await axios.get(API_URL);
       setClientes(res.data);
