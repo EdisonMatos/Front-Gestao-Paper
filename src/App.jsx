@@ -11,7 +11,7 @@ function App() {
     <div className="flex flex-col max-w-[1400px] ">
       <Clientes />
       <Servicos />
-      <Feedbacks />
+      {/* <Feedbacks /> */}
       <QuadroSuporte />
       <QuadroDev />
       <QuadroWebmaster />
