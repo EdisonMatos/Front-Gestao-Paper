@@ -70,7 +70,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     const destino = destination.droppableId;
     const itemMovido = servicos[origem][source.index];
 
-    const toastId = toast.loading("Atualizando quadro...");
+    // Removido toast.loading aqui
+    // const toastId = toast.loading("Atualizando quadro...");
 
     if (origem === destino) {
       const novaLista = Array.from(servicos[origem]);
@@ -98,20 +99,10 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
         await carregarServicos();
 
-        toast.update(toastId, {
-          render: "Ordem atualizada com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Ordem atualizada com sucesso!", { autoClose: 1000 });
       } catch (error) {
         console.error("Erro ao atualizar ordem dos serviços:", error);
-        toast.update(toastId, {
-          render: "Erro ao atualizar ordem",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.error("Erro ao atualizar ordem", { autoClose: 1000 });
       }
 
       return;
@@ -130,7 +121,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       );
 
       if (!escolha || !opcoes.includes(escolha)) {
-        toast.dismiss(toastId);
+        // toast.dismiss(toastId); removido
         alert("Setor inválido ou operação cancelada.");
         return;
       }
@@ -146,20 +137,12 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
         await carregarServicos();
 
-        toast.update(toastId, {
-          render: "Serviço concluído e direcionado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
+        toast.success("Serviço concluído e direcionado com sucesso!", {
+          autoClose: 1000,
         });
       } catch (error) {
         console.error("Erro ao atualizar serviço:", error);
-        toast.update(toastId, {
-          render: "Erro ao atualizar serviço",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.error("Erro ao atualizar serviço", { autoClose: 1000 });
       }
 
       return;
@@ -176,20 +159,10 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
       await carregarServicos();
 
-      toast.update(toastId, {
-        render: "Serviço movido com sucesso!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.success("Serviço movido com sucesso!", { autoClose: 1000 });
     } catch (error) {
       console.error("Erro ao atualizar serviço:", error);
-      toast.update(toastId, {
-        render: "Erro ao mover serviço",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error("Erro ao mover serviço", { autoClose: 1000 });
     }
   }
 

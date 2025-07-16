@@ -13,23 +13,12 @@ export default function Servicos() {
   const [servicoParaEditar, setServicoParaEditar] = useState(null);
 
   const fetchServicos = async () => {
-    const loadingToast = toast.loading("Carregando serviços...");
+    // Removi toast.loading
     try {
       const res = await axios.get(API_URL);
       setServicos(res.data);
-      toast.update(loadingToast, {
-        render: "Serviços carregados com sucesso!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
     } catch (err) {
-      toast.update(loadingToast, {
-        render: "Erro ao carregar serviços.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error("Erro ao carregar serviços.", { autoClose: 1000 });
     }
   };
 
@@ -50,23 +39,13 @@ export default function Servicos() {
 
   const handleDelete = async (id) => {
     if (confirm("Deseja realmente excluir este serviço?")) {
-      const loadingToast = toast.loading("Excluindo serviço...");
+      // Removi toast.loading
       try {
         await axios.delete(`${API_URL}/${id}`);
-        toast.update(loadingToast, {
-          render: "Serviço excluído com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Serviço excluído com sucesso!", { autoClose: 1000 });
         fetchServicos();
       } catch (err) {
-        toast.update(loadingToast, {
-          render: "Erro ao excluir serviço.",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.error("Erro ao excluir serviço.", { autoClose: 1000 });
       }
     }
   };

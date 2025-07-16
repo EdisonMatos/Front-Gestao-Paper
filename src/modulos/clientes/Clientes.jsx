@@ -13,23 +13,12 @@ export default function Clientes() {
   const [clienteParaEditar, setClienteParaEditar] = useState(null);
 
   const fetchClientes = async () => {
-    const loadingToast = toast.loading("Carregando clientes...");
+    // Removi toast.loading
     try {
       const res = await axios.get(API_URL);
       setClientes(res.data);
-      toast.update(loadingToast, {
-        render: "Clientes carregados com sucesso!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
     } catch (err) {
-      toast.update(loadingToast, {
-        render: "Erro ao carregar clientes.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error("Erro ao carregar clientes.", { autoClose: 1000 });
     }
   };
 
@@ -50,23 +39,13 @@ export default function Clientes() {
 
   const handleDelete = async (id) => {
     if (confirm("Deseja realmente excluir este cliente?")) {
-      const loadingToast = toast.loading("Excluindo cliente...");
+      // Removi toast.loading
       try {
         await axios.delete(`${API_URL}/${id}`);
-        toast.update(loadingToast, {
-          render: "Cliente excluído com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Cliente excluído com sucesso!", { autoClose: 1000 });
         fetchClientes();
       } catch (err) {
-        toast.update(loadingToast, {
-          render: "Erro ao excluir cliente.",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.error("Erro ao excluir cliente.", { autoClose: 1000 });
       }
     }
   };

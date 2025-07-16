@@ -40,35 +40,18 @@ export default function AddNovoCliente({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loadingToast = toast.loading(
-      form.id ? "Atualizando cliente..." : "Adicionando cliente..."
-    );
+
     try {
       if (form.id) {
         await axios.put(`${API_URL}/${form.id}`, form);
-        toast.update(loadingToast, {
-          render: "Cliente atualizado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Cliente atualizado com sucesso!", { autoClose: 1000 });
       } else {
         await axios.post(API_URL, form);
-        toast.update(loadingToast, {
-          render: "Cliente adicionado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Cliente adicionado com sucesso!", { autoClose: 1000 });
       }
       onSalvo();
     } catch (err) {
-      toast.update(loadingToast, {
-        render: "Erro ao salvar cliente.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error("Erro ao salvar cliente.", { autoClose: 1000 });
     }
   };
 

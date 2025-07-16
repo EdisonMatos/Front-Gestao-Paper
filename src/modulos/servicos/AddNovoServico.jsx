@@ -97,38 +97,21 @@ export default function AddNovoServico({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loadingToast = toast.loading(
-      form.id ? "Atualizando serviço..." : "Adicionando serviço..."
-    );
+
     try {
       const payload = { ...form };
       delete payload.clienteNome;
 
       if (form.id) {
         await axios.put(`${API_URL}/${form.id}`, payload);
-        toast.update(loadingToast, {
-          render: "Serviço atualizado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Serviço atualizado com sucesso!", { autoClose: 1000 });
       } else {
         await axios.post(API_URL, payload);
-        toast.update(loadingToast, {
-          render: "Serviço adicionado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success("Serviço adicionado com sucesso!", { autoClose: 1000 });
       }
       onSalvo();
     } catch (err) {
-      toast.update(loadingToast, {
-        render: "Erro ao salvar serviço.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error("Erro ao salvar serviço.", { autoClose: 1000 });
     }
   };
 
