@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import AddNovoCliente from "./AddNovoCliente";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/clientes";
@@ -9,16 +10,10 @@ export default function Clientes() {
   const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    id: null,
-    empresa: "",
-    representante: "",
-    telefone: "",
-    email: "",
-    dominio: "",
-  });
+  const [clienteParaEditar, setClienteParaEditar] = useState(null);
 
   const fetchClientes = async () => {
+    const loadingToast = toast.loading("Carregando clientes...");
     try {
       const res = await axios.get(API_URL);
       setClientes(res.data);
@@ -42,59 +37,14 @@ export default function Clientes() {
     fetchClientes();
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const resetForm = () => {
-    setForm({
-      id: null,
-      empresa: "",
-      representante: "",
-      telefone: "",
-      email: "",
-      dominio: "",
-    });
-    setShowForm(false);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const loadingToast = toast.loading(
-      form.id ? "Atualizando cliente..." : "Adicionando cliente..."
-    );
-    try {
-      if (form.id) {
-        await axios.put(`${API_URL}/${form.id}`, form);
-        toast.update(loadingToast, {
-          render: "Cliente atualizado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
-      } else {
-        await axios.post(API_URL, form);
-        toast.update(loadingToast, {
-          render: "Cliente adicionado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
-      }
-      resetForm();
-      fetchClientes();
-    } catch (err) {
-      toast.update(loadingToast, {
-        render: "Erro ao salvar cliente.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
-    }
-  };
+  const clientesFiltrados = clientes.filter(
+    (c) =>
+      c.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
+      c.representante.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   const handleEdit = (cliente) => {
-    setForm(cliente);
+    setClienteParaEditar(cliente);
     setShowForm(true);
   };
 
@@ -121,11 +71,15 @@ export default function Clientes() {
     }
   };
 
-  const clientesFiltrados = clientes.filter(
-    (c) =>
-      c.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
-      c.representante.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const handleAdicionarNovo = () => {
+    setClienteParaEditar(null);
+    setShowForm(true);
+  };
+
+  const resetForm = () => {
+    setClienteParaEditar(null);
+    setShowForm(false);
+  };
 
   return (
     <div className="p-6">
@@ -140,98 +94,34 @@ export default function Clientes() {
         className="w-full p-2 mb-4 border rounded md:w-1/2"
       />
       {/* Botão mostrar formulário */}
-      <button
-        onClick={() => {
-          if (showForm) {
-            resetForm();
-          } else {
-            setForm({
-              id: null,
-              empresa: "",
-              representante: "",
-              telefone: "",
-              email: "",
-              dominio: "",
-            });
-            setShowForm(true);
-          }
-        }}
-        className="px-4 py-2 mb-4 text-white bg-yellow-600 rounded hover:bg-yellow-700"
-      >
-        {showForm ? "Cancelar" : "Adicionar novo cliente"}
-      </button>
+      {!showForm ? (
+        <button
+          onClick={handleAdicionarNovo}
+          className="px-4 py-2 mb-4 text-white bg-yellow-600 rounded hover:bg-yellow-700"
+        >
+          Adicionar novo cliente
+        </button>
+      ) : (
+        <button
+          onClick={resetForm}
+          className="px-4 py-2 mb-4 text-white bg-gray-500 rounded hover:bg-gray-600"
+        >
+          Cancelar
+        </button>
+      )}
+
       {/* Formulário */}
       {showForm && (
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
-        >
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Empresa</label>
-            <input
-              name="empresa"
-              value={form.empresa}
-              onChange={handleChange}
-              required
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Representante</label>
-            <input
-              name="representante"
-              value={form.representante}
-              onChange={handleChange}
-              required
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Telefone</label>
-            <input
-              name="telefone"
-              value={form.telefone}
-              onChange={handleChange}
-              required
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Email</label>
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Domínio</label>
-            <input
-              name="dominio"
-              value={form.dominio}
-              onChange={handleChange}
-              required
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <div className="flex items-end">
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-white transition bg-yellow-600 rounded hover:bg-yellow-600"
-            >
-              {form.id ? "Atualizar Cliente" : "Adicionar Cliente"}
-            </button>
-          </div>
-        </form>
+        <AddNovoCliente
+          clienteParaEditar={clienteParaEditar}
+          onSalvo={() => {
+            resetForm();
+            fetchClientes();
+          }}
+          onCancelar={resetForm}
+        />
       )}
+
       {/* Tabela */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left border">
