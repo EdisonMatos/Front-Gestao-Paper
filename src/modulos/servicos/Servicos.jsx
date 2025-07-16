@@ -4,20 +4,20 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
-const API_CLIENTES = "https://backend-gestao-paper.onrender.com/clientes";
+const CLIENTES_URL = "https://backend-gestao-paper.onrender.com/clientes";
 
 export default function Servicos() {
   const [servicos, setServicos] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
-  const [showForm, setShowForm] = useState(false);
   const [clienteBusca, setClienteBusca] = useState("");
-  const [clientesFiltrados, setClientesFiltrados] = useState([]);
-
+  const [sugestoesClientes, setSugestoesClientes] = useState([]);
+  const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     id: null,
     nome: "",
     clienteId: "",
+    clienteNome: "",
     linkDoc: "",
     linkPreviaVercel: "",
     turnoDaVez: "",
@@ -29,11 +29,6 @@ export default function Servicos() {
     dataConclusao: "",
     dataProximoPrazo: "",
   });
-
-  useEffect(() => {
-    fetchServicos();
-    fetchClientes();
-  }, []);
 
   const fetchServicos = async () => {
     const loadingToast = toast.loading("Carregando serviços...");
@@ -56,120 +51,47 @@ export default function Servicos() {
     }
   };
 
-  const fetchClientes = async () => {
+  const buscarClientes = async (termo) => {
     try {
-      const res = await axios.get(API_CLIENTES);
-      setClientes(res.data);
-    } catch (error) {
-      console.error("Erro ao carregar clientes:", error);
+      const res = await axios.get(CLIENTES_URL);
+      const filtrados = res.data.filter(
+        (cliente) =>
+          cliente.empresa.toLowerCase().includes(termo.toLowerCase()) ||
+          cliente.representante.toLowerCase().includes(termo.toLowerCase())
+      );
+      setSugestoesClientes(filtrados.slice(0, 3));
+    } catch (err) {
+      console.error("Erro ao buscar clientes", err);
     }
   };
 
-  // Atualiza o filtro e lista de clientes para autocomplete conforme digita
   useEffect(() => {
-    if (!clienteBusca.trim()) {
-      setClientesFiltrados([]);
-      return;
+    fetchServicos();
+  }, []);
+
+  useEffect(() => {
+    if (clienteBusca.length > 1) {
+      buscarClientes(clienteBusca);
+    } else {
+      setSugestoesClientes([]);
     }
-    const busca = clienteBusca.toLowerCase();
-    const encontrados = clientes
-      .filter(
-        (c) =>
-          c.empresa?.toLowerCase().includes(busca) ||
-          c.representante?.toLowerCase().includes(busca)
-      )
-      .slice(0, 3);
-    setClientesFiltrados(encontrados);
-  }, [clienteBusca, clientes]);
+  }, [clienteBusca]);
 
-  // Ao escolher cliente no autocomplete
-  const handleClienteSelect = (cliente) => {
-    setForm({ ...form, clienteId: cliente.id });
-    setClienteBusca(`${cliente.empresa} | ${cliente.representante}`);
-    setClientesFiltrados([]);
-  };
-
-  // Para resetar o cliente na edição/limpar
-  const resetForm = () => {
-    setForm({
-      id: null,
-      nome: "",
-      clienteId: "",
-      linkDoc: "",
-      linkPreviaVercel: "",
-      turnoDaVez: "",
-      comentariosTexto: "",
-      dataContratacao: "",
-      dataInfosColetadas: "",
-      dataDocPronto: "",
-      dataEnvioPrevia: "",
-      dataConclusao: "",
-      dataProximoPrazo: "",
-    });
-    setClienteBusca("");
-    setClientesFiltrados([]);
-    setShowForm(false);
-  };
-
-  // Atualiza o form normalmente
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Na edição, já preenche também o campo clienteBusca para mostrar texto
-  const handleEdit = (servico) => {
-    setForm({
-      id: servico.id,
-      nome: servico.nome,
-      clienteId: servico.clienteId,
-      linkDoc: servico.linkDoc,
-      linkPreviaVercel: servico.linkPreviaVercel,
-      turnoDaVez: servico.turnoDaVez,
-      comentariosTexto: servico.comentariosTexto,
-      dataContratacao: servico.dataContratacao?.substring(0, 10) || "",
-      dataInfosColetadas: servico.dataInfosColetadas?.substring(0, 10) || "",
-      dataDocPronto: servico.dataDocPronto?.substring(0, 10) || "",
-      dataEnvioPrevia: servico.dataEnvioPrevia?.substring(0, 10) || "",
-      dataConclusao: servico.dataConclusao?.substring(0, 10) || "",
-      dataProximoPrazo: servico.dataProximoPrazo?.substring(0, 10) || "",
-    });
-
-    const cliente = clientes.find((c) => c.id === servico.clienteId);
-    if (cliente) {
-      setClienteBusca(`${cliente.empresa} | ${cliente.representante}`);
-    } else {
-      setClienteBusca("");
-    }
-
-    setClientesFiltrados([]);
-    setShowForm(true);
-  };
-
-  // Validação no submit para obrigatórios
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!form.nome.trim()) {
-      return toast.error("Nome do serviço é obrigatório");
-    }
-    if (!form.clienteId) {
-      return toast.error("Selecione um cliente válido");
-    }
-    if (!["dev", "webmaster", "suporte"].includes(form.turnoDaVez)) {
-      return toast.error(
-        "Turno da vez é obrigatório e deve ser dev, webmaster ou suporte"
-      );
-    }
-    if (!form.dataContratacao) {
-      return toast.error("Data de contratação é obrigatória");
-    }
-
     const loadingToast = toast.loading(
       form.id ? "Atualizando serviço..." : "Adicionando serviço..."
     );
     try {
+      const payload = { ...form };
+      delete payload.clienteNome;
+
       if (form.id) {
-        await axios.put(`${API_URL}/${form.id}`, form);
+        await axios.put(`${API_URL}/${form.id}`, payload);
         toast.update(loadingToast, {
           render: "Serviço atualizado com sucesso!",
           type: "success",
@@ -177,7 +99,7 @@ export default function Servicos() {
           autoClose: 3000,
         });
       } else {
-        await axios.post(API_URL, form);
+        await axios.post(API_URL, payload);
         toast.update(loadingToast, {
           render: "Serviço adicionado com sucesso!",
           type: "success",
@@ -195,6 +117,26 @@ export default function Servicos() {
         autoClose: 3000,
       });
     }
+  };
+
+  const handleEdit = (servico) => {
+    setForm({
+      id: servico.id,
+      nome: servico.nome,
+      clienteId: servico.clienteId,
+      clienteNome: servico.cliente?.empresa || "",
+      linkDoc: servico.linkDoc,
+      linkPreviaVercel: servico.linkPreviaVercel,
+      turnoDaVez: servico.turnoDaVez,
+      comentariosTexto: servico.comentariosTexto,
+      dataContratacao: servico.dataContratacao?.substring(0, 10) || "",
+      dataInfosColetadas: servico.dataInfosColetadas?.substring(0, 10) || "",
+      dataDocPronto: servico.dataDocPronto?.substring(0, 10) || "",
+      dataEnvioPrevia: servico.dataEnvioPrevia?.substring(0, 10) || "",
+      dataConclusao: servico.dataConclusao?.substring(0, 10) || "",
+      dataProximoPrazo: servico.dataProximoPrazo?.substring(0, 10) || "",
+    });
+    setShowForm(true);
   };
 
   const handleDelete = async (id) => {
@@ -220,6 +162,28 @@ export default function Servicos() {
     }
   };
 
+  const resetForm = () => {
+    setForm({
+      id: null,
+      nome: "",
+      clienteId: "",
+      clienteNome: "",
+      linkDoc: "",
+      linkPreviaVercel: "",
+      turnoDaVez: "",
+      comentariosTexto: "",
+      dataContratacao: "",
+      dataInfosColetadas: "",
+      dataDocPronto: "",
+      dataEnvioPrevia: "",
+      dataConclusao: "",
+      dataProximoPrazo: "",
+    });
+    setClienteBusca("");
+    setSugestoesClientes([]);
+    setShowForm(false);
+  };
+
   const servicosFiltrados = servicos.filter(
     (s) =>
       s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -234,7 +198,6 @@ export default function Servicos() {
       <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold">Gestão de Serviços</h2>
 
-      {/* Campo de busca */}
       <input
         type="text"
         placeholder="Pesquisar por serviço ou empresa..."
@@ -243,7 +206,6 @@ export default function Servicos() {
         className="w-full p-2 mb-4 border rounded md:w-1/2"
       />
 
-      {/* Botão para mostrar formulário */}
       {!showForm && (
         <button
           onClick={() => setShowForm(true)}
@@ -253,21 +215,15 @@ export default function Servicos() {
         </button>
       )}
 
-      {/* Formulário */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="relative grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
-          autoComplete="off"
+          className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
         >
-          {/* Nome do serviço */}
           <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Nome do serviço *
-            </label>
+            <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
             <input
               name="nome"
-              placeholder="Nome do serviço"
               value={form.nome}
               onChange={handleChange}
               required
@@ -275,30 +231,39 @@ export default function Servicos() {
             />
           </div>
 
-          {/* Cliente - campo autocomplete */}
           <div className="relative flex flex-col">
             <label className="mb-1 text-sm font-medium">
-              Selecione o cliente *
+              Selecione o Cliente*
             </label>
             <input
               type="text"
-              placeholder="Digite para buscar cliente..."
-              value={clienteBusca}
+              value={form.clienteNome || clienteBusca}
               onChange={(e) => {
                 setClienteBusca(e.target.value);
-                setForm({ ...form, clienteId: "" });
+                setForm((prev) => ({
+                  ...prev,
+                  clienteId: "",
+                  clienteNome: e.target.value,
+                }));
               }}
-              className="p-2 border rounded"
               required
-              autoComplete="off"
+              className="p-2 border rounded"
+              placeholder="Digite o nome da empresa ou representante"
             />
-            {clientesFiltrados.length > 0 && (
-              <ul className="absolute z-10 w-full overflow-auto bg-white border rounded shadow-md max-h-40">
-                {clientesFiltrados.map((cliente) => (
+            {sugestoesClientes.length > 0 && (
+              <ul className="absolute z-10 w-full bg-white border rounded shadow">
+                {sugestoesClientes.map((cliente) => (
                   <li
                     key={cliente.id}
-                    className="p-2 cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleClienteSelect(cliente)}
+                    onClick={() => {
+                      setForm((prev) => ({
+                        ...prev,
+                        clienteId: cliente.id,
+                        clienteNome: `${cliente.empresa} | ${cliente.representante}`,
+                      }));
+                      setSugestoesClientes([]);
+                    }}
+                    className="px-2 py-1 cursor-pointer hover:bg-gray-200"
                   >
                     {cliente.empresa} | {cliente.representante}
                   </li>
@@ -307,9 +272,8 @@ export default function Servicos() {
             )}
           </div>
 
-          {/* Turno da vez */}
           <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Turno da Vez *</label>
+            <label className="mb-1 text-sm font-medium">Turno da Vez*</label>
             <select
               name="turnoDaVez"
               value={form.turnoDaVez}
@@ -318,16 +282,15 @@ export default function Servicos() {
               className="p-2 border rounded"
             >
               <option value="">Selecione</option>
-              <option value="dev">dev</option>
-              <option value="webmaster">webmaster</option>
-              <option value="suporte">suporte</option>
+              <option value="dev">Dev</option>
+              <option value="suporte">Suporte</option>
+              <option value="webmaster">Webmaster</option>
             </select>
           </div>
 
-          {/* Data de contratação */}
           <div className="flex flex-col">
             <label className="mb-1 text-sm font-medium">
-              Data de Contratação *
+              Data de Contratação*
             </label>
             <input
               type="date"
@@ -346,7 +309,6 @@ export default function Servicos() {
             </label>
             <input
               name="linkDoc"
-              placeholder="Link Doc"
               value={form.linkDoc}
               onChange={handleChange}
               className="p-2 border rounded"
@@ -359,7 +321,6 @@ export default function Servicos() {
             </label>
             <input
               name="linkPreviaVercel"
-              placeholder="Link Prévia Vercel"
               value={form.linkPreviaVercel}
               onChange={handleChange}
               className="p-2 border rounded"
@@ -370,8 +331,72 @@ export default function Servicos() {
             <label className="mb-1 text-sm font-medium">Comentário</label>
             <input
               name="comentariosTexto"
-              placeholder="Comentário"
               value={form.comentariosTexto}
+              onChange={handleChange}
+              className="p-2 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Coleta de Informações
+            </label>
+            <input
+              type="date"
+              name="dataInfosColetadas"
+              value={form.dataInfosColetadas}
+              onChange={handleChange}
+              className="p-2 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data do Documento Pronto
+            </label>
+            <input
+              type="date"
+              name="dataDocPronto"
+              value={form.dataDocPronto}
+              onChange={handleChange}
+              className="p-2 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Envio da Prévia
+            </label>
+            <input
+              type="date"
+              name="dataEnvioPrevia"
+              value={form.dataEnvioPrevia}
+              onChange={handleChange}
+              className="p-2 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Conclusão
+            </label>
+            <input
+              type="date"
+              name="dataConclusao"
+              value={form.dataConclusao}
+              onChange={handleChange}
+              className="p-2 border rounded"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data do Próximo Prazo
+            </label>
+            <input
+              type="date"
+              name="dataProximoPrazo"
+              value={form.dataProximoPrazo}
               onChange={handleChange}
               className="p-2 border rounded"
             />
@@ -380,7 +405,7 @@ export default function Servicos() {
           <div className="flex col-span-1 gap-4 md:col-span-3">
             <button
               type="submit"
-              className="p-2 text-white transition bg-yellow-600 rounded hover:bg-yellow-600"
+              className="p-2 text-white transition bg-blue-600 rounded hover:bg-blue-700"
             >
               {form.id ? "Atualizar Serviço" : "Adicionar Serviço"}
             </button>
@@ -395,7 +420,6 @@ export default function Servicos() {
         </form>
       )}
 
-      {/* Tabela */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left border">
           <thead className="bg-gray-100">
@@ -419,32 +443,24 @@ export default function Servicos() {
                 </td>
                 <td className="p-2 border">{servico.turnoDaVez}</td>
                 <td className="p-2 border">
-                  {servico.linkDoc ? (
-                    <a
-                      href={servico.linkDoc}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-yellow-600 hover:underline"
-                    >
-                      Doc
-                    </a>
-                  ) : (
-                    "-"
-                  )}
+                  <a
+                    href={servico.linkDoc}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Doc
+                  </a>
                 </td>
                 <td className="p-2 border">
-                  {servico.linkPreviaVercel ? (
-                    <a
-                      href={servico.linkPreviaVercel}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-yellow-600 hover:underline"
-                    >
-                      Prévia
-                    </a>
-                  ) : (
-                    "-"
-                  )}
+                  <a
+                    href={servico.linkPreviaVercel}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Prévia
+                  </a>
                 </td>
                 <td className="p-2 text-xs border">
                   <div>
@@ -473,12 +489,12 @@ export default function Servicos() {
                   </div>
                 </td>
                 <td className="p-2 text-xs text-gray-600 border">
-                  {servico.comentariosTexto || "-"}
+                  {servico.comentariosTexto}
                 </td>
                 <td className="p-2 space-x-2 border">
                   <button
                     onClick={() => handleEdit(servico)}
-                    className="text-yellow-600 hover:underline"
+                    className="text-blue-600 hover:underline"
                   >
                     Editar
                   </button>
