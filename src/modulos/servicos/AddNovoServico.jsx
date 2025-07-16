@@ -19,7 +19,7 @@ export default function AddNovoServico({
     linkDoc: "",
     linkPreviaVercel: "",
     turnoDaVez: "",
-    comentariosTexto: "",
+    comentariosTexto: "", // ainda presente no state
     dataContratacao: "",
     dataInfosColetadas: "",
     dataDocPronto: "",
@@ -214,16 +214,6 @@ export default function AddNovoServico({
         <input
           name="linkPreviaVercel"
           value={form.linkPreviaVercel}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Comentário</label>
-        <input
-          name="comentariosTexto"
-          value={form.comentariosTexto}
           onChange={handleChange}
           className="p-2 border rounded"
         />

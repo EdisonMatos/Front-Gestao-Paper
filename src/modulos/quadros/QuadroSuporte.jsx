@@ -6,6 +6,7 @@ export default function QuadroSuporte() {
     emAtendimento: "Em Atendimento",
     infoColetadas: "Info Coletadas",
     gerandoDoc: "Gerando Doc",
+    revisar: "Revisar",
     concluido: "Concluído",
   };
 
