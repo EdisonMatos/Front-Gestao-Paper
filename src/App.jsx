@@ -6,10 +6,10 @@ import Servicos from "./modulos/servicos/Servicos";
 
 function App() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col max-w-[1115px] ">
       <Clientes />
-      <Feedbacks />
       <Servicos />
+      <Feedbacks />
       <QuadroDev />
       <QuadroSuporte />
     </div>
