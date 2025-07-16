@@ -61,7 +61,7 @@ export default function AddNovoCliente({
       className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
     >
       <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Empresa</label>
+        <label className="mb-1 text-sm font-medium">Empresa / Site</label>
         <input
           name="empresa"
           value={form.empresa}
@@ -88,7 +88,6 @@ export default function AddNovoCliente({
           name="telefone"
           value={form.telefone}
           onChange={handleChange}
-          required
           className="p-2 border rounded"
         />
       </div>
@@ -100,7 +99,6 @@ export default function AddNovoCliente({
           type="email"
           value={form.email}
           onChange={handleChange}
-          required
           className="p-2 border rounded"
         />
       </div>
@@ -111,7 +109,6 @@ export default function AddNovoCliente({
           name="dominio"
           value={form.dominio}
           onChange={handleChange}
-          required
           className="p-2 border rounded"
         />
       </div>
