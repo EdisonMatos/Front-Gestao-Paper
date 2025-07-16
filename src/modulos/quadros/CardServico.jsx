@@ -72,7 +72,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
       className={`bg-white rounded p-3 mb-2 shadow ${
         snapshot.isDragging ? "scale-105" : ""
       }`}
-      style={estiloFonte}
+      // Removi o style daqui para não quebrar o drag
     >
       {modoCompacto ? (
         <>
