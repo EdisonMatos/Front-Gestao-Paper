@@ -1,18 +1,18 @@
 import QuadroKanban from "./QuadroKanban";
 
-export default function QuadroDev() {
+export default function QuadroFeedbacks() {
   const colunas = {
     backlog: "Backlog",
-    pausadas: "Pausadas",
-    urgentes: "Urgentes",
-    emProgresso: "Em Progresso",
+    solicitado: "Solicitado",
+    emMaos: "Em mãos",
+    postado: "Postado",
     concluido: "Concluído",
   };
 
   return (
     <QuadroKanban
-      titulo="Quadro Desenvolvimento"
-      turno="dev"
+      titulo="Quadro Feedbacks"
+      turno="feedbacks"
       colunas={colunas}
     />
   );

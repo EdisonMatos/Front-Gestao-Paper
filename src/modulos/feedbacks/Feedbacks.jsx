@@ -15,19 +15,7 @@ export default function Feedbacks() {
     try {
       const res = await axios.get(API_URL);
       setServicos(res.data);
-      toast.update(loadingToast, {
-        render: "Serviços carregados com sucesso!",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
     } catch (error) {
-      toast.update(loadingToast, {
-        render: "Erro ao carregar serviços.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
     } finally {
       setLoading(false);
     }
@@ -63,7 +51,7 @@ export default function Feedbacks() {
         render: "Erro ao salvar feedback.",
         type: "error",
         isLoading: false,
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };

@@ -1,10 +1,63 @@
-// components/CardServico.jsx
-export default function CardServico({
-  servico,
-  comentario,
-  provided,
-  snapshot,
-}) {
+import { useState } from "react";
+import axios from "axios";
+
+export default function CardServico({ servico, provided, snapshot, turno }) {
+  const [comentarios, setComentarios] = useState(servico.comentarios || []);
+  const [adicionandoComentario, setAdicionandoComentario] = useState(false);
+  const [novoComentario, setNovoComentario] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mostrarTodos, setMostrarTodos] = useState(false);
+
+  const docDisponivel = !!servico.linkDoc;
+  const previaDisponivel = !!servico.linkPreviaVercel;
+
+  const capitalizar = (texto) =>
+    texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+
+  const adicionarComentario = async () => {
+    if (!novoComentario.trim()) return;
+
+    setLoading(true);
+
+    try {
+      const { data: comentarioCriado } = await axios.post(
+        "https://backend-gestao-paper.onrender.com/comentarios",
+        {
+          servicoId: servico.id,
+          texto: novoComentario.trim(),
+          feitoPor: capitalizar(turno),
+          setor: turno,
+        }
+      );
+
+      setComentarios((prev) => [comentarioCriado, ...prev]);
+      setNovoComentario("");
+      setAdicionandoComentario(false);
+    } catch (err) {
+      console.error("Erro ao adicionar comentário:", err);
+      alert("Erro ao adicionar comentário");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatarDataHora = (dataISO) => {
+    const data = new Date(dataISO);
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const ano = data.getFullYear();
+    const hora = String(data.getHours()).padStart(2, "0");
+    const min = String(data.getMinutes()).padStart(2, "0");
+    return `${dia}/${mes}/${ano} às ${hora}:${min}h`;
+  };
+
+  const comentariosOrdenados = [...comentarios].sort(
+    (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
+  );
+
+  const comentarioMaisRecente = comentariosOrdenados[0];
+  const comentariosRestantes = comentariosOrdenados.slice(1);
+
   return (
     <div
       ref={provided.innerRef}
@@ -21,9 +74,120 @@ export default function CardServico({
       <p className="text-xs italic text-gray-500">
         {servico.cliente?.representante || "Sem representante"}
       </p>
-      <p className="mt-2 text-sm text-gray-700">
-        {comentario || "Sem comentário"}
-      </p>
+
+      <div className="flex gap-2 mt-2 mb-2 text-sm">
+        {docDisponivel ? (
+          <a
+            href={servico.linkDoc}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            Doc
+          </a>
+        ) : (
+          <span className="text-gray-400 cursor-default">Doc</span>
+        )}
+
+        {previaDisponivel ? (
+          <a
+            href={servico.linkPreviaVercel}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            Prévia
+          </a>
+        ) : (
+          <span className="text-gray-400 cursor-default">Prévia</span>
+        )}
+      </div>
+
+      {!adicionandoComentario && (
+        <button
+          onClick={() => setAdicionandoComentario(true)}
+          className="mb-2 text-sm text-blue-600 hover:underline"
+        >
+          Adicionar comentário
+        </button>
+      )}
+
+      {adicionandoComentario && (
+        <div className="mb-2">
+          <input
+            type="text"
+            value={novoComentario}
+            onChange={(e) => setNovoComentario(e.target.value)}
+            className="w-full p-1 mb-1 text-sm border rounded"
+            placeholder="Digite seu comentário..."
+          />
+          <div className="flex gap-2 mt-1">
+            <button
+              onClick={adicionarComentario}
+              disabled={loading}
+              className="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+            >
+              {loading ? "Adicionando..." : "Adicionar"}
+            </button>
+            <button
+              onClick={() => {
+                setAdicionandoComentario(false);
+                setNovoComentario("");
+              }}
+              className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-3">
+        {comentarioMaisRecente ? (
+          <div className="pt-2 text-sm text-gray-700 border-t">
+            <p>{comentarioMaisRecente.texto}</p>
+            <p className="mt-1 text-xs text-gray-500">
+              {capitalizar(comentarioMaisRecente.setor)} -{" "}
+              {formatarDataHora(comentarioMaisRecente.criadoEm)}
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm italic text-gray-500">Sem comentários ainda.</p>
+        )}
+
+        {comentariosRestantes.length > 0 && (
+          <div className="mt-2">
+            {!mostrarTodos ? (
+              <button
+                onClick={() => setMostrarTodos(true)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Ver todos
+              </button>
+            ) : (
+              <>
+                <ul className="mt-2 space-y-2 text-sm text-gray-700">
+                  {comentariosRestantes.map((comentario) => (
+                    <li key={comentario.id} className="pt-2 border-t">
+                      <p>{comentario.texto}</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        {capitalizar(comentario.setor)} -{" "}
+                        {formatarDataHora(comentario.criadoEm)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => setMostrarTodos(false)}
+                  className="mt-2 text-sm text-blue-600 hover:underline"
+                >
+                  Ocultar
+                </button>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

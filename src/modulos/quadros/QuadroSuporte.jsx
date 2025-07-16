@@ -1,5 +1,15 @@
 import QuadroKanban from "./QuadroKanban";
 
 export default function QuadroSuporte() {
-  return <QuadroKanban titulo="Quadro Suporte" turno="suporte" />;
+  const colunas = {
+    backlog: "Backlog",
+    emAtendimento: "Em Atendimento",
+    infoColetadas: "Info Coletadas",
+    gerandoDoc: "Gerando Doc",
+    concluido: "Concluído",
+  };
+
+  return (
+    <QuadroKanban titulo="Quadro Suporte" turno="suporte" colunas={colunas} />
+  );
 }
