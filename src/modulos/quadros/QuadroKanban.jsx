@@ -140,6 +140,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         toast.success("Serviço concluído e direcionado com sucesso!", {
           autoClose: 1000,
         });
+        window.location.reload();
       } catch (error) {
         console.error("Erro ao atualizar serviço:", error);
         toast.error("Erro ao atualizar serviço", { autoClose: 1000 });

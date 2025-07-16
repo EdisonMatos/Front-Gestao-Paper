@@ -25,11 +25,13 @@ export default function Clientes() {
     fetchClientes();
   }, []);
 
-  const clientesFiltrados = clientes.filter(
-    (c) =>
-      c.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
-      c.representante.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const clientesFiltrados = clientes
+    .filter(
+      (c) =>
+        c.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
+        c.representante.toLowerCase().includes(filtro.toLowerCase())
+    )
+    .slice(0, 3);
 
   const handleEdit = (cliente) => {
     setClienteParaEditar(cliente);
@@ -120,38 +122,45 @@ export default function Clientes() {
             </tr>
           </thead>
           <tbody>
-            {clientesFiltrados.map((cliente) => (
-              <tr key={cliente.id} className="hover:bg-gray-50">
-                <td className="p-2 border">{cliente.empresa}</td>
-                <td className="p-2 border">{cliente.representante}</td>
-                <td className="p-2 border">{cliente.telefone}</td>
-                <td className="p-2 border">{cliente.email}</td>
-                <td className="p-2 border">{cliente.dominio}</td>
-                <td className="p-2 border">
-                  {cliente.servicos?.length || 0} serviço(s)
-                  <ul className="pl-4 mt-1 text-xs text-gray-600 list-disc">
-                    {cliente.servicos?.map((servico) => (
-                      <li key={servico.id}>{servico.nome}</li>
-                    ))}
-                  </ul>
-                </td>
-                <td className="p-2 space-x-2 border">
-                  <button
-                    onClick={() => handleEdit(cliente)}
-                    className="text-yellow-600 hover:underline"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleDelete(cliente.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Excluir
-                  </button>
+            {filtro.trim() === "" ? (
+              <tr>
+                <td colSpan="7" className="p-4 text-center text-gray-500">
+                  Digite o cliente que deseja localizar no campo de busca
                 </td>
               </tr>
-            ))}
-            {clientesFiltrados.length === 0 && (
+            ) : clientesFiltrados.length > 0 ? (
+              clientesFiltrados.map((cliente) => (
+                <tr key={cliente.id} className="hover:bg-gray-50">
+                  <td className="p-2 border">{cliente.empresa}</td>
+                  <td className="p-2 border">{cliente.representante}</td>
+                  <td className="p-2 border">{cliente.telefone}</td>
+                  <td className="p-2 border">{cliente.email}</td>
+                  <td className="p-2 border">{cliente.dominio}</td>
+                  <td className="p-2 border">
+                    {cliente.servicos?.length || 0} serviço(s)
+                    <ul className="pl-4 mt-1 text-xs text-gray-600 list-disc">
+                      {cliente.servicos?.map((servico) => (
+                        <li key={servico.id}>{servico.nome}</li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td className="p-2 space-x-2 border">
+                    <button
+                      onClick={() => handleEdit(cliente)}
+                      className="text-yellow-600 hover:underline"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(cliente.id)}
+                      className="text-red-600 hover:underline"
+                    >
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan="7" className="p-4 text-center text-gray-500">
                   Nenhum cliente encontrado.
