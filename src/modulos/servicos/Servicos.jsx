@@ -5,6 +5,8 @@ import AddNovoServico from "./AddNovoServico"; // import novo componente
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
+const API_COMENTARIOS_URL =
+  "https://backend-gestao-paper.onrender.com/comentarios";
 
 export default function Servicos() {
   const [servicos, setServicos] = useState([]);
@@ -13,7 +15,6 @@ export default function Servicos() {
   const [servicoParaEditar, setServicoParaEditar] = useState(null);
 
   const fetchServicos = async () => {
-    // Removi toast.loading
     try {
       const res = await axios.get(API_URL);
       setServicos(res.data);
@@ -38,15 +39,41 @@ export default function Servicos() {
   };
 
   const handleDelete = async (id) => {
-    if (confirm("Deseja realmente excluir este serviço?")) {
-      // Removi toast.loading
-      try {
-        await axios.delete(`${API_URL}/${id}`);
-        toast.success("Serviço excluído com sucesso!", { autoClose: 1000 });
-        fetchServicos();
-      } catch (err) {
-        toast.error("Erro ao excluir serviço.", { autoClose: 1000 });
+    try {
+      // Busca TODOS os comentários e filtra os do serviço atual
+      const resComentarios = await axios.get(API_COMENTARIOS_URL);
+      const comentarios = resComentarios.data.filter((c) => c.servicoId === id);
+
+      let mensagemConfirm = "Deseja realmente excluir este serviço?";
+
+      if (comentarios.length > 0) {
+        mensagemConfirm =
+          `Este serviço possui ${comentarios.length} comentário(s).\n` +
+          `Ao excluir, TODOS os comentários relacionados também serão removidos.\n\n` +
+          "Deseja continuar e excluir tudo?";
       }
+
+      if (!confirm(mensagemConfirm)) {
+        return;
+      }
+
+      // Exclui todos os comentários relacionados (se houver)
+      if (comentarios.length > 0) {
+        await Promise.all(
+          comentarios.map((comentario) =>
+            axios.delete(`${API_COMENTARIOS_URL}/${comentario.id}`)
+          )
+        );
+      }
+
+      // Exclui o serviço
+      await axios.delete(`${API_URL}/${id}`);
+      toast.success("Serviço e comentários excluídos com sucesso!", {
+        autoClose: 1000,
+      });
+      fetchServicos();
+    } catch (err) {
+      toast.error("Erro ao excluir serviço.", { autoClose: 1000 });
     }
   };
 

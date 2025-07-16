@@ -13,7 +13,6 @@ export default function Clientes() {
   const [clienteParaEditar, setClienteParaEditar] = useState(null);
 
   const fetchClientes = async () => {
-    // Removi toast.loading
     try {
       const res = await axios.get(API_URL);
       setClientes(res.data);
@@ -38,8 +37,17 @@ export default function Clientes() {
   };
 
   const handleDelete = async (id) => {
+    const cliente = clientes.find((c) => c.id === id);
+
+    if (cliente.servicos && cliente.servicos.length > 0) {
+      alert(
+        `Este cliente possui ${cliente.servicos.length} serviço(s) vinculado(s).\n\n` +
+          `Exclua os serviços individualmente antes de apagar o cliente.`
+      );
+      return;
+    }
+
     if (confirm("Deseja realmente excluir este cliente?")) {
-      // Removi toast.loading
       try {
         await axios.delete(`${API_URL}/${id}`);
         toast.success("Cliente excluído com sucesso!", { autoClose: 1000 });
@@ -64,7 +72,6 @@ export default function Clientes() {
     <div className="p-6">
       <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold">Gestão de Clientes</h2>
-      {/* Pesquisa */}
       <input
         type="text"
         placeholder="Pesquisar por empresa ou representante..."
@@ -72,7 +79,6 @@ export default function Clientes() {
         onChange={(e) => setFiltro(e.target.value)}
         className="w-full p-2 mb-4 border rounded md:w-1/2"
       />
-      {/* Botão mostrar formulário */}
       {!showForm ? (
         <button
           onClick={handleAdicionarNovo}
@@ -89,7 +95,6 @@ export default function Clientes() {
         </button>
       )}
 
-      {/* Formulário */}
       {showForm && (
         <AddNovoCliente
           clienteParaEditar={clienteParaEditar}
@@ -101,7 +106,6 @@ export default function Clientes() {
         />
       )}
 
-      {/* Tabela */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left border">
           <thead className="bg-gray-100">
