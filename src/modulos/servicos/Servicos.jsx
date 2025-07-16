@@ -27,11 +27,13 @@ export default function Servicos() {
     fetchServicos();
   }, []);
 
-  const servicosFiltrados = servicos.filter(
-    (s) =>
-      s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-      s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const servicosFiltrados = servicos
+    .filter(
+      (s) =>
+        s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+        s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase())
+    )
+    .slice(0, 3);
 
   const handleEdit = (servico) => {
     setServicoParaEditar(servico);
@@ -136,79 +138,87 @@ export default function Servicos() {
             </tr>
           </thead>
           <tbody>
-            {servicosFiltrados.map((servico) => (
-              <tr key={servico.id} className="hover:bg-gray-50">
-                <td className="p-2 border">{servico.nome}</td>
-                <td className="p-2 border">
-                  {servico.cliente?.empresa || "Sem cliente"}
-                </td>
-                <td className="p-2 border">{servico.turnoDaVez}</td>
-                <td className="p-2 border">
-                  <a
-                    href={servico.linkDoc}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    Doc
-                  </a>
-                </td>
-                <td className="p-2 border">
-                  <a
-                    href={servico.linkPreviaVercel}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    Prévia
-                  </a>
-                </td>
-                <td className="p-2 text-xs border">
-                  <div>
-                    <strong>Contratação:</strong>{" "}
-                    {formatDate(servico.dataContratacao)}
-                  </div>
-                  <div>
-                    <strong>Infos Coletadas:</strong>{" "}
-                    {formatDate(servico.dataInfosColetadas)}
-                  </div>
-                  <div>
-                    <strong>Doc Pronto:</strong>{" "}
-                    {formatDate(servico.dataDocPronto)}
-                  </div>
-                  <div>
-                    <strong>Prévia Enviada:</strong>{" "}
-                    {formatDate(servico.dataEnvioPrevia)}
-                  </div>
-                  <div>
-                    <strong>Conclusão:</strong>{" "}
-                    {formatDate(servico.dataConclusao)}
-                  </div>
-                  <div>
-                    <strong>Próximo Prazo:</strong>{" "}
-                    {formatDate(servico.dataProximoPrazo)}
-                  </div>
-                </td>
-                <td className="p-2 text-xs text-gray-600 border">
-                  {servico.comentariosTexto}
-                </td>
-                <td className="p-2 space-x-2 border">
-                  <button
-                    onClick={() => handleEdit(servico)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleDelete(servico.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Excluir
-                  </button>
+            {filtro.trim() === "" ? (
+              <tr>
+                <td colSpan="8" className="p-4 text-center text-gray-500">
+                  Digite o serviço ou cliente que deseja localizar no campo de
+                  busca
                 </td>
               </tr>
-            ))}
-            {servicosFiltrados.length === 0 && (
+            ) : servicosFiltrados.length > 0 ? (
+              servicosFiltrados.map((servico) => (
+                <tr key={servico.id} className="hover:bg-gray-50">
+                  <td className="p-2 border">{servico.nome}</td>
+                  <td className="p-2 border">
+                    {servico.cliente?.empresa || "Sem cliente"}
+                  </td>
+                  <td className="p-2 border">{servico.turnoDaVez}</td>
+                  <td className="p-2 border">
+                    <a
+                      href={servico.linkDoc}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Doc
+                    </a>
+                  </td>
+                  <td className="p-2 border">
+                    <a
+                      href={servico.linkPreviaVercel}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Prévia
+                    </a>
+                  </td>
+                  <td className="p-2 text-xs border">
+                    <div>
+                      <strong>Contratação:</strong>{" "}
+                      {formatDate(servico.dataContratacao)}
+                    </div>
+                    <div>
+                      <strong>Infos Coletadas:</strong>{" "}
+                      {formatDate(servico.dataInfosColetadas)}
+                    </div>
+                    <div>
+                      <strong>Doc Pronto:</strong>{" "}
+                      {formatDate(servico.dataDocPronto)}
+                    </div>
+                    <div>
+                      <strong>Prévia Enviada:</strong>{" "}
+                      {formatDate(servico.dataEnvioPrevia)}
+                    </div>
+                    <div>
+                      <strong>Conclusão:</strong>{" "}
+                      {formatDate(servico.dataConclusao)}
+                    </div>
+                    <div>
+                      <strong>Próximo Prazo:</strong>{" "}
+                      {formatDate(servico.dataProximoPrazo)}
+                    </div>
+                  </td>
+                  <td className="p-2 text-xs text-gray-600 border">
+                    {servico.comentariosTexto}
+                  </td>
+                  <td className="p-2 space-x-2 border">
+                    <button
+                      onClick={() => handleEdit(servico)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(servico.id)}
+                      className="text-red-600 hover:underline"
+                    >
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan="8" className="p-4 text-center text-gray-500">
                   Nenhum serviço encontrado.
