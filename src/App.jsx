@@ -2,6 +2,7 @@ import Clientes from "./modulos/clientes/Clientes";
 import Feedbacks from "./modulos/feedbacks/Feedbacks";
 import QuadroDev from "./modulos/quadros/QuadroDev";
 import QuadroSuporte from "./modulos/quadros/QuadroSuporte";
+import QuadroWebmaster from "./modulos/quadros/QuadroWebmaster";
 import Servicos from "./modulos/servicos/Servicos";
 
 function App() {
@@ -10,8 +11,9 @@ function App() {
       <Clientes />
       <Servicos />
       <Feedbacks />
-      <QuadroDev />
       <QuadroSuporte />
+      <QuadroDev />
+      <QuadroWebmaster />
     </div>
   );
 }
