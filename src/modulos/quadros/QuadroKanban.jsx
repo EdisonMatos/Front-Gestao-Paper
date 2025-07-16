@@ -6,24 +6,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardServico from "./CardServico";
 
-const colunasKanban = {
-  backlog: "Backlog",
-  pausadas: "Pausadas",
-  urgentes: "Urgentes",
-  emProgresso: "Em Progresso",
-  concluido: "Concluído",
-};
-
 const opcoesSetores = ["dev", "suporte", "webmaster"];
 
-export default function QuadroKanban({ titulo, turno }) {
-  const [servicos, setServicos] = useState({
-    backlog: [],
-    pausadas: [],
-    urgentes: [],
-    emProgresso: [],
-    concluido: [],
-  });
+export default function QuadroKanban({ titulo, turno, colunas }) {
+  // Inicializa o estado com as chaves das colunas recebidas
+  const [servicos, setServicos] = useState(
+    Object.keys(colunas).reduce((acc, coluna) => {
+      acc[coluna] = [];
+      return acc;
+    }, {})
+  );
 
   async function carregarServicos() {
     try {
@@ -35,20 +27,20 @@ export default function QuadroKanban({ titulo, turno }) {
         (servico) => servico.turnoDaVez === turno
       );
 
-      const servicosOrganizados = {
-        backlog: [],
-        pausadas: [],
-        urgentes: [],
-        emProgresso: [],
-        concluido: [],
-      };
+      const servicosOrganizados = Object.keys(colunas).reduce((acc, coluna) => {
+        acc[coluna] = [];
+        return acc;
+      }, {});
 
       apenasDoTurno.forEach((servico) => {
         const pos = servico.posicaoNoQuadro;
-        const coluna = !pos || !servicosOrganizados[pos] ? "backlog" : pos;
-        servicosOrganizados[coluna].push(servico);
+        // Se pos não existir ou não for uma coluna válida, joga no primeiro da lista (pode ser backlog ou o primeiro da prop)
+        const colunaValida =
+          pos && servicosOrganizados[pos] ? pos : Object.keys(colunas)[0];
+        servicosOrganizados[colunaValida].push(servico);
       });
 
+      // Ordena por atualizadoEm em cada coluna
       Object.keys(servicosOrganizados).forEach((coluna) => {
         servicosOrganizados[coluna].sort(
           (a, b) => new Date(a.atualizadoEm) - new Date(b.atualizadoEm)
@@ -63,7 +55,7 @@ export default function QuadroKanban({ titulo, turno }) {
 
   useEffect(() => {
     carregarServicos();
-  }, []);
+  }, [turno, colunas]);
 
   async function onDragEnd(result) {
     const { source, destination } = result;
@@ -125,6 +117,7 @@ export default function QuadroKanban({ titulo, turno }) {
       return;
     }
 
+    // Se houver uma coluna chamada "concluido", tratar ela como especial (igual antes)
     if (destino === "concluido") {
       const opcoes = opcoesSetores.filter(
         (setor) => setor !== itemMovido.turnoDaVez
@@ -217,7 +210,7 @@ export default function QuadroKanban({ titulo, turno }) {
       <div className="relative flex gap-4 p-4 min-h-[500px]">
         <ToastContainer position="top-right" autoClose={3000} />
         <DragDropContext onDragEnd={onDragEnd}>
-          {Object.entries(colunasKanban).map(([key, titulo]) => (
+          {Object.entries(colunas).map(([key, nome]) => (
             <Droppable key={key} droppableId={key}>
               {(provided) => (
                 <div
@@ -225,7 +218,7 @@ export default function QuadroKanban({ titulo, turno }) {
                   {...provided.droppableProps}
                   className="min-w-[250px] bg-gray-100 p-2 rounded shadow-md"
                 >
-                  <h2 className="mb-2 font-bold text-center">{titulo}</h2>
+                  <h2 className="mb-2 font-bold text-center">{nome}</h2>
                   {servicos[key].map((servico, index) => {
                     const comentario = obterComentarioMaisRecente(servico);
                     return (
