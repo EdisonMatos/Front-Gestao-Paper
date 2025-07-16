@@ -141,7 +141,7 @@ export default function Feedbacks() {
                 <td className="p-2 text-center border">
                   <button
                     onClick={() => handleSave(s)}
-                    className="px-2 py-1 text-white bg-blue-600 rounded hover:bg-blue-700"
+                    className="px-2 py-1 text-white bg-yellow-600 rounded hover:bg-yellow-600"
                   >
                     Salvar
                   </button>

@@ -4,15 +4,20 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
+const CLIENTES_URL = "https://backend-gestao-paper.onrender.com/clientes";
 
 export default function Servicos() {
   const [servicos, setServicos] = useState([]);
+  const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
+  const [clienteBusca, setClienteBusca] = useState("");
+  const [sugestoesClientes, setSugestoesClientes] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     id: null,
     nome: "",
     clienteId: "",
+    clienteNome: "",
     linkDoc: "",
     linkPreviaVercel: "",
     turnoDaVez: "",
@@ -26,6 +31,7 @@ export default function Servicos() {
   });
 
   const fetchServicos = async () => {
+    const loadingToast = toast.loading("Carregando serviços...");
     try {
       const res = await axios.get(API_URL);
       setServicos(res.data);
@@ -45,9 +51,31 @@ export default function Servicos() {
     }
   };
 
+  const buscarClientes = async (termo) => {
+    try {
+      const res = await axios.get(CLIENTES_URL);
+      const filtrados = res.data.filter(
+        (cliente) =>
+          cliente.empresa.toLowerCase().includes(termo.toLowerCase()) ||
+          cliente.representante.toLowerCase().includes(termo.toLowerCase())
+      );
+      setSugestoesClientes(filtrados.slice(0, 3));
+    } catch (err) {
+      console.error("Erro ao buscar clientes", err);
+    }
+  };
+
   useEffect(() => {
     fetchServicos();
   }, []);
+
+  useEffect(() => {
+    if (clienteBusca.length > 1) {
+      buscarClientes(clienteBusca);
+    } else {
+      setSugestoesClientes([]);
+    }
+  }, [clienteBusca]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -59,8 +87,11 @@ export default function Servicos() {
       form.id ? "Atualizando serviço..." : "Adicionando serviço..."
     );
     try {
+      const payload = { ...form };
+      delete payload.clienteNome;
+
       if (form.id) {
-        await axios.put(`${API_URL}/${form.id}`, form);
+        await axios.put(`${API_URL}/${form.id}`, payload);
         toast.update(loadingToast, {
           render: "Serviço atualizado com sucesso!",
           type: "success",
@@ -68,7 +99,7 @@ export default function Servicos() {
           autoClose: 3000,
         });
       } else {
-        await axios.post(API_URL, form);
+        await axios.post(API_URL, payload);
         toast.update(loadingToast, {
           render: "Serviço adicionado com sucesso!",
           type: "success",
@@ -93,6 +124,7 @@ export default function Servicos() {
       id: servico.id,
       nome: servico.nome,
       clienteId: servico.clienteId,
+      clienteNome: servico.cliente?.empresa || "",
       linkDoc: servico.linkDoc,
       linkPreviaVercel: servico.linkPreviaVercel,
       turnoDaVez: servico.turnoDaVez,
@@ -135,6 +167,7 @@ export default function Servicos() {
       id: null,
       nome: "",
       clienteId: "",
+      clienteNome: "",
       linkDoc: "",
       linkPreviaVercel: "",
       turnoDaVez: "",
@@ -146,6 +179,8 @@ export default function Servicos() {
       dataConclusao: "",
       dataProximoPrazo: "",
     });
+    setClienteBusca("");
+    setSugestoesClientes([]);
     setShowForm(false);
   };
 
@@ -163,17 +198,6 @@ export default function Servicos() {
       <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold">Gestão de Serviços</h2>
 
-      {/* Botão para mostrar formulário */}
-      {!showForm && (
-        <button
-          onClick={() => setShowForm(true)}
-          className="px-4 py-2 mb-4 text-white transition bg-green-600 rounded hover:bg-green-700"
-        >
-          Adicionar novo serviço
-        </button>
-      )}
-
-      {/* Campo de busca */}
       <input
         type="text"
         placeholder="Pesquisar por serviço ou empresa..."
@@ -182,17 +206,24 @@ export default function Servicos() {
         className="w-full p-2 mb-4 border rounded md:w-1/2"
       />
 
-      {/* Formulário */}
+      {!showForm && (
+        <button
+          onClick={() => setShowForm(true)}
+          className="px-4 py-2 mb-4 text-white transition bg-yellow-600 rounded hover:bg-yellow-700"
+        >
+          Adicionar novo serviço
+        </button>
+      )}
+
       {showForm && (
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
         >
           <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Nome do serviço</label>
+            <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
             <input
               name="nome"
-              placeholder="Nome do serviço"
               value={form.nome}
               onChange={handleChange}
               required
@@ -200,36 +231,84 @@ export default function Servicos() {
             />
           </div>
 
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">ID do Cliente</label>
+          <div className="relative flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Selecione o Cliente*
+            </label>
             <input
-              name="clienteId"
-              placeholder="ID do Cliente"
-              value={form.clienteId}
+              type="text"
+              value={form.clienteNome || clienteBusca}
+              onChange={(e) => {
+                setClienteBusca(e.target.value);
+                setForm((prev) => ({
+                  ...prev,
+                  clienteId: "",
+                  clienteNome: e.target.value,
+                }));
+              }}
+              required
+              className="p-2 border rounded"
+              placeholder="Digite o nome da empresa ou representante"
+            />
+            {sugestoesClientes.length > 0 && (
+              <ul className="absolute z-10 w-full bg-white border rounded shadow">
+                {sugestoesClientes.map((cliente) => (
+                  <li
+                    key={cliente.id}
+                    onClick={() => {
+                      setForm((prev) => ({
+                        ...prev,
+                        clienteId: cliente.id,
+                        clienteNome: `${cliente.empresa} | ${cliente.representante}`,
+                      }));
+                      setSugestoesClientes([]);
+                    }}
+                    className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                  >
+                    {cliente.empresa} | {cliente.representante}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Turno da Vez*</label>
+            <select
+              name="turnoDaVez"
+              value={form.turnoDaVez}
+              onChange={handleChange}
+              required
+              className="p-2 border rounded"
+            >
+              <option value="">Selecione</option>
+              <option value="dev">Dev</option>
+              <option value="suporte">Suporte</option>
+              <option value="webmaster">Webmaster</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Contratação*
+            </label>
+            <input
+              type="date"
+              name="dataContratacao"
+              value={form.dataContratacao}
               onChange={handleChange}
               required
               className="p-2 border rounded"
             />
           </div>
 
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Turno da Vez</label>
-            <input
-              name="turnoDaVez"
-              placeholder="Turno da Vez"
-              value={form.turnoDaVez}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
-          </div>
-
+          {/* Campos opcionais */}
           <div className="flex flex-col">
             <label className="mb-1 text-sm font-medium">
               Link do Documento
             </label>
             <input
               name="linkDoc"
-              placeholder="Link Doc"
               value={form.linkDoc}
               onChange={handleChange}
               className="p-2 border rounded"
@@ -242,7 +321,6 @@ export default function Servicos() {
             </label>
             <input
               name="linkPreviaVercel"
-              placeholder="Link Prévia Vercel"
               value={form.linkPreviaVercel}
               onChange={handleChange}
               className="p-2 border rounded"
@@ -253,21 +331,7 @@ export default function Servicos() {
             <label className="mb-1 text-sm font-medium">Comentário</label>
             <input
               name="comentariosTexto"
-              placeholder="Comentário"
               value={form.comentariosTexto}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Contratação
-            </label>
-            <input
-              type="date"
-              name="dataContratacao"
-              value={form.dataContratacao}
               onChange={handleChange}
               className="p-2 border rounded"
             />
@@ -356,7 +420,6 @@ export default function Servicos() {
         </form>
       )}
 
-      {/* Tabela */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left border">
           <thead className="bg-gray-100">
@@ -383,6 +446,7 @@ export default function Servicos() {
                   <a
                     href={servico.linkDoc}
                     target="_blank"
+                    rel="noreferrer"
                     className="text-blue-600 hover:underline"
                   >
                     Doc
@@ -392,6 +456,7 @@ export default function Servicos() {
                   <a
                     href={servico.linkPreviaVercel}
                     target="_blank"
+                    rel="noreferrer"
                     className="text-blue-600 hover:underline"
                   >
                     Prévia

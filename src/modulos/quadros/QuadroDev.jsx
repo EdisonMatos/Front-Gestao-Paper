@@ -1,3 +1,5 @@
+import QuadroKanban from "./QuadroKanban";
+
 export default function QuadroDev() {
-  return <div>QuadroDev</div>;
+  return <QuadroKanban titulo="Quadro Desenvolvimento" turno="dev" />;
 }

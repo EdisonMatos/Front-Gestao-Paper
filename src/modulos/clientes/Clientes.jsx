@@ -156,7 +156,7 @@ export default function Clientes() {
             setShowForm(true);
           }
         }}
-        className="px-4 py-2 mb-4 text-white bg-green-600 rounded hover:bg-green-700"
+        className="px-4 py-2 mb-4 text-white bg-yellow-600 rounded hover:bg-yellow-700"
       >
         {showForm ? "Cancelar" : "Adicionar novo cliente"}
       </button>
@@ -225,7 +225,7 @@ export default function Clientes() {
           <div className="flex items-end">
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white transition bg-blue-600 rounded hover:bg-blue-700"
+              className="w-full px-4 py-2 text-white transition bg-yellow-600 rounded hover:bg-yellow-600"
             >
               {form.id ? "Atualizar Cliente" : "Adicionar Cliente"}
             </button>
@@ -265,7 +265,7 @@ export default function Clientes() {
                 <td className="p-2 space-x-2 border">
                   <button
                     onClick={() => handleEdit(cliente)}
-                    className="text-blue-600 hover:underline"
+                    className="text-yellow-600 hover:underline"
                   >
                     Editar
                   </button>
