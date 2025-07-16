@@ -1,17 +1,41 @@
-export default function CardServico({ servico, provided, snapshot }) {
-  function obterComentarioMaisRecente() {
-    if (servico.comentarios && servico.comentarios.length > 0) {
-      const maisRecente = [...servico.comentarios].sort(
-        (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
-      )[0];
-      return maisRecente?.texto;
-    }
+import { useState } from "react";
+import axios from "axios";
 
-    return servico.comentariosTexto || "Sem comentário";
-  }
+export default function CardServico({ servico, provided, snapshot }) {
+  const [comentarios, setComentarios] = useState(servico.comentarios || []);
+  const [adicionandoComentario, setAdicionandoComentario] = useState(false);
+  const [novoComentario, setNovoComentario] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
+
+  const adicionarComentario = async () => {
+    if (!novoComentario.trim()) return;
+
+    setLoading(true);
+
+    try {
+      const { data: comentarioCriado } = await axios.post(
+        "https://backend-gestao-paper.onrender.com/comentarios",
+        {
+          servicoId: servico.id,
+          texto: novoComentario.trim(),
+          feitoPor: "Ed", // você pode alterar isso dinamicamente no futuro
+          setor: "gestao",
+        }
+      );
+
+      setComentarios((prev) => [...prev, comentarioCriado]);
+      setNovoComentario("");
+      setAdicionandoComentario(false);
+    } catch (err) {
+      console.error("Erro ao adicionar comentário:", err);
+      alert("Erro ao adicionar comentário");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -29,8 +53,8 @@ export default function CardServico({ servico, provided, snapshot }) {
       <p className="text-xs italic text-gray-500">
         {servico.cliente?.representante || "Sem representante"}
       </p>
+
       <div className="flex gap-2 mt-2 mb-2 text-sm">
-        {/* Link do DOC */}
         {docDisponivel ? (
           <a
             href={servico.linkDoc}
@@ -44,7 +68,6 @@ export default function CardServico({ servico, provided, snapshot }) {
           <span className="text-gray-400 cursor-default">Doc</span>
         )}
 
-        {/* Link da PRÉVIA */}
         {previaDisponivel ? (
           <a
             href={servico.linkPreviaVercel}
@@ -58,9 +81,62 @@ export default function CardServico({ servico, provided, snapshot }) {
           <span className="text-gray-400 cursor-default">Prévia</span>
         )}
       </div>
-      <p className="mt-2 text-sm text-gray-700">
-        {obterComentarioMaisRecente()}
-      </p>
+
+      {!adicionandoComentario && (
+        <button
+          onClick={() => setAdicionandoComentario(true)}
+          className="mb-2 text-sm text-blue-600 hover:underline"
+        >
+          Adicionar comentário
+        </button>
+      )}
+
+      {adicionandoComentario && (
+        <div className="mb-2">
+          <input
+            type="text"
+            value={novoComentario}
+            onChange={(e) => setNovoComentario(e.target.value)}
+            className="w-full p-1 mb-1 text-sm border rounded"
+            placeholder="Digite seu comentário..."
+          />
+          <div className="flex gap-2 mt-1">
+            <button
+              onClick={adicionarComentario}
+              disabled={loading}
+              className="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+            >
+              {loading ? "Adicionando..." : "Adicionar"}
+            </button>
+            <button
+              onClick={() => {
+                setAdicionandoComentario(false);
+                setNovoComentario("");
+              }}
+              className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-3">
+        {comentarios.length > 0 ? (
+          <ul className="space-y-1 text-sm text-gray-700">
+            {comentarios
+              .sort((a, b) => new Date(a.criadoEm) - new Date(b.criadoEm))
+              .map((comentario) => (
+                <li key={comentario.id} className="pt-1 border-t">
+                  <span className="font-semibold">{comentario.feitoPor}:</span>{" "}
+                  {comentario.texto}
+                </li>
+              ))}
+          </ul>
+        ) : (
+          <p className="text-sm italic text-gray-500">Sem comentários ainda.</p>
+        )}
+      </div>
     </div>
   );
 }
