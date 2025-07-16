@@ -249,6 +249,15 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
               </div>
             )}
           </div>
+
+          {servico.posicaoNoQuadro === "aguardandoCliente" && (
+            <button
+              onClick={() => setMostrarCompleto(false)}
+              className="mt-4 text-sm text-blue-600 hover:underline"
+            >
+              Ocultar
+            </button>
+          )}
         </>
       )}
     </div>
