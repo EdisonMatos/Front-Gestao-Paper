@@ -203,15 +203,15 @@ export default function QuadroDev() {
   }
 
   function obterComentarioMaisRecente(servico) {
-    if (!servico.comentarios || servico.comentarios.length === 0) return null;
+    if (servico.comentarios && servico.comentarios.length > 0) {
+      const maisRecente = [...servico.comentarios].sort(
+        (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
+      )[0];
+      return maisRecente?.texto;
+    }
 
-    const maisRecente = [...servico.comentarios].sort(
-      (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
-    )[0];
-
-    return maisRecente?.texto || null;
+    return servico.comentariosTexto || null;
   }
-
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold">Quadro Desenvolvimento</h2>

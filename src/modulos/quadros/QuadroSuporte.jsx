@@ -202,13 +202,15 @@ export default function QuadroSuporte() {
   }
 
   function obterComentarioMaisRecente(servico) {
-    if (!servico.comentarios || servico.comentarios.length === 0) return null;
+    if (servico.comentarios && servico.comentarios.length > 0) {
+      const maisRecente = [...servico.comentarios].sort(
+        (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
+      )[0];
+      return maisRecente?.texto;
+    }
 
-    const maisRecente = [...servico.comentarios].sort(
-      (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
-    )[0];
-
-    return maisRecente?.texto || null;
+    // Fallback: usa o campo string `comentariosTexto` se não houver no array
+    return servico.comentariosTexto || null;
   }
 
   return (
