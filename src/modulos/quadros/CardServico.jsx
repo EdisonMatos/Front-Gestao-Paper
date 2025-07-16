@@ -7,6 +7,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const [novoComentario, setNovoComentario] = useState("");
   const [loading, setLoading] = useState(false);
   const [mostrarTodos, setMostrarTodos] = useState(false);
+  const [mostrarCompleto, setMostrarCompleto] = useState(false);
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
@@ -58,6 +59,11 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const comentarioMaisRecente = comentariosOrdenados[0];
   const comentariosRestantes = comentariosOrdenados.slice(1);
 
+  const modoCompacto =
+    servico.posicaoNoQuadro === "aguardandoCliente" && !mostrarCompleto;
+
+  const estiloFonte = modoCompacto ? { fontSize: "12px" } : {};
+
   return (
     <div
       ref={provided.innerRef}
@@ -66,128 +72,185 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
       className={`bg-white rounded p-3 mb-2 shadow ${
         snapshot.isDragging ? "scale-105" : ""
       }`}
+      style={estiloFonte}
     >
-      <h3 className="font-semibold">{servico.nome}</h3>
-      <p className="text-sm text-gray-600">
-        {servico.cliente?.empresa || "Sem empresa"}
-      </p>
-      <p className="text-xs italic text-gray-500">
-        {servico.cliente?.representante || "Sem representante"}
-      </p>
-
-      <div className="flex gap-2 mt-2 mb-2 text-sm">
-        {docDisponivel ? (
-          <a
-            href={servico.linkDoc}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
+      {modoCompacto ? (
+        <>
+          <div
+            className="flex items-center justify-between"
+            style={estiloFonte}
           >
-            Doc
-          </a>
-        ) : (
-          <span className="text-gray-400 cursor-default">Doc</span>
-        )}
-
-        {previaDisponivel ? (
-          <a
-            href={servico.linkPreviaVercel}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            Prévia
-          </a>
-        ) : (
-          <span className="text-gray-400 cursor-default">Prévia</span>
-        )}
-      </div>
-
-      {!adicionandoComentario && (
-        <button
-          onClick={() => setAdicionandoComentario(true)}
-          className="mb-2 text-sm text-blue-600 hover:underline"
-        >
-          Adicionar comentário
-        </button>
-      )}
-
-      {adicionandoComentario && (
-        <div className="mb-2">
-          <input
-            type="text"
-            value={novoComentario}
-            onChange={(e) => setNovoComentario(e.target.value)}
-            className="w-full p-1 mb-1 text-sm border rounded"
-            placeholder="Digite seu comentário..."
-          />
-          <div className="flex gap-2 mt-1">
-            <button
-              onClick={adicionarComentario}
-              disabled={loading}
-              className="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-            >
-              {loading ? "Adicionando..." : "Adicionar"}
-            </button>
-            <button
-              onClick={() => {
-                setAdicionandoComentario(false);
-                setNovoComentario("");
-              }}
-              className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className="mt-3">
-        {comentarioMaisRecente ? (
-          <div className="pt-2 text-sm text-gray-700 border-t">
-            <p>{comentarioMaisRecente.texto}</p>
-            <p className="mt-1 text-xs text-gray-500">
-              {capitalizar(comentarioMaisRecente.setor)} -{" "}
-              {formatarDataHora(comentarioMaisRecente.criadoEm)}
+            <h3 className="font-semibold">{servico.nome}</h3>
+            <p className="text-gray-600">
+              {servico.cliente?.empresa || "Sem empresa"}
             </p>
           </div>
-        ) : (
-          <p className="text-sm italic text-gray-500">Sem comentários ainda.</p>
-        )}
 
-        {comentariosRestantes.length > 0 && (
-          <div className="mt-2">
-            {!mostrarTodos ? (
-              <button
-                onClick={() => setMostrarTodos(true)}
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Ver todos
-              </button>
-            ) : (
+          <div className="pt-2 text-gray-700 border-t" style={estiloFonte}>
+            {comentarioMaisRecente ? (
               <>
-                <ul className="mt-2 space-y-2 text-sm text-gray-700">
-                  {comentariosRestantes.map((comentario) => (
-                    <li key={comentario.id} className="pt-2 border-t">
-                      <p>{comentario.texto}</p>
-                      <p className="mt-1 text-xs text-gray-500">
-                        {capitalizar(comentario.setor)} -{" "}
-                        {formatarDataHora(comentario.criadoEm)}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => setMostrarTodos(false)}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
-                >
-                  Ocultar
-                </button>
+                <p>{comentarioMaisRecente.texto}</p>
+                <p className="mt-1 text-gray-500" style={{ fontSize: "12px" }}>
+                  {capitalizar(comentarioMaisRecente.setor)} -{" "}
+                  {formatarDataHora(comentarioMaisRecente.criadoEm)}
+                </p>
               </>
+            ) : (
+              <p className="italic text-gray-500" style={estiloFonte}>
+                Sem comentários ainda.
+              </p>
             )}
           </div>
-        )}
-      </div>
+
+          <button
+            onClick={() => setMostrarCompleto(true)}
+            className="mt-2 text-blue-600 hover:underline"
+            style={estiloFonte}
+          >
+            Mostrar card completo
+          </button>
+        </>
+      ) : (
+        <>
+          <h3 className="font-semibold" style={estiloFonte}>
+            {servico.nome}
+          </h3>
+          <p className="text-sm text-gray-600" style={estiloFonte}>
+            {servico.cliente?.empresa || "Sem empresa"}
+          </p>
+
+          <p className="text-xs italic text-gray-500" style={estiloFonte}>
+            {servico.cliente?.representante || "Sem representante"}
+          </p>
+
+          <div className="flex gap-2 mt-2 mb-2 text-sm" style={estiloFonte}>
+            {docDisponivel ? (
+              <a
+                href={servico.linkDoc}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                Doc
+              </a>
+            ) : (
+              <span className="text-gray-400 cursor-default">Doc</span>
+            )}
+
+            {previaDisponivel ? (
+              <a
+                href={servico.linkPreviaVercel}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                Prévia
+              </a>
+            ) : (
+              <span className="text-gray-400 cursor-default">Prévia</span>
+            )}
+          </div>
+
+          {!adicionandoComentario && (
+            <button
+              onClick={() => setAdicionandoComentario(true)}
+              className="mb-2 text-sm text-blue-600 hover:underline"
+            >
+              Adicionar comentário
+            </button>
+          )}
+
+          {adicionandoComentario && (
+            <div className="mb-2">
+              <input
+                type="text"
+                value={novoComentario}
+                onChange={(e) => setNovoComentario(e.target.value)}
+                className="w-full p-1 mb-1 text-sm border rounded"
+                placeholder="Digite seu comentário..."
+              />
+              <div className="flex gap-2 mt-1">
+                <button
+                  onClick={adicionarComentario}
+                  disabled={loading}
+                  className="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                >
+                  {loading ? "Adicionando..." : "Adicionar"}
+                </button>
+                <button
+                  onClick={() => {
+                    setAdicionandoComentario(false);
+                    setNovoComentario("");
+                  }}
+                  className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-3">
+            {comentarioMaisRecente ? (
+              <div
+                className="pt-2 text-sm text-gray-700 border-t"
+                style={estiloFonte}
+              >
+                <p>{comentarioMaisRecente.texto}</p>
+                <p className="mt-1 text-xs text-gray-500" style={estiloFonte}>
+                  {capitalizar(comentarioMaisRecente.setor)} -{" "}
+                  {formatarDataHora(comentarioMaisRecente.criadoEm)}
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm italic text-gray-500" style={estiloFonte}>
+                Sem comentários ainda.
+              </p>
+            )}
+
+            {comentariosRestantes.length > 0 && (
+              <div className="mt-2">
+                {!mostrarTodos ? (
+                  <button
+                    onClick={() => setMostrarTodos(true)}
+                    className="text-sm text-blue-600 hover:underline"
+                    style={estiloFonte}
+                  >
+                    Ver todos
+                  </button>
+                ) : (
+                  <>
+                    <ul
+                      className="mt-2 space-y-2 text-sm text-gray-700"
+                      style={estiloFonte}
+                    >
+                      {comentariosRestantes.map((comentario) => (
+                        <li key={comentario.id} className="pt-2 border-t">
+                          <p>{comentario.texto}</p>
+                          <p
+                            className="mt-1 text-xs text-gray-500"
+                            style={estiloFonte}
+                          >
+                            {capitalizar(comentario.setor)} -{" "}
+                            {formatarDataHora(comentario.criadoEm)}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      onClick={() => setMostrarTodos(false)}
+                      className="mt-2 text-sm text-blue-600 hover:underline"
+                      style={estiloFonte}
+                    >
+                      Ocultar
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
