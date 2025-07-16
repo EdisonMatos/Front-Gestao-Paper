@@ -163,6 +163,15 @@ export default function Servicos() {
       <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold">Gestão de Serviços</h2>
 
+      {/* Campo de busca */}
+      <input
+        type="text"
+        placeholder="Pesquisar por serviço ou empresa..."
+        value={filtro}
+        onChange={(e) => setFiltro(e.target.value)}
+        className="w-full p-2 mb-4 border rounded md:w-1/2"
+      />
+
       {/* Botão para mostrar formulário */}
       {!showForm && (
         <button
@@ -172,15 +181,6 @@ export default function Servicos() {
           Adicionar novo serviço
         </button>
       )}
-
-      {/* Campo de busca */}
-      <input
-        type="text"
-        placeholder="Pesquisar por serviço ou empresa..."
-        value={filtro}
-        onChange={(e) => setFiltro(e.target.value)}
-        className="w-full p-2 mb-4 border rounded md:w-1/2"
-      />
 
       {/* Formulário */}
       {showForm && (

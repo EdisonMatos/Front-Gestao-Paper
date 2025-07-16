@@ -6,7 +6,7 @@ import Servicos from "./modulos/servicos/Servicos";
 
 function App() {
   return (
-    <div className="flex flex-col max-w-[1115px] ">
+    <div className="flex flex-col max-w-[1400px] ">
       <Clientes />
       <Servicos />
       <Feedbacks />
