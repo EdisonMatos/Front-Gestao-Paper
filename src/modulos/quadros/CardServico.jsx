@@ -18,7 +18,6 @@ export default function CardServico({
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
 
-  // Estado local para refletir atualizações imediatas do prazo
   const [dataProximoPrazoLocal, setDataProximoPrazoLocal] = useState(
     servico.dataProximoPrazo || null
   );
@@ -69,7 +68,12 @@ export default function CardServico({
 
   const formatarDataPrazo = (dataPrazoISO) => {
     if (!dataPrazoISO) {
-      return <span className="text-green-500">Sem prazo</span>;
+      return (
+        <>
+          <span className="text-green-500">Sem prazo</span> (
+          <span className="text-red-400">-</span>)
+        </>
+      );
     }
 
     const hoje = new Date();
@@ -82,31 +86,52 @@ export default function CardServico({
       prazo.getMonth() + 1
     ).padStart(2, "0")}/${prazo.getFullYear()}`;
 
+    const complexidade = servico.complexidade;
+    const complexidadeText =
+      complexidade === null ? "-" : complexidade.toString();
+
+    const complexidadeClass = [1, 2, 3, 4, 5].includes(complexidade)
+      ? {
+          1: "text-text",
+          2: "text-text",
+          3: "text-text",
+          4: "text-text",
+          5: "text-text",
+        }[complexidade]
+      : "text-text";
+
+    const renderComplexidade = (
+      <span className={complexidadeClass}>({complexidadeText})</span>
+    );
+
     if (diffDias === 0) {
       return (
         <>
           {dataFormatada} -{" "}
-          <span className="font-semibold text-red-500">Hoje</span>
+          <span className="font-semibold text-red-500">Hoje</span>{" "}
+          {renderComplexidade}
         </>
       );
     } else if (diffDias === 1) {
       return (
         <>
           {dataFormatada} -{" "}
-          <span className="font-semibold text-yellow-300">Amanhã</span>
+          <span className="font-semibold text-yellow-300">Amanhã</span>{" "}
+          {renderComplexidade}
         </>
       );
     } else if ([2, 3].includes(diffDias)) {
       return (
         <>
           {dataFormatada} -{" "}
-          <span className="font-semibold text-yellow-700">Breve</span>
+          <span className="font-semibold text-yellow-700">Breve</span>{" "}
+          {renderComplexidade}
         </>
       );
     } else {
       return (
         <>
-          {dataFormatada} - {diffDias} dias
+          {dataFormatada} - {diffDias} dias {renderComplexidade}
         </>
       );
     }
@@ -129,7 +154,6 @@ export default function CardServico({
     return telefone.replace(/\D/g, "");
   };
 
-  // FUNÇÃO PARA ATUALIZAR O PRAZO NO ESTADO LOCAL
   const handleAtualizarPrazo = (novaData) => {
     setDataProximoPrazoLocal(novaData);
   };
@@ -268,7 +292,7 @@ export default function CardServico({
               turno={turno}
               capitalizar={capitalizar}
               onFechar={() => setMostrarDirecionar(false)}
-              onAtualizarPrazo={handleAtualizarPrazo} // <-- PASSANDO FUNÇÃO PARA AÇÔES
+              onAtualizarPrazo={handleAtualizarPrazo}
             />
           )}
 
