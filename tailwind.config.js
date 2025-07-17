@@ -11,10 +11,12 @@ export const theme = {
       text: "#CECECE", // textos principais
       textMuted: "#B0B0C0", // textos secundários, data, descrição etc.
       border: "#3A3A4D", // bordas suaves
-      inputBg: "#252530", // fundo de inputs
+      inputBg: "#212024", // fundo de inputs
       placeholder: "#6C6C80", // placeholder dos campos
       buttons: "#373770",
       buttonsHover: "#242448", // hover do botão primário (versão mais clara do primary)
+      secondaryButtons: "#6B7280",
+      secondaryButtonsHover: "#4B5563",
       links: "#8282DE", // links e interações
     },
     boxShadow: {

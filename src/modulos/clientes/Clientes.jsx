@@ -84,14 +84,14 @@ export default function Clientes() {
       {!showForm ? (
         <button
           onClick={handleAdicionarNovo}
-          className="px-4 py-2 mb-4 ml-4 text-white bg-buttons rounded hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 ml-4 text-white rounded bg-buttons hover:bg-buttonsHover"
         >
           Adicionar novo cliente
         </button>
       ) : (
         <button
           onClick={resetForm}
-          className="px-4 py-2 mb-4 text-white bg-gray-500 rounded hover:bg-gray-600"
+          className="px-4 py-2 mb-4 ml-4 text-white bg-gray-500 rounded hover:bg-gray-600"
         >
           Cancelar
         </button>
@@ -108,17 +108,17 @@ export default function Clientes() {
         />
       )}
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto text-text">
         <table className="min-w-full text-sm text-left border border-border">
-          <thead className="bg-background text-text">
+          <thead className="bg-containers border-solid border-[1px] border-containers">
             <tr className="">
-              <th className="p-2 border">Empresa</th>
-              <th className="p-2 border">Representante</th>
-              <th className="p-2 border">Telefone</th>
-              <th className="p-2 border">Email</th>
-              <th className="p-2 border">Domínio</th>
-              <th className="p-2 border">Serviços</th>
-              <th className="p-2 border">Ações</th>
+              <th className="p-2 border border-containers">Empresa</th>
+              <th className="p-2 border border-containers">Representante</th>
+              <th className="p-2 border border-containers">Telefone</th>
+              <th className="p-2 border border-containers">Email</th>
+              <th className="p-2 border border-containers">Domínio</th>
+              <th className="p-2 border border-containers">Serviços</th>
+              <th className="p-2 border border-containers">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -130,21 +130,32 @@ export default function Clientes() {
               </tr>
             ) : clientesFiltrados.length > 0 ? (
               clientesFiltrados.map((cliente) => (
-                <tr key={cliente.id} className="hover:bg-gray-50">
-                  <td className="p-2 border">{cliente.empresa}</td>
-                  <td className="p-2 border">{cliente.representante}</td>
-                  <td className="p-2 border">{cliente.telefone}</td>
-                  <td className="p-2 border">{cliente.email}</td>
-                  <td className="p-2 border">{cliente.dominio}</td>
-                  <td className="p-2 border">
+                <tr
+                  key={cliente.id}
+                  className="hover:bg-[#2E2C33] border-border"
+                >
+                  <td className="p-2 border border-border">
+                    {cliente.empresa}
+                  </td>
+                  <td className="p-2 border border-border">
+                    {cliente.representante}
+                  </td>
+                  <td className="p-2 border border-border">
+                    {cliente.telefone}
+                  </td>
+                  <td className="p-2 border border-border">{cliente.email}</td>
+                  <td className="p-2 border border-border">
+                    {cliente.dominio}
+                  </td>
+                  <td className="p-2 border border-border">
                     {cliente.servicos?.length || 0} serviço(s)
-                    <ul className="pl-4 mt-1 text-xs text-gray-600 list-disc">
+                    <ul className="pl-4 mt-1 text-xs list-disc">
                       {cliente.servicos?.map((servico) => (
                         <li key={servico.id}>{servico.nome}</li>
                       ))}
                     </ul>
                   </td>
-                  <td className="p-2 space-x-2 border">
+                  <td className="p-2 space-x-2 border border-border">
                     <button
                       onClick={() => handleEdit(cliente)}
                       className="text-yellow-600 hover:underline"

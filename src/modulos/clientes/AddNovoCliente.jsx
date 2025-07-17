@@ -58,7 +58,7 @@ export default function AddNovoCliente({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
+      className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-background border-border text-text"
     >
       <div className="flex flex-col">
         <label className="mb-1 text-sm font-medium">Empresa / Site</label>
@@ -116,14 +116,14 @@ export default function AddNovoCliente({
       <div className="flex items-end">
         <button
           type="submit"
-          className="w-full px-4 py-2 text-white transition bg-buttons rounded hover:bg-buttonsHover"
+          className="w-full px-4 py-2 text-white transition rounded bg-buttons hover:bg-buttonsHover"
         >
           {form.id ? "Atualizar Cliente" : "Adicionar Cliente"}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="px-4 py-2 ml-2 bg-gray-300 rounded hover:bg-gray-400"
+          className="px-4 py-2 ml-2 rounded bg-secondaryButtons hover:bg-secondaryButtonsHover"
         >
           Cancelar
         </button>

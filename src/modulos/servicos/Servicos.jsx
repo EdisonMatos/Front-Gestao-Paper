@@ -106,7 +106,7 @@ export default function Servicos() {
             setServicoParaEditar(null);
             setShowForm(true);
           }}
-          className="px-4 py-2 mb-4 ml-4 text-white transition bg-buttons rounded hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 ml-4 text-white transition rounded bg-buttons hover:bg-buttonsHover"
         >
           Adicionar novo serviço
         </button>
@@ -124,17 +124,17 @@ export default function Servicos() {
       )}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left border">
-          <thead className="bg-gray-100">
+        <table className="min-w-full text-sm text-left border border-border">
+          <thead className="bg-containers border-solid border-[1px] border-containers text-text">
             <tr>
-              <th className="p-2 border">Nome</th>
-              <th className="p-2 border">Empresa</th>
-              <th className="p-2 border">Turno</th>
-              <th className="p-2 border">Doc</th>
-              <th className="p-2 border">Prévia</th>
-              <th className="p-2 border">Datas</th>
-              <th className="p-2 border">Comentário</th>
-              <th className="p-2 border">Ações</th>
+              <th className="p-2 border border-containers">Nome</th>
+              <th className="p-2 border border-containers">Empresa</th>
+              <th className="p-2 border border-containers">Turno</th>
+              <th className="p-2 border border-containers">Doc</th>
+              <th className="p-2 border border-containers">Prévia</th>
+              <th className="p-2 border border-containers">Datas</th>
+              <th className="p-2 border border-containers">Comentário</th>
+              <th className="p-2 border border-containers">Ações</th>
             </tr>
           </thead>
           <tbody>
