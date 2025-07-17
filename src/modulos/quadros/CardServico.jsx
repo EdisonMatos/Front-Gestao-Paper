@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import AcoesCardServico from "./AcoesCardServico";
 
 export default function CardServico({ servico, provided, snapshot, turno }) {
   const [comentarios, setComentarios] = useState(servico.comentarios || []);
@@ -9,9 +10,6 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
-  const [acaoSelecionada, setAcaoSelecionada] = useState("");
-  const [setorSelecionado, setSetorSelecionado] = useState("");
-  const [comentarioDirecionar, setComentarioDirecionar] = useState("");
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
@@ -42,44 +40,6 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
     } catch (err) {
       console.error("Erro ao adicionar comentário:", err);
       alert("Erro ao adicionar comentário");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const direcionarServico = async () => {
-    if (!comentarioDirecionar.trim()) return alert("Comentário é obrigatório.");
-    if (!setorSelecionado) return alert("Setor é obrigatório.");
-
-    setLoading(true);
-    try {
-      await axios.post(
-        "https://backend-gestao-paper.onrender.com/comentarios",
-        {
-          servicoId: servico.id,
-          texto: comentarioDirecionar.trim(),
-          feitoPor: capitalizar(turno),
-          setor: turno,
-        }
-      );
-
-      await axios.put(
-        `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
-        {
-          ...servico,
-          turnoDaVez: setorSelecionado,
-          posicaoNoQuadro: "solicitado",
-        }
-      );
-
-      setMostrarDirecionar(false);
-      setAcaoSelecionada("");
-      setSetorSelecionado("");
-      setComentarioDirecionar("");
-      alert("Serviço direcionado com sucesso!");
-    } catch (err) {
-      console.error("Erro ao direcionar:", err);
-      alert("Erro ao direcionar serviço.");
     } finally {
       setLoading(false);
     }
@@ -234,66 +194,17 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
               onClick={() => setMostrarDirecionar((prev) => !prev)}
               className="text-links hover:underline"
             >
-              {mostrarDirecionar ? "-" : "+"}
+              {mostrarDirecionar ? "Ocultar Ações" : "Ações"}
             </button>
           </div>
 
           {mostrarDirecionar && (
-            <div className="mb-2 space-y-2 text-sm">
-              <select
-                value={acaoSelecionada}
-                onChange={(e) => setAcaoSelecionada(e.target.value)}
-                className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-              >
-                <option value="">Selecione a ação:</option>
-                <option value="direcionar">Direcionar</option>
-              </select>
-
-              {acaoSelecionada === "direcionar" && (
-                <>
-                  <select
-                    value={setorSelecionado}
-                    onChange={(e) => setSetorSelecionado(e.target.value)}
-                    className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-                  >
-                    <option value="">Selecione o setor:</option>
-                    <option value="suporte">Suporte</option>
-                    <option value="dev">Dev</option>
-                    <option value="webmaster">Webmaster</option>
-                    <option value="feedbacks">Feedbacks</option>
-                  </select>
-
-                  <input
-                    type="text"
-                    value={comentarioDirecionar}
-                    onChange={(e) => setComentarioDirecionar(e.target.value)}
-                    placeholder="Adicione um comentário (campo obrigatório)"
-                    className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-                  />
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={direcionarServico}
-                      disabled={loading}
-                      className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
-                    >
-                      {loading ? "Enviando..." : "Direcionar"}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setMostrarDirecionar(false);
-                        setAcaoSelecionada("");
-                        setSetorSelecionado("");
-                        setComentarioDirecionar("");
-                      }}
-                      className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+            <AcoesCardServico
+              servico={servico}
+              turno={turno}
+              capitalizar={capitalizar}
+              onFechar={() => setMostrarDirecionar(false)}
+            />
           )}
 
           {!adicionandoComentario && (
@@ -336,7 +247,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           )}
 
           <div className="mt-0">
-            {comentarioMaisRecente ? (
+            {comentarioMaisRecente && (
               <div
                 className="pt-2 text-sm border-t-2 border-border text-text"
                 style={estiloFonte}
@@ -350,8 +261,6 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                   {formatarDataHora(comentarioMaisRecente.criadoEm)}
                 </p>
               </div>
-            ) : (
-              <p></p>
             )}
 
             {comentariosRestantes.length > 0 && (
