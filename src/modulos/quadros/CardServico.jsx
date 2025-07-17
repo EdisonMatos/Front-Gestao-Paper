@@ -137,7 +137,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 Doc
               </a>
             ) : (
-              <span className="text-gray-400 cursor-default">Doc</span>
+              <span className="cursor-default text-text opacity-40">Doc</span>
             )}
 
             {previaDisponivel ? (
@@ -150,7 +150,9 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 Prévia
               </a>
             ) : (
-              <span className="cursor-default text-text">Prévia</span>
+              <span className="cursor-default text-text opacity-40">
+                Prévia
+              </span>
             )}
           </div>
 
