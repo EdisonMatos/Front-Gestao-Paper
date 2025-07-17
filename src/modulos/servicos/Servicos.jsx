@@ -90,14 +90,14 @@ export default function Servicos() {
   return (
     <div className="p-6">
       <ToastContainer />
-      <h2 className="mb-4 text-2xl font-bold">Gestão de Serviços</h2>
+      <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Serviços</h2>
 
       <input
         type="text"
         placeholder="Pesquisar por serviço ou empresa..."
         value={filtro}
         onChange={(e) => setFiltro(e.target.value)}
-        className="w-full p-2 mb-4 border rounded md:w-1/2"
+        className="w-full p-2 mb-4 border rounded md:w-1/4 bg-inputBg text-placeholder border-border"
       />
 
       {!showForm && (
@@ -106,7 +106,7 @@ export default function Servicos() {
             setServicoParaEditar(null);
             setShowForm(true);
           }}
-          className="px-4 py-2 mb-4 text-white transition bg-yellow-600 rounded hover:bg-yellow-700"
+          className="px-4 py-2 mb-4 ml-4 text-white transition bg-buttons rounded hover:bg-buttonsHover"
         >
           Adicionar novo serviço
         </button>
@@ -158,7 +158,7 @@ export default function Servicos() {
                       href={servico.linkDoc}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 hover:underline"
+                      className="text-links hover:underline"
                     >
                       Doc
                     </a>
@@ -168,7 +168,7 @@ export default function Servicos() {
                       href={servico.linkPreviaVercel}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 hover:underline"
+                      className="text-links hover:underline"
                     >
                       Prévia
                     </a>
@@ -205,7 +205,7 @@ export default function Servicos() {
                   <td className="p-2 space-x-2 border">
                     <button
                       onClick={() => handleEdit(servico)}
-                      className="text-blue-600 hover:underline"
+                      className="text-links hover:underline"
                     >
                       Editar
                     </button>

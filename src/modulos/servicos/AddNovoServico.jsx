@@ -128,7 +128,7 @@ export default function AddNovoServico({
           value={form.nome}
           onChange={handleChange}
           required
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -146,7 +146,7 @@ export default function AddNovoServico({
             }));
           }}
           required
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
           placeholder="Digite o nome da empresa ou representante"
         />
         {sugestoesClientes.length > 0 && (
@@ -195,7 +195,7 @@ export default function AddNovoServico({
           value={form.dataContratacao}
           onChange={handleChange}
           required
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -206,7 +206,7 @@ export default function AddNovoServico({
           name="linkDoc"
           value={form.linkDoc}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -216,7 +216,7 @@ export default function AddNovoServico({
           name="linkPreviaVercel"
           value={form.linkPreviaVercel}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -229,7 +229,7 @@ export default function AddNovoServico({
           name="dataInfosColetadas"
           value={form.dataInfosColetadas}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -242,7 +242,7 @@ export default function AddNovoServico({
           name="dataDocPronto"
           value={form.dataDocPronto}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -255,7 +255,7 @@ export default function AddNovoServico({
           name="dataEnvioPrevia"
           value={form.dataEnvioPrevia}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -266,7 +266,7 @@ export default function AddNovoServico({
           name="dataConclusao"
           value={form.dataConclusao}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -279,7 +279,7 @@ export default function AddNovoServico({
           name="dataProximoPrazo"
           value={form.dataProximoPrazo}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 

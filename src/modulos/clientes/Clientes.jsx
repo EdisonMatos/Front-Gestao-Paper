@@ -73,18 +73,18 @@ export default function Clientes() {
   return (
     <div className="p-6">
       <ToastContainer />
-      <h2 className="mb-4 text-2xl font-bold">Gestão de Clientes</h2>
+      <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Clientes</h2>
       <input
         type="text"
         placeholder="Pesquisar por empresa ou representante..."
         value={filtro}
         onChange={(e) => setFiltro(e.target.value)}
-        className="w-full p-2 mb-4 border rounded md:w-1/2"
+        className="w-full p-2 mb-4 border rounded md:w-1/4 bg-inputBg text-placeholder border-border"
       />
       {!showForm ? (
         <button
           onClick={handleAdicionarNovo}
-          className="px-4 py-2 mb-4 text-white bg-yellow-600 rounded hover:bg-yellow-700"
+          className="px-4 py-2 mb-4 ml-4 text-white bg-buttons rounded hover:bg-buttonsHover"
         >
           Adicionar novo cliente
         </button>
@@ -109,9 +109,9 @@ export default function Clientes() {
       )}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left border">
-          <thead className="bg-gray-100">
-            <tr>
+        <table className="min-w-full text-sm text-left border border-border">
+          <thead className="bg-background text-text">
+            <tr className="">
               <th className="p-2 border">Empresa</th>
               <th className="p-2 border">Representante</th>
               <th className="p-2 border">Telefone</th>

@@ -67,7 +67,7 @@ export default function AddNovoCliente({
           value={form.empresa}
           onChange={handleChange}
           required
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -78,7 +78,7 @@ export default function AddNovoCliente({
           value={form.representante}
           onChange={handleChange}
           required
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -88,7 +88,7 @@ export default function AddNovoCliente({
           name="telefone"
           value={form.telefone}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -99,7 +99,7 @@ export default function AddNovoCliente({
           type="email"
           value={form.email}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
@@ -109,14 +109,14 @@ export default function AddNovoCliente({
           name="dominio"
           value={form.dominio}
           onChange={handleChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
 
       <div className="flex items-end">
         <button
           type="submit"
-          className="w-full px-4 py-2 text-white transition bg-yellow-600 rounded hover:bg-yellow-700"
+          className="w-full px-4 py-2 text-white transition bg-buttons rounded hover:bg-buttonsHover"
         >
           {form.id ? "Atualizar Cliente" : "Adicionar Cliente"}
         </button>

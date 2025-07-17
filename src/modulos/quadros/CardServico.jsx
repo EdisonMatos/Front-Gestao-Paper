@@ -69,7 +69,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      className={`bg-white rounded p-3 mb-2 shadow ${
+      className={`bg-cards rounded-2xl p-5 mb-2 shadow ${
         snapshot.isDragging ? "scale-105" : ""
       }`}
       // Removi o style daqui para não quebrar o drag
@@ -80,7 +80,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             className="flex items-center justify-between"
             style={estiloFonte}
           >
-            <h3 className="font-semibold">{servico.nome}</h3>
+            <h3 className="font-semibold text-text">{servico.nome}</h3>
             <p className="text-gray-600">
               {servico.cliente?.empresa || "Sem empresa"}
             </p>
@@ -104,7 +104,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
 
           <button
             onClick={() => setMostrarCompleto(true)}
-            className="mt-2 text-blue-600 hover:underline"
+            className="mt-2 text-links hover:underline"
             style={estiloFonte}
           >
             Mostrar card completo
@@ -112,7 +112,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
         </>
       ) : (
         <>
-          <h3 className="font-semibold" style={estiloFonte}>
+          <h3 className="font-semibold text-text" style={estiloFonte}>
             {servico.nome}
           </h3>
           <p className="text-sm text-gray-600" style={estiloFonte}>
@@ -129,7 +129,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 href={servico.linkDoc}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-links hover:underline"
               >
                 Doc
               </a>
@@ -142,7 +142,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 href={servico.linkPreviaVercel}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-links hover:underline"
               >
                 Prévia
               </a>
@@ -154,7 +154,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           {!adicionandoComentario && (
             <button
               onClick={() => setAdicionandoComentario(true)}
-              className="mb-2 text-sm text-blue-600 hover:underline"
+              className="mb-2 text-sm text-links hover:underline"
             >
               Adicionar comentário
             </button>
@@ -166,7 +166,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 type="text"
                 value={novoComentario}
                 onChange={(e) => setNovoComentario(e.target.value)}
-                className="w-full p-1 mb-1 text-sm border rounded"
+                className="w-full p-1 mb-1 text-sm border rounded bg-inputBg text-placeholder border-border"
                 placeholder="Digite seu comentário..."
               />
               <div className="flex gap-2 mt-1">
@@ -213,7 +213,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 {!mostrarTodos ? (
                   <button
                     onClick={() => setMostrarTodos(true)}
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-links hover:underline"
                     style={estiloFonte}
                   >
                     Ver todos
@@ -239,7 +239,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                     </ul>
                     <button
                       onClick={() => setMostrarTodos(false)}
-                      className="mt-2 text-sm text-blue-600 hover:underline"
+                      className="mt-2 text-sm text-links hover:underline"
                       style={estiloFonte}
                     >
                       Ocultar
@@ -253,7 +253,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           {servico.posicaoNoQuadro === "aguardandoCliente" && (
             <button
               onClick={() => setMostrarCompleto(false)}
-              className="mt-4 text-sm text-blue-600 hover:underline"
+              className="mt-4 text-sm text-links hover:underline"
             >
               Ocultar
             </button>

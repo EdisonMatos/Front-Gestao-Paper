@@ -180,7 +180,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
   return (
     <div className="p-6">
-      <h2 className="mb-4 text-2xl font-bold">{titulo}</h2>
+      <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
       <div className="relative flex gap-4 p-4 min-h-[500px]">
         <ToastContainer position="top-right" autoClose={3000} />
         <DragDropContext onDragEnd={onDragEnd}>
@@ -190,9 +190,9 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="min-w-[250px] bg-gray-100 p-2 rounded shadow-md"
+                  className="min-w-[250px] bg-containers p-3 rounded-2xl shadow-md"
                 >
-                  <h2 className="mb-2 font-bold text-center">{nome}</h2>
+                  <h2 className="px-2 py-4 mb-2 text-left text-text">{nome}</h2>
                   {servicos[key].map((servico, index) => {
                     const comentario = obterComentarioMaisRecente(servico);
                     return (

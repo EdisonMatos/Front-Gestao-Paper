@@ -8,14 +8,16 @@ import Servicos from "./modulos/servicos/Servicos";
 
 function App() {
   return (
-    <div className="flex flex-col max-w-[1400px] ">
-      <Clientes />
-      <Servicos />
-      {/* <Feedbacks /> */}
-      <QuadroSuporte />
-      <QuadroDev />
-      <QuadroWebmaster />
-      <QuadroFeedbacks />
+    <div className="bg-background font-mainFont">
+      <div className="flex flex-col max-w-[1400px] ">
+        <Clientes />
+        <Servicos />
+        {/* <Feedbacks /> */}
+        <QuadroSuporte />
+        <QuadroDev />
+        <QuadroWebmaster />
+        <QuadroFeedbacks />
+      </div>
     </div>
   );
 }
