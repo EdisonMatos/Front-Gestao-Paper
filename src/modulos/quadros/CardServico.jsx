@@ -61,6 +61,51 @@ export default function CardServico({
     return `${dia}/${mes}/${ano} às ${hora}:${min}h`;
   };
 
+  const formatarDataPrazo = (dataPrazoISO) => {
+    if (!dataPrazoISO) {
+      return <span className="text-green-500">Sem prazo</span>;
+    }
+
+    const hoje = new Date();
+    const prazo = new Date(dataPrazoISO);
+
+    const diffMs = prazo.setHours(0, 0, 0, 0) - hoje.setHours(0, 0, 0, 0);
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    const dataFormatada = `${String(prazo.getDate()).padStart(2, "0")}/${String(
+      prazo.getMonth() + 1
+    ).padStart(2, "0")}/${prazo.getFullYear()}`;
+
+    if (diffDias === 0) {
+      return (
+        <>
+          {dataFormatada} (
+          <span className="font-semibold text-red-500">Hoje</span>)
+        </>
+      );
+    } else if (diffDias === 1) {
+      return (
+        <>
+          {dataFormatada} (
+          <span className="font-semibold text-yellow-300">Amanhã</span>)
+        </>
+      );
+    } else if ([2, 3].includes(diffDias)) {
+      return (
+        <>
+          {dataFormatada} (
+          <span className="font-semibold text-yellow-700">Breve</span>)
+        </>
+      );
+    } else {
+      return (
+        <>
+          {dataFormatada} ({diffDias} dias)
+        </>
+      );
+    }
+  };
+
   const comentariosOrdenados = [...comentarios].sort(
     (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
   );
@@ -147,6 +192,10 @@ export default function CardServico({
             ) : (
               servico.cliente?.representante || "Sem representante"
             )}
+          </p>
+
+          <p className="mt-2 text-sm text-text" style={estiloFonte}>
+            {formatarDataPrazo(servico.dataProximoPrazo)}
           </p>
 
           <div
