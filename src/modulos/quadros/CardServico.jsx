@@ -65,7 +65,11 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const modoCompacto =
     servico.posicaoNoQuadro === "aguardandoCliente" && !mostrarCompleto;
 
-  const estiloFonte = modoCompacto ? { fontSize: "12px" } : {};
+  const modoSuperCompacto =
+    servico.posicaoNoQuadro === "solicitado" && !mostrarCompleto;
+
+  const estiloFonte =
+    modoCompacto || modoSuperCompacto ? { fontSize: "12px" } : {};
 
   const formatarTelefoneParaWhatsApp = (telefone) => {
     return telefone.replace(/\D/g, "");
@@ -80,36 +84,33 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
         snapshot.isDragging ? "scale-105" : ""
       }`}
     >
-      {modoCompacto ? (
+      {modoCompacto || modoSuperCompacto ? (
         <>
-          <div
-            className="flex items-center justify-between"
-            style={estiloFonte}
-          >
-            <h3 className="font-semibold text-text">{servico.nome}</h3>
-            <p className="text-text">
-              {servico.cliente?.empresa || "Sem empresa"}
-            </p>
+          <div className="text-text" style={estiloFonte}>
+            <h3 className="font-semibold">{servico.nome}</h3>
+            <p>{servico.cliente?.empresa || "Sem empresa"}</p>
           </div>
 
-          <div
-            className="pt-2 border-t-2 border-border text-text"
-            style={estiloFonte}
-          >
-            {comentarioMaisRecente ? (
-              <>
-                <p>{comentarioMaisRecente.texto}</p>
-                <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
-                  {capitalizar(comentarioMaisRecente.setor)} -{" "}
-                  {formatarDataHora(comentarioMaisRecente.criadoEm)}
+          {!modoSuperCompacto && (
+            <div
+              className="pt-2 border-t-2 border-border text-text"
+              style={estiloFonte}
+            >
+              {comentarioMaisRecente ? (
+                <>
+                  <p>{comentarioMaisRecente.texto}</p>
+                  <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
+                    {capitalizar(comentarioMaisRecente.setor)} -{" "}
+                    {formatarDataHora(comentarioMaisRecente.criadoEm)}
+                  </p>
+                </>
+              ) : (
+                <p className="italic text-text" style={estiloFonte}>
+                  Sem comentários ainda.
                 </p>
-              </>
-            ) : (
-              <p className="italic text-text" style={estiloFonte}>
-                Sem comentários ainda.
-              </p>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           <button
             onClick={() => setMostrarCompleto(true)}
@@ -308,7 +309,8 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             )}
           </div>
 
-          {servico.posicaoNoQuadro === "aguardandoCliente" && (
+          {(servico.posicaoNoQuadro === "aguardandoCliente" ||
+            servico.posicaoNoQuadro === "solicitado") && (
             <button
               onClick={() => setMostrarCompleto(false)}
               className="mt-4 text-sm text-links hover:underline"
