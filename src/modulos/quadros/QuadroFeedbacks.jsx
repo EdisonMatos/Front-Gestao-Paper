@@ -6,7 +6,7 @@ export default function QuadroFeedbacks() {
     solicitado: "Solicitado",
     emMaos: "Em mãos",
     postado: "Postado",
-    concluido: "Concluído",
+    finalizado: "Finalizado",
   };
 
   return (

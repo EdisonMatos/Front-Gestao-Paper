@@ -6,7 +6,7 @@ export default function QuadroDev() {
     pausadas: "Pausadas",
     urgentes: "Urgentes",
     emProgresso: "Em Progresso",
-    concluido: "Concluído",
+    emRevisao: "Em revisão",
   };
 
   return (
