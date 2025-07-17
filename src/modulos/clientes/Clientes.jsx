@@ -161,12 +161,12 @@ export default function Clientes() {
                     >
                       Editar
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleDelete(cliente.id)}
                       className="text-red-600 hover:underline"
                     >
                       Excluir
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))
