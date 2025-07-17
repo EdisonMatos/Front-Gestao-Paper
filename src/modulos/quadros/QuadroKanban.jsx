@@ -105,55 +105,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       return;
     }
 
-    if (destino === "concluido") {
-      const opcoes = opcoesSetores.filter(
-        (setor) => setor !== itemMovido.turnoDaVez
-      );
-
-      const escolha = window.prompt(
-        `Para qual setor você quer mover agora que foi concluído?\nOpções: ${opcoes.join(
-          ", "
-        )}`
-      );
-
-      if (!escolha || !opcoes.includes(escolha)) {
-        alert("Setor inválido ou operação cancelada.");
-        return;
-      }
-
-      try {
-        const loadingToastId = toast.loading("Direcionando serviço...");
-
-        await axios.put(
-          `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
-          {
-            turnoDaVez: escolha,
-            posicaoNoQuadro: null,
-          }
-        );
-
-        await carregarServicos();
-
-        toast.update(loadingToastId, {
-          render: "Serviço concluído e direcionado com sucesso!",
-          type: "success",
-          isLoading: false,
-          autoClose: 1500,
-          closeButton: true,
-        });
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } catch (error) {
-        console.error("Erro ao atualizar serviço:", error);
-        toast.dismiss();
-        toast.error("Erro ao atualizar serviço", { autoClose: 1500 });
-      }
-
-      return;
-    }
-
     try {
       const movingToastId = toast.loading("Movendo serviço...");
 

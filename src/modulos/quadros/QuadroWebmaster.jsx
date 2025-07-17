@@ -7,7 +7,6 @@ export default function QuadroWebmaster() {
     apontarDns: "Apontar DNS",
     criarEmailBlog: "Criar Email Blog",
     deploy: "Deploy",
-    concluido: "Concluído",
   };
 
   return (

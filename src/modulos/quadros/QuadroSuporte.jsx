@@ -8,7 +8,6 @@ export default function QuadroSuporte() {
     gerandoDoc: "Gerando Doc",
     aguardandoCliente: "Aguardando Cliente",
     revisar: "Revisar",
-    concluido: "Concluído",
   };
 
   return (

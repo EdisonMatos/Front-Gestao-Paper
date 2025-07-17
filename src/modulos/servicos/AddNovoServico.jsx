@@ -6,6 +6,22 @@ import { toast } from "react-toastify";
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
 const CLIENTES_URL = "https://backend-gestao-paper.onrender.com/clientes";
 
+// Função para converter ISO datetime para string yyyy-mm-dd para input type=date
+function toInputDateString(isoDate) {
+  if (!isoDate) return "";
+  const date = new Date(isoDate);
+  const timezoneOffset = date.getTimezoneOffset() * 60000;
+  const localISO = new Date(date.getTime() - timezoneOffset).toISOString();
+  return localISO.split("T")[0];
+}
+
+// Função para converter string yyyy-mm-dd do input para objeto Date local
+function fromInputDateString(dateStr) {
+  if (!dateStr) return null;
+  const [year, month, day] = dateStr.split("-");
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
 export default function AddNovoServico({
   servicoParaEditar = null,
   onSalvo,
@@ -45,22 +61,22 @@ export default function AddNovoServico({
         turnoDaVez: servicoParaEditar.turnoDaVez || "",
         comentariosTexto: servicoParaEditar.comentariosTexto || "",
         dataContratacao: servicoParaEditar.dataContratacao
-          ? servicoParaEditar.dataContratacao.substring(0, 10)
+          ? toInputDateString(servicoParaEditar.dataContratacao)
           : "",
         dataInfosColetadas: servicoParaEditar.dataInfosColetadas
-          ? servicoParaEditar.dataInfosColetadas.substring(0, 10)
+          ? toInputDateString(servicoParaEditar.dataInfosColetadas)
           : "",
         dataDocPronto: servicoParaEditar.dataDocPronto
-          ? servicoParaEditar.dataDocPronto.substring(0, 10)
+          ? toInputDateString(servicoParaEditar.dataDocPronto)
           : "",
         dataEnvioPrevia: servicoParaEditar.dataEnvioPrevia
-          ? servicoParaEditar.dataEnvioPrevia.substring(0, 10)
+          ? toInputDateString(servicoParaEditar.dataEnvioPrevia)
           : "",
         dataConclusao: servicoParaEditar.dataConclusao
-          ? servicoParaEditar.dataConclusao.substring(0, 10)
+          ? toInputDateString(servicoParaEditar.dataConclusao)
           : "",
         dataProximoPrazo: servicoParaEditar.dataProximoPrazo
-          ? servicoParaEditar.dataProximoPrazo.substring(0, 10)
+          ? toInputDateString(servicoParaEditar.dataProximoPrazo)
           : "",
       });
       setClienteBusca(servicoParaEditar.cliente?.empresa || "");
@@ -102,6 +118,15 @@ export default function AddNovoServico({
 
     try {
       const payload = { ...form };
+
+      // Converter as datas para objetos Date antes de enviar
+      payload.dataContratacao = fromInputDateString(form.dataContratacao);
+      payload.dataInfosColetadas = fromInputDateString(form.dataInfosColetadas);
+      payload.dataDocPronto = fromInputDateString(form.dataDocPronto);
+      payload.dataEnvioPrevia = fromInputDateString(form.dataEnvioPrevia);
+      payload.dataConclusao = fromInputDateString(form.dataConclusao);
+      payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
+
       delete payload.clienteNome;
 
       if (form.id) {

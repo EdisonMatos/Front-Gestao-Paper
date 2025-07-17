@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import AcoesCardServico from "./AcoesCardServico";
 
 export default function CardServico({ servico, provided, snapshot, turno }) {
   const [comentarios, setComentarios] = useState(servico.comentarios || []);
@@ -8,6 +9,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const [loading, setLoading] = useState(false);
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
+  const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
@@ -143,7 +145,10 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             )}
           </p>
 
-          <div className="flex gap-2 mt-2 mb-2 text-sm" style={estiloFonte}>
+          <div
+            className="flex items-center gap-2 mt-2 mb-2 text-sm"
+            style={estiloFonte}
+          >
             {docDisponivel ? (
               <a
                 href={servico.linkDoc}
@@ -184,7 +189,23 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             ) : (
               <span className="cursor-default text-text opacity-40">Git</span>
             )}
+
+            <button
+              onClick={() => setMostrarDirecionar((prev) => !prev)}
+              className="text-links hover:underline"
+            >
+              {mostrarDirecionar ? "Ocultar Ações" : "Ações"}
+            </button>
           </div>
+
+          {mostrarDirecionar && (
+            <AcoesCardServico
+              servico={servico}
+              turno={turno}
+              capitalizar={capitalizar}
+              onFechar={() => setMostrarDirecionar(false)}
+            />
+          )}
 
           {!adicionandoComentario && (
             <button
@@ -226,7 +247,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           )}
 
           <div className="mt-0">
-            {comentarioMaisRecente ? (
+            {comentarioMaisRecente && (
               <div
                 className="pt-2 text-sm border-t-2 border-border text-text"
                 style={estiloFonte}
@@ -240,8 +261,6 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                   {formatarDataHora(comentarioMaisRecente.criadoEm)}
                 </p>
               </div>
-            ) : (
-              <p></p>
             )}
 
             {comentariosRestantes.length > 0 && (
