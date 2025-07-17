@@ -11,6 +11,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
+  const repoDisponivel = !!servico.linkRepoGithub;
 
   const capitalizar = (texto) =>
     texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
@@ -169,6 +170,19 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
               <span className="cursor-default text-text opacity-40">
                 Prévia
               </span>
+            )}
+
+            {repoDisponivel ? (
+              <a
+                href={servico.linkRepoGithub}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-links hover:underline"
+              >
+                Git
+              </a>
+            ) : (
+              <span className="cursor-default text-text opacity-40">Git</span>
             )}
           </div>
 

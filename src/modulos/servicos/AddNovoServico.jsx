@@ -18,6 +18,7 @@ export default function AddNovoServico({
     clienteNome: "",
     linkDoc: "",
     linkPreviaVercel: "",
+    linkRepoGithub: "", // novo campo adicionado aqui
     turnoDaVez: "",
     comentariosTexto: "", // ainda presente no state
     dataContratacao: "",
@@ -40,6 +41,7 @@ export default function AddNovoServico({
         clienteNome: servicoParaEditar.cliente?.empresa || "",
         linkDoc: servicoParaEditar.linkDoc || "",
         linkPreviaVercel: servicoParaEditar.linkPreviaVercel || "",
+        linkRepoGithub: servicoParaEditar.linkRepoGithub || "", // atribuição do valor
         turnoDaVez: servicoParaEditar.turnoDaVez || "",
         comentariosTexto: servicoParaEditar.comentariosTexto || "",
         dataContratacao: servicoParaEditar.dataContratacao
@@ -215,6 +217,19 @@ export default function AddNovoServico({
         <input
           name="linkPreviaVercel"
           value={form.linkPreviaVercel}
+          onChange={handleChange}
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
+        />
+      </div>
+
+      {/* Novo campo para link do repositório GitHub */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-sm font-medium">
+          Link do Repositório Github
+        </label>
+        <input
+          name="linkRepoGithub"
+          value={form.linkRepoGithub}
           onChange={handleChange}
           className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
