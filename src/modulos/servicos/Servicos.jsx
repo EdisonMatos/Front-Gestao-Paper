@@ -123,7 +123,7 @@ export default function Servicos() {
         />
       )}
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto text-text">
         <table className="min-w-full text-sm text-left border border-border">
           <thead className="bg-containers border-solid border-[1px] border-containers text-text">
             <tr>
@@ -147,13 +147,15 @@ export default function Servicos() {
               </tr>
             ) : servicosFiltrados.length > 0 ? (
               servicosFiltrados.map((servico) => (
-                <tr key={servico.id} className="hover:bg-gray-50">
-                  <td className="p-2 border">{servico.nome}</td>
-                  <td className="p-2 border">
+                <tr key={servico.id} className="hover:bg-[#2E2C33] ">
+                  <td className="p-2 border border-border">{servico.nome}</td>
+                  <td className="p-2 border border-border">
                     {servico.cliente?.empresa || "Sem cliente"}
                   </td>
-                  <td className="p-2 border">{servico.turnoDaVez}</td>
-                  <td className="p-2 border">
+                  <td className="p-2 border border-border">
+                    {servico.turnoDaVez}
+                  </td>
+                  <td className="p-2 border border-border">
                     <a
                       href={servico.linkDoc}
                       target="_blank"
@@ -163,7 +165,7 @@ export default function Servicos() {
                       Doc
                     </a>
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 border border-border">
                     <a
                       href={servico.linkPreviaVercel}
                       target="_blank"
@@ -173,7 +175,7 @@ export default function Servicos() {
                       Prévia
                     </a>
                   </td>
-                  <td className="p-2 text-xs border">
+                  <td className="p-2 text-xs border border-border">
                     <div>
                       <strong>Contratação:</strong>{" "}
                       {formatDate(servico.dataContratacao)}
@@ -199,10 +201,10 @@ export default function Servicos() {
                       {formatDate(servico.dataProximoPrazo)}
                     </div>
                   </td>
-                  <td className="p-2 text-xs text-gray-600 border">
+                  <td className="p-2 text-xs text-gray-600 border border-border">
                     {servico.comentariosTexto}
                   </td>
-                  <td className="p-2 space-x-2 border">
+                  <td className="p-2 space-x-2 border border-border">
                     <button
                       onClick={() => handleEdit(servico)}
                       className="text-links hover:underline"

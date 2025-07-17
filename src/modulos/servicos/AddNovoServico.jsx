@@ -119,7 +119,7 @@ export default function AddNovoServico({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded md:grid-cols-3 bg-gray-50"
+      className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded border-border md:grid-cols-3 bg-containers text-text"
     >
       <div className="flex flex-col">
         <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
@@ -150,7 +150,7 @@ export default function AddNovoServico({
           placeholder="Digite o nome da empresa ou representante"
         />
         {sugestoesClientes.length > 0 && (
-          <ul className="absolute z-10 w-full bg-white border rounded shadow">
+          <ul className="absolute z-10 w-full border rounded shadow bg-background">
             {sugestoesClientes.map((cliente) => (
               <li
                 key={cliente.id}
@@ -162,7 +162,7 @@ export default function AddNovoServico({
                   }));
                   setSugestoesClientes([]);
                 }}
-                className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                className="px-2 py-1 cursor-pointer hover:bg-inputBg"
               >
                 {cliente.empresa} | {cliente.representante}
               </li>
@@ -178,7 +178,7 @@ export default function AddNovoServico({
           value={form.turnoDaVez}
           onChange={handleChange}
           required
-          className="p-2 border rounded"
+          className="p-2 border rounded text-placeholder bg-inputBg"
         >
           <option value="">Selecione</option>
           <option value="dev">Dev</option>
@@ -286,14 +286,14 @@ export default function AddNovoServico({
       <div className="flex col-span-1 gap-4 md:col-span-3">
         <button
           type="submit"
-          className="p-2 text-white transition bg-blue-600 rounded hover:bg-blue-700"
+          className="p-2 text-white transition rounded bg-buttons hover:bg-buttonsHover"
         >
           {form.id ? "Atualizar Serviço" : "Adicionar Serviço"}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="p-2 text-black transition bg-gray-300 rounded hover:bg-gray-400"
+          className="p-2 text-white transition rounded bg-secondaryButtons hover:bg-secondaryButtonsHover"
         >
           Cancelar
         </button>

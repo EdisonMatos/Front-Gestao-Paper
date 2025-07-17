@@ -158,7 +158,7 @@ export default function Clientes() {
                   <td className="p-2 space-x-2 border border-border">
                     <button
                       onClick={() => handleEdit(cliente)}
-                      className="text-yellow-600 hover:underline"
+                      className="text-links hover:underline"
                     >
                       Editar
                     </button>

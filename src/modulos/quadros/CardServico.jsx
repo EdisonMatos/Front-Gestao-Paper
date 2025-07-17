@@ -156,7 +156,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
               onClick={() => setAdicionandoComentario(true)}
               className="mb-2 text-sm text-links hover:underline"
             >
-              Adicionar comentário
+              Comentar
             </button>
           )}
 
@@ -173,7 +173,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 <button
                   onClick={adicionarComentario}
                   disabled={loading}
-                  className="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                  className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
                 >
                   {loading ? "Adicionando..." : "Adicionar"}
                 </button>
