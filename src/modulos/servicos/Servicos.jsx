@@ -31,7 +31,8 @@ export default function Servicos() {
     .filter(
       (s) =>
         s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-        s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase())
+        s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase()) ||
+        s.cliente?.representante?.toLowerCase().includes(filtro.toLowerCase())
     )
     .slice(0, 3);
 
