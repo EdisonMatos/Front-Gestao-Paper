@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import AddNovoServico from "./AddNovoServico"; // import novo componente
 import "react-toastify/dist/ReactToastify.css";
 
@@ -89,7 +89,6 @@ export default function Servicos() {
 
   return (
     <div className="p-6">
-      <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Serviços</h2>
 
       <input

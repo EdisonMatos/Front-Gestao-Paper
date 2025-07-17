@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
@@ -58,7 +58,6 @@ export default function Feedbacks() {
 
   return (
     <div className="p-6">
-      <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold text-text">
         Feedbacks dos Serviços
       </h2>
@@ -135,7 +134,7 @@ export default function Feedbacks() {
                 <td className="p-2 text-center border">
                   <button
                     onClick={() => handleSave(s)}
-                    className="px-2 py-1 text-white bg-buttons rounded hover:bg-buttons"
+                    className="px-2 py-1 text-white rounded bg-buttons hover:bg-buttons"
                   >
                     Salvar
                   </button>

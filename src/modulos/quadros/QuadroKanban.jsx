@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardServico from "./CardServico";
 
@@ -70,9 +70,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     const destino = destination.droppableId;
     const itemMovido = servicos[origem][source.index];
 
-    // Removido toast.loading aqui
-    // const toastId = toast.loading("Atualizando quadro...");
-
     if (origem === destino) {
       const novaLista = Array.from(servicos[origem]);
       const [movido] = novaLista.splice(source.index, 1);
@@ -121,7 +118,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       );
 
       if (!escolha || !opcoes.includes(escolha)) {
-        // toast.dismiss(toastId); removido
         alert("Setor inválido ou operação cancelada.");
         return;
       }
@@ -140,7 +136,9 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         toast.success("Serviço concluído e direcionado com sucesso!", {
           autoClose: 1000,
         });
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch (error) {
         console.error("Erro ao atualizar serviço:", error);
         toast.error("Erro ao atualizar serviço", { autoClose: 1000 });
@@ -182,7 +180,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
       <div className="relative flex justify-between gap-4 gap py-4 min-h-[500px]">
-        <ToastContainer position="top-right" autoClose={3000} />
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(colunas).map(([key, nome]) => (
             <Droppable key={key} droppableId={key}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import AddNovoCliente from "./AddNovoCliente";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -72,7 +72,6 @@ export default function Clientes() {
 
   return (
     <div className="p-6">
-      <ToastContainer />
       <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Clientes</h2>
       <input
         type="text"
