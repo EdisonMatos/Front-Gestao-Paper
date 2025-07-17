@@ -3,14 +3,29 @@ export const content = ["./src/**/*.{js,jsx,ts,tsx}"];
 export const theme = {
   extend: {
     colors: {
-      primary: "#722630",
-      secondary: "#000000",
+      primary: "#722630", // destaque, botões, ações principais
+      secondary: "#000000", // uso estratégico em textos ou contornos
+      background: "#1A191E", // fundo geral
+      cards: "#1A191E", // cards e containers
+      containers: "#3B4048",
+      text: "#CECECE", // textos principais
+      textMuted: "#B0B0C0", // textos secundários, data, descrição etc.
+      border: "#3A3A4D", // bordas suaves
+      inputBg: "#212024", // fundo de inputs
+      placeholder: "#6C6C80", // placeholder dos campos
+      buttons: "#373770",
+      buttonsHover: "#242448", // hover do botão primário (versão mais clara do primary)
+      secondaryButtons: "#6B7280",
+      secondaryButtonsHover: "#4B5563",
+      links: "#8282DE", // links e interações
     },
     boxShadow: {
       "custom-opacity": "-20px 20px 0px",
       "custom-opacityButton": "-5px 5px 0px",
     },
-    fontFamily: {},
+    fontFamily: {
+      mainFont: ["Roboto", "sans-serif"],
+    },
     fontSize: {
       paragraph1: "0.625rem",
       paragraph2: "0.75rem",

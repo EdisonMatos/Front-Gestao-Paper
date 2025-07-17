@@ -69,7 +69,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      className={`bg-white rounded p-3 mb-2 shadow ${
+      className={`bg-cards rounded-2xl p-5 mb-2 shadow ${
         snapshot.isDragging ? "scale-105" : ""
       }`}
       // Removi o style daqui para não quebrar o drag
@@ -80,23 +80,26 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             className="flex items-center justify-between"
             style={estiloFonte}
           >
-            <h3 className="font-semibold">{servico.nome}</h3>
-            <p className="text-gray-600">
+            <h3 className="font-semibold text-text">{servico.nome}</h3>
+            <p className="text-text">
               {servico.cliente?.empresa || "Sem empresa"}
             </p>
           </div>
 
-          <div className="pt-2 text-gray-700 border-t" style={estiloFonte}>
+          <div
+            className="pt-2 border-t-2 border-border text-text"
+            style={estiloFonte}
+          >
             {comentarioMaisRecente ? (
               <>
                 <p>{comentarioMaisRecente.texto}</p>
-                <p className="mt-1 text-gray-500" style={{ fontSize: "12px" }}>
+                <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
                   {capitalizar(comentarioMaisRecente.setor)} -{" "}
                   {formatarDataHora(comentarioMaisRecente.criadoEm)}
                 </p>
               </>
             ) : (
-              <p className="italic text-gray-500" style={estiloFonte}>
+              <p className="italic text-text" style={estiloFonte}>
                 Sem comentários ainda.
               </p>
             )}
@@ -104,7 +107,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
 
           <button
             onClick={() => setMostrarCompleto(true)}
-            className="mt-2 text-blue-600 hover:underline"
+            className="mt-2 text-links hover:underline"
             style={estiloFonte}
           >
             Mostrar card completo
@@ -112,14 +115,14 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
         </>
       ) : (
         <>
-          <h3 className="font-semibold" style={estiloFonte}>
+          <h3 className="font-semibold text-text" style={estiloFonte}>
             {servico.nome}
           </h3>
-          <p className="text-sm text-gray-600" style={estiloFonte}>
+          <p className="text-sm text-text opacity-90" style={estiloFonte}>
             {servico.cliente?.empresa || "Sem empresa"}
           </p>
 
-          <p className="text-xs italic text-gray-500" style={estiloFonte}>
+          <p className="text-xs text-text opacity-70" style={estiloFonte}>
             {servico.cliente?.representante || "Sem representante"}
           </p>
 
@@ -129,7 +132,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 href={servico.linkDoc}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-links hover:underline"
               >
                 Doc
               </a>
@@ -142,21 +145,21 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 href={servico.linkPreviaVercel}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-links hover:underline"
               >
                 Prévia
               </a>
             ) : (
-              <span className="text-gray-400 cursor-default">Prévia</span>
+              <span className="cursor-default text-text">Prévia</span>
             )}
           </div>
 
           {!adicionandoComentario && (
             <button
               onClick={() => setAdicionandoComentario(true)}
-              className="mb-2 text-sm text-blue-600 hover:underline"
+              className="mb-2 text-sm text-links hover:underline"
             >
-              Adicionar comentário
+              Comentar
             </button>
           )}
 
@@ -166,14 +169,14 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 type="text"
                 value={novoComentario}
                 onChange={(e) => setNovoComentario(e.target.value)}
-                className="w-full p-1 mb-1 text-sm border rounded"
+                className="w-full p-1 mb-1 text-sm border rounded bg-inputBg text-placeholder border-border"
                 placeholder="Digite seu comentário..."
               />
               <div className="flex gap-2 mt-1">
                 <button
                   onClick={adicionarComentario}
                   disabled={loading}
-                  className="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                  className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
                 >
                   {loading ? "Adicionando..." : "Adicionar"}
                 </button>
@@ -190,22 +193,23 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             </div>
           )}
 
-          <div className="mt-3">
+          <div className="mt-0">
             {comentarioMaisRecente ? (
               <div
-                className="pt-2 text-sm text-gray-700 border-t"
+                className="pt-2 text-sm border-t-2 border-border text-text"
                 style={estiloFonte}
               >
                 <p>{comentarioMaisRecente.texto}</p>
-                <p className="mt-1 text-xs text-gray-500" style={estiloFonte}>
+                <p
+                  className="mt-1 text-xs text-text opacity-80"
+                  style={estiloFonte}
+                >
                   {capitalizar(comentarioMaisRecente.setor)} -{" "}
                   {formatarDataHora(comentarioMaisRecente.criadoEm)}
                 </p>
               </div>
             ) : (
-              <p className="text-sm italic text-gray-500" style={estiloFonte}>
-                Sem comentários ainda.
-              </p>
+              <p></p>
             )}
 
             {comentariosRestantes.length > 0 && (
@@ -213,7 +217,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 {!mostrarTodos ? (
                   <button
                     onClick={() => setMostrarTodos(true)}
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-links hover:underline"
                     style={estiloFonte}
                   >
                     Ver todos
@@ -221,14 +225,17 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 ) : (
                   <>
                     <ul
-                      className="mt-2 space-y-2 text-sm text-gray-700"
+                      className="mt-2 space-y-2 text-sm text-text"
                       style={estiloFonte}
                     >
                       {comentariosRestantes.map((comentario) => (
-                        <li key={comentario.id} className="pt-2 border-t">
+                        <li
+                          key={comentario.id}
+                          className="pt-2 border-t-2 border-border text-text"
+                        >
                           <p>{comentario.texto}</p>
                           <p
-                            className="mt-1 text-xs text-gray-500"
+                            className="mt-1 text-xs text-text"
                             style={estiloFonte}
                           >
                             {capitalizar(comentario.setor)} -{" "}
@@ -239,7 +246,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                     </ul>
                     <button
                       onClick={() => setMostrarTodos(false)}
-                      className="mt-2 text-sm text-blue-600 hover:underline"
+                      className="mt-2 text-sm text-links hover:underline"
                       style={estiloFonte}
                     >
                       Ocultar
@@ -253,7 +260,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           {servico.posicaoNoQuadro === "aguardandoCliente" && (
             <button
               onClick={() => setMostrarCompleto(false)}
-              className="mt-4 text-sm text-blue-600 hover:underline"
+              className="mt-4 text-sm text-links hover:underline"
             >
               Ocultar
             </button>

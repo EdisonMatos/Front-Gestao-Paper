@@ -2,20 +2,21 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardServico from "./CardServico";
+import SkeletonCard from "./SkeletonCard";
 
 const opcoesSetores = ["dev", "suporte", "webmaster", "feedbacks"];
 
 export default function QuadroKanban({ titulo, turno, colunas }) {
-  // Inicializa o estado com as chaves das colunas recebidas
   const [servicos, setServicos] = useState(
     Object.keys(colunas).reduce((acc, coluna) => {
       acc[coluna] = [];
       return acc;
     }, {})
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   async function carregarServicos() {
     try {
@@ -34,13 +35,11 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
       apenasDoTurno.forEach((servico) => {
         const pos = servico.posicaoNoQuadro;
-        // Se pos não existir ou não for uma coluna válida, joga no primeiro da lista (pode ser backlog ou o primeiro da prop)
         const colunaValida =
           pos && servicosOrganizados[pos] ? pos : Object.keys(colunas)[0];
         servicosOrganizados[colunaValida].push(servico);
       });
 
-      // Ordena por atualizadoEm em cada coluna
       Object.keys(servicosOrganizados).forEach((coluna) => {
         servicosOrganizados[coluna].sort(
           (a, b) => new Date(a.atualizadoEm) - new Date(b.atualizadoEm)
@@ -50,6 +49,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       setServicos(servicosOrganizados);
     } catch (err) {
       console.error("Erro ao carregar serviços:", err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -69,9 +70,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     const origem = source.droppableId;
     const destino = destination.droppableId;
     const itemMovido = servicos[origem][source.index];
-
-    // Removido toast.loading aqui
-    // const toastId = toast.loading("Atualizando quadro...");
 
     if (origem === destino) {
       const novaLista = Array.from(servicos[origem]);
@@ -98,7 +96,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         );
 
         await carregarServicos();
-
         toast.success("Ordem atualizada com sucesso!", { autoClose: 1000 });
       } catch (error) {
         console.error("Erro ao atualizar ordem dos serviços:", error);
@@ -108,7 +105,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       return;
     }
 
-    // Se houver uma coluna chamada "concluido", tratar ela como especial (igual antes)
     if (destino === "concluido") {
       const opcoes = opcoesSetores.filter(
         (setor) => setor !== itemMovido.turnoDaVez
@@ -121,12 +117,13 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       );
 
       if (!escolha || !opcoes.includes(escolha)) {
-        // toast.dismiss(toastId); removido
         alert("Setor inválido ou operação cancelada.");
         return;
       }
 
       try {
+        const loadingToastId = toast.loading("Direcionando serviço...");
+
         await axios.put(
           `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
           {
@@ -137,19 +134,29 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
         await carregarServicos();
 
-        toast.success("Serviço concluído e direcionado com sucesso!", {
-          autoClose: 1000,
+        toast.update(loadingToastId, {
+          render: "Serviço concluído e direcionado com sucesso!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1500,
+          closeButton: true,
         });
-        window.location.reload();
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch (error) {
         console.error("Erro ao atualizar serviço:", error);
-        toast.error("Erro ao atualizar serviço", { autoClose: 1000 });
+        toast.dismiss();
+        toast.error("Erro ao atualizar serviço", { autoClose: 1500 });
       }
 
       return;
     }
 
     try {
+      const movingToastId = toast.loading("Movendo serviço...");
+
       await axios.put(
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
         {
@@ -160,9 +167,16 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
       await carregarServicos();
 
-      toast.success("Serviço movido com sucesso!", { autoClose: 1000 });
+      toast.update(movingToastId, {
+        render: "Serviço movido com sucesso!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+        closeButton: true,
+      });
     } catch (error) {
       console.error("Erro ao atualizar serviço:", error);
+      toast.dismiss();
       toast.error("Erro ao mover serviço", { autoClose: 1000 });
     }
   }
@@ -180,9 +194,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
   return (
     <div className="p-6">
-      <h2 className="mb-4 text-2xl font-bold">{titulo}</h2>
-      <div className="relative flex gap-4 p-4 min-h-[500px]">
-        <ToastContainer position="top-right" autoClose={3000} />
+      <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
+      <div className="relative flex justify-between gap-4 py-4 gap">
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(colunas).map(([key, nome]) => (
             <Droppable key={key} droppableId={key}>
@@ -190,28 +203,34 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="min-w-[250px] bg-gray-100 p-2 rounded shadow-md"
+                  className="min-w-[250px] bg-containers p-3 rounded-2xl shadow-md"
                 >
-                  <h2 className="mb-2 font-bold text-center">{nome}</h2>
-                  {servicos[key].map((servico, index) => {
-                    const comentario = obterComentarioMaisRecente(servico);
-                    return (
-                      <Draggable
-                        key={servico.id}
-                        draggableId={servico.id.toString()}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <CardServico
-                            servico={servico}
-                            provided={provided}
-                            snapshot={snapshot}
-                            turno={turno}
-                          />
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                  <h2 className="px-2 py-4 mb-2 text-left text-text">{nome}</h2>
+
+                  {isLoading
+                    ? Array.from({ length: 3 }).map((_, i) => (
+                        <SkeletonCard key={i} />
+                      ))
+                    : servicos[key].map((servico, index) => {
+                        const comentario = obterComentarioMaisRecente(servico);
+                        return (
+                          <Draggable
+                            key={servico.id}
+                            draggableId={servico.id.toString()}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <CardServico
+                                servico={servico}
+                                provided={provided}
+                                snapshot={snapshot}
+                                turno={turno}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                      })}
+
                   {provided.placeholder}
                 </div>
               )}

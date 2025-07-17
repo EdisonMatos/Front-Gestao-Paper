@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
@@ -58,8 +58,9 @@ export default function Feedbacks() {
 
   return (
     <div className="p-6">
-      <ToastContainer />
-      <h2 className="mb-4 text-2xl font-bold">Feedbacks dos Serviços</h2>
+      <h2 className="mb-4 text-2xl font-bold text-text">
+        Feedbacks dos Serviços
+      </h2>
 
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left border">
@@ -89,6 +90,7 @@ export default function Feedbacks() {
                 <td className="p-2 text-center border">
                   <input
                     type="checkbox"
+                    className="bg-inputBg text-placeholder border-border"
                     checked={!!s.deuFeedbackSite}
                     onChange={() =>
                       handleCheckboxChange(s.id, "deuFeedbackSite")
@@ -103,6 +105,7 @@ export default function Feedbacks() {
                     onChange={() =>
                       handleCheckboxChange(s.id, "feedbackSitePostado")
                     }
+                    className="bg-inputBg text-placeholder border-border"
                   />
                 </td>
 
@@ -113,6 +116,7 @@ export default function Feedbacks() {
                     onChange={() =>
                       handleCheckboxChange(s.id, "deuFeedbackGoogle")
                     }
+                    className="bg-inputBg text-placeholder border-border"
                   />
                 </td>
 
@@ -123,13 +127,14 @@ export default function Feedbacks() {
                     onChange={() =>
                       handleCheckboxChange(s.id, "feedbackGooglePostado")
                     }
+                    className="bg-inputBg text-placeholder border-border"
                   />
                 </td>
 
                 <td className="p-2 text-center border">
                   <button
                     onClick={() => handleSave(s)}
-                    className="px-2 py-1 text-white bg-yellow-600 rounded hover:bg-yellow-600"
+                    className="px-2 py-1 text-white rounded bg-buttons hover:bg-buttons"
                   >
                     Salvar
                   </button>

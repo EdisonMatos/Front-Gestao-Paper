@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import Clientes from "./modulos/clientes/Clientes";
 import Feedbacks from "./modulos/feedbacks/Feedbacks";
 import QuadroDev from "./modulos/quadros/QuadroDev";
@@ -8,14 +9,17 @@ import Servicos from "./modulos/servicos/Servicos";
 
 function App() {
   return (
-    <div className="flex flex-col max-w-[1400px] ">
-      <Clientes />
-      <Servicos />
-      {/* <Feedbacks /> */}
-      <QuadroSuporte />
-      <QuadroDev />
-      <QuadroWebmaster />
-      <QuadroFeedbacks />
+    <div className="bg-background font-mainFont">
+      <ToastContainer />
+      <div className="flex flex-col max-w-[1400px] ">
+        <Clientes />
+        <Servicos />
+        {/* <Feedbacks /> */}
+        <QuadroSuporte />
+        <QuadroDev />
+        <QuadroWebmaster />
+        <QuadroFeedbacks />
+      </div>
     </div>
   );
 }
