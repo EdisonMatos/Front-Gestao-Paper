@@ -85,6 +85,43 @@ export default function Servicos() {
   const formatDate = (date) =>
     date ? new Date(date).toLocaleDateString("pt-BR") : "-";
 
+  const formatDateTime = (isoString) => {
+    const data = new Date(isoString);
+    return `${data.toLocaleDateString("pt-BR")} às ${data.toLocaleTimeString(
+      "pt-BR",
+      { hour: "2-digit", minute: "2-digit" }
+    )}h`;
+  };
+
+  const getComentarioMaisRecente = (comentarios) => {
+    if (!comentarios || comentarios.length === 0) return "-";
+    const maisRecente = comentarios.reduce((a, b) =>
+      new Date(a.criadoEm) > new Date(b.criadoEm) ? a : b
+    );
+    return (
+      <div>
+        <div>{maisRecente.texto}</div>
+        <div className="mt-1 text-xs text-gray-400">
+          {maisRecente.feitoPor} - {formatDateTime(maisRecente.criadoEm)}
+        </div>
+      </div>
+    );
+  };
+
+  const renderLink = (url, label) => {
+    if (!url) return <span className="opacity-40 text-text">{label}</span>;
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        className="text-links hover:underline"
+      >
+        {label}
+      </a>
+    );
+  };
+
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Serviços</h2>
@@ -130,7 +167,9 @@ export default function Servicos() {
                 <th className="p-2 border border-containers">Turno</th>
                 <th className="p-2 border border-containers">Doc</th>
                 <th className="p-2 border border-containers">Prévia</th>
+                <th className="p-2 border border-containers">Git</th>
                 <th className="p-2 border border-containers">Datas</th>
+                <th className="p-2 border border-containers">Comentários</th>
                 <th className="p-2 border border-containers">Ações</th>
               </tr>
             </thead>
@@ -145,24 +184,13 @@ export default function Servicos() {
                     {servico.turnoDaVez}
                   </td>
                   <td className="p-2 border border-border">
-                    <a
-                      href={servico.linkDoc}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-links hover:underline"
-                    >
-                      Doc
-                    </a>
+                    {renderLink(servico.linkDoc, "Doc")}
                   </td>
                   <td className="p-2 border border-border">
-                    <a
-                      href={servico.linkPreviaVercel}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-links hover:underline"
-                    >
-                      Prévia
-                    </a>
+                    {renderLink(servico.linkPreviaVercel, "Prévia")}
+                  </td>
+                  <td className="p-2 border border-border">
+                    {renderLink(servico.linkRepoGithub, "Git")}
                   </td>
                   <td className="p-2 text-xs border border-border">
                     <div>
@@ -189,6 +217,9 @@ export default function Servicos() {
                       <strong>Próximo Prazo:</strong>{" "}
                       {formatDate(servico.dataProximoPrazo)}
                     </div>
+                  </td>
+                  <td className="p-2 border border-border">
+                    {getComentarioMaisRecente(servico.comentarios)}
                   </td>
                   <td className="p-2 space-x-2 border border-border">
                     <button
