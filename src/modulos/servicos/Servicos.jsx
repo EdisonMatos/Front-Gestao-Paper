@@ -122,6 +122,16 @@ export default function Servicos() {
     );
   };
 
+  const renderStatus = (servico) => {
+    if (servico.dataConclusao) {
+      return <span className="text-text opacity-40">Finalizado</span>;
+    }
+    if (servico.dataContratacao && !servico.dataConclusao) {
+      return <span className="text-yellow-600">Ativo</span>;
+    }
+    return <span className="opacity-40 text-text">Finalizado</span>;
+  };
+
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Serviços</h2>
@@ -164,6 +174,7 @@ export default function Servicos() {
               <tr>
                 <th className="p-2 border border-containers">Nome</th>
                 <th className="p-2 border border-containers">Empresa</th>
+                <th className="p-2 border border-containers">Status</th>
                 <th className="p-2 border border-containers">Turno</th>
                 <th className="p-2 border border-containers">Doc</th>
                 <th className="p-2 border border-containers">Prévia</th>
@@ -179,6 +190,9 @@ export default function Servicos() {
                   <td className="p-2 border border-border">{servico.nome}</td>
                   <td className="p-2 border border-border">
                     {servico.cliente?.empresa || "Sem cliente"}
+                  </td>
+                  <td className="p-2 border border-border">
+                    {renderStatus(servico)}
                   </td>
                   <td className="p-2 border border-border">
                     {servico.turnoDaVez}
