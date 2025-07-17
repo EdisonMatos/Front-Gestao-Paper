@@ -193,7 +193,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             </div>
           )}
 
-          <div className="mt-3">
+          <div className="mt-0">
             {comentarioMaisRecente ? (
               <div
                 className="pt-2 text-sm border-t-2 border-border text-text"
@@ -209,12 +209,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 </p>
               </div>
             ) : (
-              <p
-                className="text-sm italic text-text opacity-40"
-                style={estiloFonte}
-              >
-                Sem comentários ainda.
-              </p>
+              <p></p>
             )}
 
             {comentariosRestantes.length > 0 && (
