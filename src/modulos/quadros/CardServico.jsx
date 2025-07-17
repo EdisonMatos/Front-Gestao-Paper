@@ -64,6 +64,10 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
 
   const estiloFonte = modoCompacto ? { fontSize: "12px" } : {};
 
+  const formatarTelefoneParaWhatsApp = (telefone) => {
+    return telefone.replace(/\D/g, "");
+  };
+
   return (
     <div
       ref={provided.innerRef}
@@ -72,7 +76,6 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
       className={`bg-cards rounded-2xl p-5 mb-2 shadow ${
         snapshot.isDragging ? "scale-105" : ""
       }`}
-      // Removi o style daqui para não quebrar o drag
     >
       {modoCompacto ? (
         <>
@@ -123,7 +126,20 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           </p>
 
           <p className="text-xs text-text opacity-70" style={estiloFonte}>
-            {servico.cliente?.representante || "Sem representante"}
+            {servico.cliente?.telefone ? (
+              <a
+                href={`https://wa.me/+55${formatarTelefoneParaWhatsApp(
+                  servico.cliente.telefone
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-links hover:underline"
+              >
+                {servico.cliente?.representante || "Sem representante"}
+              </a>
+            ) : (
+              servico.cliente?.representante || "Sem representante"
+            )}
           </p>
 
           <div className="flex gap-2 mt-2 mb-2 text-sm" style={estiloFonte}>
