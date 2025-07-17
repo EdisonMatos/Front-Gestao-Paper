@@ -123,6 +123,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       }
 
       try {
+        const loadingToastId = toast.loading("Direcionando serviço...");
+
         await axios.put(
           `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
           {
@@ -133,21 +135,29 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
         await carregarServicos();
 
-        toast.success("Serviço concluído e direcionado com sucesso!", {
-          autoClose: 1000,
+        toast.update(loadingToastId, {
+          render: "Serviço concluído e direcionado com sucesso!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1500,
+          closeButton: true,
         });
+
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       } catch (error) {
         console.error("Erro ao atualizar serviço:", error);
-        toast.error("Erro ao atualizar serviço", { autoClose: 1000 });
+        toast.dismiss(); // remove o toast loading se ainda estiver visível
+        toast.error("Erro ao atualizar serviço", { autoClose: 1500 });
       }
 
       return;
     }
 
     try {
+      const movingToastId = toast.loading("Movendo serviço...");
+
       await axios.put(
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
         {
@@ -158,9 +168,16 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
       await carregarServicos();
 
-      toast.success("Serviço movido com sucesso!", { autoClose: 1000 });
+      toast.update(movingToastId, {
+        render: "Serviço movido com sucesso!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+        closeButton: true,
+      });
     } catch (error) {
       console.error("Erro ao atualizar serviço:", error);
+      toast.dismiss();
       toast.error("Erro ao mover serviço", { autoClose: 1000 });
     }
   }
