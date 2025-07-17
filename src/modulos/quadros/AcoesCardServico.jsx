@@ -140,7 +140,7 @@ export default function AcoesCardServico({
       <select
         value={acaoSelecionada}
         onChange={(e) => setAcaoSelecionada(e.target.value)}
-        className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+        className="w-full p-1 border rounded bg-inputBg text-text border-border"
       >
         <option value="">Selecione a ação:</option>
         <option value="direcionar">Direcionar serviço</option>
@@ -153,7 +153,7 @@ export default function AcoesCardServico({
           <select
             value={setorSelecionado}
             onChange={(e) => setSetorSelecionado(e.target.value)}
-            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+            className="w-full p-1 border rounded bg-inputBg text-text border-border"
           >
             <option value="">Selecione o setor:</option>
             <option value="suporte">Suporte</option>
