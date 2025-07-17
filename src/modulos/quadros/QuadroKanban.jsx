@@ -5,17 +5,18 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardServico from "./CardServico";
+import SkeletonCard from "./SkeletonCard";
 
 const opcoesSetores = ["dev", "suporte", "webmaster", "feedbacks"];
 
 export default function QuadroKanban({ titulo, turno, colunas }) {
-  // Inicializa o estado com as chaves das colunas recebidas
   const [servicos, setServicos] = useState(
     Object.keys(colunas).reduce((acc, coluna) => {
       acc[coluna] = [];
       return acc;
     }, {})
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   async function carregarServicos() {
     try {
@@ -34,13 +35,11 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
       apenasDoTurno.forEach((servico) => {
         const pos = servico.posicaoNoQuadro;
-        // Se pos não existir ou não for uma coluna válida, joga no primeiro da lista (pode ser backlog ou o primeiro da prop)
         const colunaValida =
           pos && servicosOrganizados[pos] ? pos : Object.keys(colunas)[0];
         servicosOrganizados[colunaValida].push(servico);
       });
 
-      // Ordena por atualizadoEm em cada coluna
       Object.keys(servicosOrganizados).forEach((coluna) => {
         servicosOrganizados[coluna].sort(
           (a, b) => new Date(a.atualizadoEm) - new Date(b.atualizadoEm)
@@ -50,6 +49,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       setServicos(servicosOrganizados);
     } catch (err) {
       console.error("Erro ao carregar serviços:", err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -95,7 +96,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         );
 
         await carregarServicos();
-
         toast.success("Ordem atualizada com sucesso!", { autoClose: 1000 });
       } catch (error) {
         console.error("Erro ao atualizar ordem dos serviços:", error);
@@ -105,7 +105,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       return;
     }
 
-    // Se houver uma coluna chamada "concluido", tratar ela como especial (igual antes)
     if (destino === "concluido") {
       const opcoes = opcoesSetores.filter(
         (setor) => setor !== itemMovido.turnoDaVez
@@ -148,7 +147,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         }, 2000);
       } catch (error) {
         console.error("Erro ao atualizar serviço:", error);
-        toast.dismiss(); // remove o toast loading se ainda estiver visível
+        toast.dismiss();
         toast.error("Erro ao atualizar serviço", { autoClose: 1500 });
       }
 
@@ -196,7 +195,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
-      <div className="relative flex justify-between gap-4 gap py-4 min-h-[500px]">
+      <div className="relative flex justify-between gap-4 py-4 gap">
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(colunas).map(([key, nome]) => (
             <Droppable key={key} droppableId={key}>
@@ -207,25 +206,31 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                   className="min-w-[250px] bg-containers p-3 rounded-2xl shadow-md"
                 >
                   <h2 className="px-2 py-4 mb-2 text-left text-text">{nome}</h2>
-                  {servicos[key].map((servico, index) => {
-                    const comentario = obterComentarioMaisRecente(servico);
-                    return (
-                      <Draggable
-                        key={servico.id}
-                        draggableId={servico.id.toString()}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <CardServico
-                            servico={servico}
-                            provided={provided}
-                            snapshot={snapshot}
-                            turno={turno}
-                          />
-                        )}
-                      </Draggable>
-                    );
-                  })}
+
+                  {isLoading
+                    ? Array.from({ length: 3 }).map((_, i) => (
+                        <SkeletonCard key={i} />
+                      ))
+                    : servicos[key].map((servico, index) => {
+                        const comentario = obterComentarioMaisRecente(servico);
+                        return (
+                          <Draggable
+                            key={servico.id}
+                            draggableId={servico.id.toString()}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <CardServico
+                                servico={servico}
+                                provided={provided}
+                                snapshot={snapshot}
+                                turno={turno}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                      })}
+
                   {provided.placeholder}
                 </div>
               )}

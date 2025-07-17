@@ -132,7 +132,7 @@ export default function Servicos() {
               <th className="p-2 border border-containers">Doc</th>
               <th className="p-2 border border-containers">Prévia</th>
               <th className="p-2 border border-containers">Datas</th>
-              <th className="p-2 border border-containers">Comentário</th>
+
               <th className="p-2 border border-containers">Ações</th>
             </tr>
           </thead>
@@ -200,9 +200,7 @@ export default function Servicos() {
                       {formatDate(servico.dataProximoPrazo)}
                     </div>
                   </td>
-                  <td className="p-2 text-xs text-gray-600 border border-border">
-                    {servico.comentariosTexto}
-                  </td>
+
                   <td className="p-2 space-x-2 border border-border">
                     <button
                       onClick={() => handleEdit(servico)}
