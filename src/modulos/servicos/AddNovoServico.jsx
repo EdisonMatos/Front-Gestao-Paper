@@ -119,7 +119,7 @@ export default function AddNovoServico({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded border-border md:grid-cols-3 bg-containers text-text"
+      className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded border-border md:grid-cols-3 bg-background text-text"
     >
       <div className="flex flex-col">
         <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
