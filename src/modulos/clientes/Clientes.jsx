@@ -107,28 +107,22 @@ export default function Clientes() {
         />
       )}
 
-      <div className="overflow-x-auto text-text">
-        <table className="min-w-full text-sm text-left border border-border">
-          <thead className="bg-containers border-solid border-[1px] border-containers">
-            <tr className="">
-              <th className="p-2 border border-containers">Empresa</th>
-              <th className="p-2 border border-containers">Representante</th>
-              <th className="p-2 border border-containers">Telefone</th>
-              <th className="p-2 border border-containers">Email</th>
-              <th className="p-2 border border-containers">Domínio</th>
-              <th className="p-2 border border-containers">Serviços</th>
-              <th className="p-2 border border-containers">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtro.trim() === "" ? (
-              <tr>
-                <td colSpan="7" className="p-4 text-center text-gray-500">
-                  Digite o cliente que deseja localizar no campo de busca
-                </td>
+      {filtro.trim() !== "" && clientesFiltrados.length > 0 && (
+        <div className="overflow-x-auto text-text">
+          <table className="min-w-full text-sm text-left border border-border">
+            <thead className="bg-containers border-solid border-[1px] border-containers">
+              <tr className="">
+                <th className="p-2 border border-containers">Empresa</th>
+                <th className="p-2 border border-containers">Representante</th>
+                <th className="p-2 border border-containers">Telefone</th>
+                <th className="p-2 border border-containers">Email</th>
+                <th className="p-2 border border-containers">Domínio</th>
+                <th className="p-2 border border-containers">Serviços</th>
+                <th className="p-2 border border-containers">Ações</th>
               </tr>
-            ) : clientesFiltrados.length > 0 ? (
-              clientesFiltrados.map((cliente) => (
+            </thead>
+            <tbody>
+              {clientesFiltrados.map((cliente) => (
                 <tr
                   key={cliente.id}
                   className="hover:bg-[#2E2C33] border-border"
@@ -169,17 +163,17 @@ export default function Clientes() {
                     </button> */}
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="p-4 text-center text-gray-500">
-                  Nenhum cliente encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {filtro.trim() !== "" && clientesFiltrados.length === 0 && (
+        <p className="mt-4 text-left text-text opacity-60">
+          Nenhum resultado encontrado.
+        </p>
+      )}
     </div>
   );
 }
