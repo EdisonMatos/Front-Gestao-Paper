@@ -1,3 +1,4 @@
+// components/CardServico.jsx
 import { useState } from "react";
 import axios from "axios";
 import AcoesCardServico from "./AcoesCardServico";
@@ -16,6 +17,11 @@ export default function CardServico({
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
+
+  // Estado local para refletir atualizações imediatas do prazo
+  const [dataProximoPrazoLocal, setDataProximoPrazoLocal] = useState(
+    servico.dataProximoPrazo || null
+  );
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
@@ -123,6 +129,11 @@ export default function CardServico({
     return telefone.replace(/\D/g, "");
   };
 
+  // FUNÇÃO PARA ATUALIZAR O PRAZO NO ESTADO LOCAL
+  const handleAtualizarPrazo = (novaData) => {
+    setDataProximoPrazoLocal(novaData);
+  };
+
   return (
     <div
       ref={provided.innerRef}
@@ -195,7 +206,7 @@ export default function CardServico({
           </p>
 
           <p className="mt-2 text-sm text-text" style={estiloFonte}>
-            {formatarDataPrazo(servico.dataProximoPrazo)}
+            {formatarDataPrazo(dataProximoPrazoLocal)}
           </p>
 
           <div
@@ -257,6 +268,7 @@ export default function CardServico({
               turno={turno}
               capitalizar={capitalizar}
               onFechar={() => setMostrarDirecionar(false)}
+              onAtualizarPrazo={handleAtualizarPrazo} // <-- PASSANDO FUNÇÃO PARA AÇÔES
             />
           )}
 

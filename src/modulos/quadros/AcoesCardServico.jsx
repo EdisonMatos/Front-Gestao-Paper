@@ -3,16 +3,35 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
+// Função para converter ISO datetime para string yyyy-mm-dd para input type=date
+function toInputDateString(isoDate) {
+  if (!isoDate) return "";
+  const date = new Date(isoDate);
+  const timezoneOffset = date.getTimezoneOffset() * 60000;
+  const localISO = new Date(date.getTime() - timezoneOffset).toISOString();
+  return localISO.split("T")[0];
+}
+
+// Função para converter string yyyy-mm-dd do input para objeto Date local
+function fromInputDateString(dateStr) {
+  if (!dateStr) return null;
+  const [year, month, day] = dateStr.split("-");
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
 export default function AcoesCardServico({
   servico,
   turno,
   capitalizar,
   onFechar,
+  onAtualizarPrazo, // <-- RECEBENDO PROP NOVA
 }) {
   const [acaoSelecionada, setAcaoSelecionada] = useState("");
   const [setorSelecionado, setSetorSelecionado] = useState("");
   const [comentarioDirecionar, setComentarioDirecionar] = useState("");
-  const [novaDataPrazo, setNovaDataPrazo] = useState("");
+  const [novaDataPrazo, setNovaDataPrazo] = useState(
+    toInputDateString(servico.dataProximoPrazo)
+  );
   const [loading, setLoading] = useState(false);
 
   const direcionarServico = async () => {
@@ -59,11 +78,15 @@ export default function AcoesCardServico({
         `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
         {
           ...servico,
-          dataProximoPrazo: novaDataPrazo,
+          dataProximoPrazo: fromInputDateString(novaDataPrazo),
         }
       );
 
       toast.success("Prazo alterado com sucesso!", { autoClose: 1000 });
+
+      // Atualiza estado no componente pai
+      onAtualizarPrazo(fromInputDateString(novaDataPrazo).toISOString());
+
       onFechar();
     } catch (err) {
       console.error("Erro ao mudar prazo:", err);
