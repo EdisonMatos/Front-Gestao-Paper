@@ -85,28 +85,28 @@ export default function CardServico({
     if (diffDias === 0) {
       return (
         <>
-          {dataFormatada} (
-          <span className="font-semibold text-red-500">Hoje</span>)
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-red-500">Hoje</span>
         </>
       );
     } else if (diffDias === 1) {
       return (
         <>
-          {dataFormatada} (
-          <span className="font-semibold text-yellow-300">Amanhã</span>)
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-yellow-300">Amanhã</span>
         </>
       );
     } else if ([2, 3].includes(diffDias)) {
       return (
         <>
-          {dataFormatada} (
-          <span className="font-semibold text-yellow-700">Breve</span>)
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-yellow-700">Breve</span>
         </>
       );
     } else {
       return (
         <>
-          {dataFormatada} ({diffDias} dias)
+          {dataFormatada} - {diffDias} dias
         </>
       );
     }
