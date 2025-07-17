@@ -2,12 +2,12 @@ import QuadroKanban from "./QuadroKanban";
 
 export default function QuadroSuporte() {
   const colunas = {
-    backlog: "Backlog",
-    emAtendimento: "Em Atendimento",
-    infoColetadas: "Info Coletadas",
-    gerandoDoc: "Gerando Doc",
-    aguardandoCliente: "Aguardando Cliente",
-    revisar: "Revisar",
+    backlog: { nome: "Backlog", tipoCard: "normal" },
+    emAtendimento: { nome: "Em Atendimento", tipoCard: "normal" },
+    infoColetadas: { nome: "Info Coletadas", tipoCard: "normal" },
+    gerandoDoc: { nome: "Gerando Doc", tipoCard: "normal" },
+    aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
+    revisar: { nome: "Revisar", tipoCard: "normal" },
   };
 
   return (

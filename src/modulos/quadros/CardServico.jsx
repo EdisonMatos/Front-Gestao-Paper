@@ -1,15 +1,32 @@
+// components/CardServico.jsx
 import { useState } from "react";
 import axios from "axios";
 import AcoesCardServico from "./AcoesCardServico";
 
-export default function CardServico({ servico, provided, snapshot, turno }) {
-  const [comentarios, setComentarios] = useState(servico.comentarios || []);
+export default function CardServico({
+  servico: servicoInicial,
+  provided,
+  snapshot,
+  turno,
+  modoCard,
+}) {
+  const [comentarios, setComentarios] = useState(
+    servicoInicial.comentarios || []
+  );
   const [adicionandoComentario, setAdicionandoComentario] = useState(false);
   const [novoComentario, setNovoComentario] = useState("");
   const [loading, setLoading] = useState(false);
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
+
+  // Estado local do serviço para refletir atualizações (prazo, complexidade etc)
+  const [servico, setServico] = useState(servicoInicial);
+
+  // Guardar localmente o prazo para exibir formatado
+  const [dataProximoPrazoLocal, setDataProximoPrazoLocal] = useState(
+    servico.dataProximoPrazo || null
+  );
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
@@ -55,6 +72,77 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
     return `${dia}/${mes}/${ano} às ${hora}:${min}h`;
   };
 
+  const formatarDataPrazo = (dataPrazoISO) => {
+    if (!dataPrazoISO) {
+      return (
+        <>
+          <span className="text-green-500">Sem prazo</span> (
+          <span className="text-red-400">-</span>)
+        </>
+      );
+    }
+
+    const hoje = new Date();
+    const prazo = new Date(dataPrazoISO);
+
+    const diffMs = prazo.setHours(0, 0, 0, 0) - hoje.setHours(0, 0, 0, 0);
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    const dataFormatada = `${String(prazo.getDate()).padStart(2, "0")}/${String(
+      prazo.getMonth() + 1
+    ).padStart(2, "0")}/${prazo.getFullYear()}`;
+
+    const complexidade = servico.complexidade;
+    const complexidadeText =
+      complexidade === null ? "-" : complexidade.toString();
+
+    const complexidadeClass = [1, 2, 3, 4, 5].includes(complexidade)
+      ? {
+          1: "text-text",
+          2: "text-text",
+          3: "text-text",
+          4: "text-text",
+          5: "text-text",
+        }[complexidade]
+      : "text-text";
+
+    const renderComplexidade = (
+      <span className={complexidadeClass}>({complexidadeText})</span>
+    );
+
+    if (diffDias === 0) {
+      return (
+        <>
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-red-500">Hoje</span>{" "}
+          {renderComplexidade}
+        </>
+      );
+    } else if (diffDias === 1) {
+      return (
+        <>
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-yellow-300">Amanhã</span>{" "}
+          {renderComplexidade}
+        </>
+      );
+    } else if ([2, 3].includes(diffDias)) {
+      return (
+        <>
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-yellow-700">Breve</span>{" "}
+          {renderComplexidade}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {dataFormatada} - {diffDias} dias {renderComplexidade}
+        </>
+      );
+    }
+  };
+
   const comentariosOrdenados = [...comentarios].sort(
     (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
   );
@@ -62,13 +150,29 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const comentarioMaisRecente = comentariosOrdenados[0];
   const comentariosRestantes = comentariosOrdenados.slice(1);
 
-  const modoCompacto =
-    servico.posicaoNoQuadro === "aguardandoCliente" && !mostrarCompleto;
+  const modoCompacto = modoCard === "compacto" && !mostrarCompleto;
+  const modoSuperCompacto = modoCard === "superCompacto" && !mostrarCompleto;
 
-  const estiloFonte = modoCompacto ? { fontSize: "12px" } : {};
+  const estiloFonte =
+    modoCompacto || modoSuperCompacto ? { fontSize: "12px" } : {};
 
   const formatarTelefoneParaWhatsApp = (telefone) => {
     return telefone.replace(/\D/g, "");
+  };
+
+  const handleAtualizarPrazo = (novaData) => {
+    setDataProximoPrazoLocal(novaData);
+    setServico((prev) => ({
+      ...prev,
+      dataProximoPrazo: novaData,
+    }));
+  };
+
+  const handleAtualizarComplexidade = (novaComplexidade) => {
+    setServico((prev) => ({
+      ...prev,
+      complexidade: novaComplexidade,
+    }));
   };
 
   return (
@@ -80,36 +184,33 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
         snapshot.isDragging ? "scale-105" : ""
       }`}
     >
-      {modoCompacto ? (
+      {modoCompacto || modoSuperCompacto ? (
         <>
-          <div
-            className="flex items-center justify-between"
-            style={estiloFonte}
-          >
-            <h3 className="font-semibold text-text">{servico.nome}</h3>
-            <p className="text-text">
-              {servico.cliente?.empresa || "Sem empresa"}
-            </p>
+          <div className="text-text" style={estiloFonte}>
+            <h3 className="font-semibold">{servico.nome}</h3>
+            <p>{servico.cliente?.empresa || "Sem empresa"}</p>
           </div>
 
-          <div
-            className="pt-2 border-t-2 border-border text-text"
-            style={estiloFonte}
-          >
-            {comentarioMaisRecente ? (
-              <>
-                <p>{comentarioMaisRecente.texto}</p>
-                <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
-                  {capitalizar(comentarioMaisRecente.setor)} -{" "}
-                  {formatarDataHora(comentarioMaisRecente.criadoEm)}
+          {!modoSuperCompacto && (
+            <div
+              className="pt-2 border-t-2 border-border text-text"
+              style={estiloFonte}
+            >
+              {comentarioMaisRecente ? (
+                <>
+                  <p>{comentarioMaisRecente.texto}</p>
+                  <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
+                    {capitalizar(comentarioMaisRecente.setor)} -{" "}
+                    {formatarDataHora(comentarioMaisRecente.criadoEm)}
+                  </p>
+                </>
+              ) : (
+                <p className="italic text-text" style={estiloFonte}>
+                  Sem comentários ainda.
                 </p>
-              </>
-            ) : (
-              <p className="italic text-text" style={estiloFonte}>
-                Sem comentários ainda.
-              </p>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           <button
             onClick={() => setMostrarCompleto(true)}
@@ -143,6 +244,10 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             ) : (
               servico.cliente?.representante || "Sem representante"
             )}
+          </p>
+
+          <p className="mt-2 text-sm text-text" style={estiloFonte}>
+            {formatarDataPrazo(dataProximoPrazoLocal)}
           </p>
 
           <div
@@ -204,6 +309,8 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
               turno={turno}
               capitalizar={capitalizar}
               onFechar={() => setMostrarDirecionar(false)}
+              onAtualizarPrazo={handleAtualizarPrazo}
+              onAtualizarComplexidade={handleAtualizarComplexidade}
             />
           )}
 
@@ -308,7 +415,8 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             )}
           </div>
 
-          {servico.posicaoNoQuadro === "aguardandoCliente" && (
+          {(servico.posicaoNoQuadro === "aguardandoCliente" ||
+            servico.posicaoNoQuadro === "solicitado") && (
             <button
               onClick={() => setMostrarCompleto(false)}
               className="mt-4 text-sm text-links hover:underline"

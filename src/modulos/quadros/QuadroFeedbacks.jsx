@@ -2,11 +2,11 @@ import QuadroKanban from "./QuadroKanban";
 
 export default function QuadroFeedbacks() {
   const colunas = {
-    backlog: "Backlog",
-    solicitado: "Solicitado",
-    emMaos: "Em mãos",
-    postado: "Postado",
-    finalizado: "Finalizado",
+    backlog: { nome: "Backlog", tipoCard: "normal" },
+    solicitado: { nome: "Solicitado", tipoCard: "superCompacto" },
+    emMaos: { nome: "Em mãos", tipoCard: "superCompacto" },
+    postado: { nome: "Postado", tipoCard: "normal" },
+    finalizado: { nome: "Finalizado", tipoCard: "compacto" },
   };
 
   return (
