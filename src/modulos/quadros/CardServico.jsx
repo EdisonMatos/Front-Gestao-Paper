@@ -8,6 +8,10 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const [loading, setLoading] = useState(false);
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
+  const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
+  const [acaoSelecionada, setAcaoSelecionada] = useState("");
+  const [setorSelecionado, setSetorSelecionado] = useState("");
+  const [comentarioDirecionar, setComentarioDirecionar] = useState("");
 
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
@@ -38,6 +42,44 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
     } catch (err) {
       console.error("Erro ao adicionar comentário:", err);
       alert("Erro ao adicionar comentário");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const direcionarServico = async () => {
+    if (!comentarioDirecionar.trim()) return alert("Comentário é obrigatório.");
+    if (!setorSelecionado) return alert("Setor é obrigatório.");
+
+    setLoading(true);
+    try {
+      await axios.post(
+        "https://backend-gestao-paper.onrender.com/comentarios",
+        {
+          servicoId: servico.id,
+          texto: comentarioDirecionar.trim(),
+          feitoPor: capitalizar(turno),
+          setor: turno,
+        }
+      );
+
+      await axios.put(
+        `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
+        {
+          ...servico,
+          turnoDaVez: setorSelecionado,
+          posicaoNoQuadro: "solicitado",
+        }
+      );
+
+      setMostrarDirecionar(false);
+      setAcaoSelecionada("");
+      setSetorSelecionado("");
+      setComentarioDirecionar("");
+      alert("Serviço direcionado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao direcionar:", err);
+      alert("Erro ao direcionar serviço.");
     } finally {
       setLoading(false);
     }
@@ -143,7 +185,10 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             )}
           </p>
 
-          <div className="flex gap-2 mt-2 mb-2 text-sm" style={estiloFonte}>
+          <div
+            className="flex items-center gap-2 mt-2 mb-2 text-sm"
+            style={estiloFonte}
+          >
             {docDisponivel ? (
               <a
                 href={servico.linkDoc}
@@ -184,7 +229,72 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             ) : (
               <span className="cursor-default text-text opacity-40">Git</span>
             )}
+
+            <button
+              onClick={() => setMostrarDirecionar((prev) => !prev)}
+              className="text-links hover:underline"
+            >
+              {mostrarDirecionar ? "-" : "+"}
+            </button>
           </div>
+
+          {mostrarDirecionar && (
+            <div className="mb-2 space-y-2 text-sm">
+              <select
+                value={acaoSelecionada}
+                onChange={(e) => setAcaoSelecionada(e.target.value)}
+                className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+              >
+                <option value="">Selecione a ação:</option>
+                <option value="direcionar">Direcionar</option>
+              </select>
+
+              {acaoSelecionada === "direcionar" && (
+                <>
+                  <select
+                    value={setorSelecionado}
+                    onChange={(e) => setSetorSelecionado(e.target.value)}
+                    className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                  >
+                    <option value="">Selecione o setor:</option>
+                    <option value="suporte">Suporte</option>
+                    <option value="dev">Dev</option>
+                    <option value="webmaster">Webmaster</option>
+                    <option value="feedbacks">Feedbacks</option>
+                  </select>
+
+                  <input
+                    type="text"
+                    value={comentarioDirecionar}
+                    onChange={(e) => setComentarioDirecionar(e.target.value)}
+                    placeholder="Adicione um comentário (campo obrigatório)"
+                    className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                  />
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={direcionarServico}
+                      disabled={loading}
+                      className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
+                    >
+                      {loading ? "Enviando..." : "Direcionar"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMostrarDirecionar(false);
+                        setAcaoSelecionada("");
+                        setSetorSelecionado("");
+                        setComentarioDirecionar("");
+                      }}
+                      className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {!adicionandoComentario && (
             <button
