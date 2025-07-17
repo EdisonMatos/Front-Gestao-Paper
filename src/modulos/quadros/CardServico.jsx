@@ -4,13 +4,15 @@ import axios from "axios";
 import AcoesCardServico from "./AcoesCardServico";
 
 export default function CardServico({
-  servico,
+  servico: servicoInicial,
   provided,
   snapshot,
   turno,
   modoCard,
 }) {
-  const [comentarios, setComentarios] = useState(servico.comentarios || []);
+  const [comentarios, setComentarios] = useState(
+    servicoInicial.comentarios || []
+  );
   const [adicionandoComentario, setAdicionandoComentario] = useState(false);
   const [novoComentario, setNovoComentario] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,6 +20,10 @@ export default function CardServico({
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
 
+  // Estado local do serviço para refletir atualizações (prazo, complexidade etc)
+  const [servico, setServico] = useState(servicoInicial);
+
+  // Guardar localmente o prazo para exibir formatado
   const [dataProximoPrazoLocal, setDataProximoPrazoLocal] = useState(
     servico.dataProximoPrazo || null
   );
@@ -156,6 +162,17 @@ export default function CardServico({
 
   const handleAtualizarPrazo = (novaData) => {
     setDataProximoPrazoLocal(novaData);
+    setServico((prev) => ({
+      ...prev,
+      dataProximoPrazo: novaData,
+    }));
+  };
+
+  const handleAtualizarComplexidade = (novaComplexidade) => {
+    setServico((prev) => ({
+      ...prev,
+      complexidade: novaComplexidade,
+    }));
   };
 
   return (
@@ -293,6 +310,7 @@ export default function CardServico({
               capitalizar={capitalizar}
               onFechar={() => setMostrarDirecionar(false)}
               onAtualizarPrazo={handleAtualizarPrazo}
+              onAtualizarComplexidade={handleAtualizarComplexidade}
             />
           )}
 
