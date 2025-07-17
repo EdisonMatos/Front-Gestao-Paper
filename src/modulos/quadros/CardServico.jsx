@@ -2,7 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import AcoesCardServico from "./AcoesCardServico";
 
-export default function CardServico({ servico, provided, snapshot, turno }) {
+export default function CardServico({
+  servico,
+  provided,
+  snapshot,
+  turno,
+  modoCard,
+}) {
   const [comentarios, setComentarios] = useState(servico.comentarios || []);
   const [adicionandoComentario, setAdicionandoComentario] = useState(false);
   const [novoComentario, setNovoComentario] = useState("");
@@ -62,11 +68,8 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
   const comentarioMaisRecente = comentariosOrdenados[0];
   const comentariosRestantes = comentariosOrdenados.slice(1);
 
-  const modoCompacto =
-    servico.posicaoNoQuadro === "aguardandoCliente" && !mostrarCompleto;
-
-  const modoSuperCompacto =
-    servico.posicaoNoQuadro === "solicitado" && !mostrarCompleto;
+  const modoCompacto = modoCard === "compacto" && !mostrarCompleto;
+  const modoSuperCompacto = modoCard === "superCompacto" && !mostrarCompleto;
 
   const estiloFonte =
     modoCompacto || modoSuperCompacto ? { fontSize: "12px" } : {};

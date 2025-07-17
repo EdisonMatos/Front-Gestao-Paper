@@ -148,7 +148,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
       <div className="relative flex justify-between gap-4 py-4 gap">
         <DragDropContext onDragEnd={onDragEnd}>
-          {Object.entries(colunas).map(([key, nome]) => (
+          {Object.entries(colunas).map(([key, config]) => (
             <Droppable key={key} droppableId={key}>
               {(provided) => (
                 <div
@@ -156,7 +156,9 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                   {...provided.droppableProps}
                   className="min-w-[250px] bg-containers p-3 rounded-2xl shadow-md"
                 >
-                  <h2 className="px-2 py-4 mb-2 text-left text-text">{nome}</h2>
+                  <h2 className="px-2 py-4 mb-2 text-left text-text">
+                    {config.nome}
+                  </h2>
 
                   {isLoading
                     ? Array.from({ length: 3 }).map((_, i) => (
@@ -176,6 +178,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                                 provided={provided}
                                 snapshot={snapshot}
                                 turno={turno}
+                                modoCard={config.tipoCard}
                               />
                             )}
                           </Draggable>
