@@ -7,7 +7,7 @@ export const theme = {
       secondary: "#000000", // uso estratégico em textos ou contornos
       background: "#1A191E", // fundo geral
       cards: "#1A191E", // cards e containers
-      containers: "#3E3D44",
+      containers: "#3B4048",
       text: "#CECECE", // textos principais
       textMuted: "#B0B0C0", // textos secundários, data, descrição etc.
       border: "#3A3A4D", // bordas suaves

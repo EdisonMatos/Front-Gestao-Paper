@@ -81,22 +81,25 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
             style={estiloFonte}
           >
             <h3 className="font-semibold text-text">{servico.nome}</h3>
-            <p className="text-gray-600">
+            <p className="text-text">
               {servico.cliente?.empresa || "Sem empresa"}
             </p>
           </div>
 
-          <div className="pt-2 text-gray-700 border-t" style={estiloFonte}>
+          <div
+            className="pt-2 border-t-2 border-border text-text"
+            style={estiloFonte}
+          >
             {comentarioMaisRecente ? (
               <>
                 <p>{comentarioMaisRecente.texto}</p>
-                <p className="mt-1 text-gray-500" style={{ fontSize: "12px" }}>
+                <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
                   {capitalizar(comentarioMaisRecente.setor)} -{" "}
                   {formatarDataHora(comentarioMaisRecente.criadoEm)}
                 </p>
               </>
             ) : (
-              <p className="italic text-gray-500" style={estiloFonte}>
+              <p className="italic text-text" style={estiloFonte}>
                 Sem comentários ainda.
               </p>
             )}
@@ -115,11 +118,11 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           <h3 className="font-semibold text-text" style={estiloFonte}>
             {servico.nome}
           </h3>
-          <p className="text-sm text-gray-600" style={estiloFonte}>
+          <p className="text-sm text-text opacity-90" style={estiloFonte}>
             {servico.cliente?.empresa || "Sem empresa"}
           </p>
 
-          <p className="text-xs italic text-gray-500" style={estiloFonte}>
+          <p className="text-xs text-text opacity-70" style={estiloFonte}>
             {servico.cliente?.representante || "Sem representante"}
           </p>
 
@@ -147,7 +150,7 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 Prévia
               </a>
             ) : (
-              <span className="text-gray-400 cursor-default">Prévia</span>
+              <span className="cursor-default text-text">Prévia</span>
             )}
           </div>
 
@@ -193,17 +196,23 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
           <div className="mt-3">
             {comentarioMaisRecente ? (
               <div
-                className="pt-2 text-sm text-gray-700 border-t"
+                className="pt-2 text-sm border-t-2 border-border text-text"
                 style={estiloFonte}
               >
                 <p>{comentarioMaisRecente.texto}</p>
-                <p className="mt-1 text-xs text-gray-500" style={estiloFonte}>
+                <p
+                  className="mt-1 text-xs text-text opacity-80"
+                  style={estiloFonte}
+                >
                   {capitalizar(comentarioMaisRecente.setor)} -{" "}
                   {formatarDataHora(comentarioMaisRecente.criadoEm)}
                 </p>
               </div>
             ) : (
-              <p className="text-sm italic text-gray-500" style={estiloFonte}>
+              <p
+                className="text-sm italic text-text opacity-40"
+                style={estiloFonte}
+              >
                 Sem comentários ainda.
               </p>
             )}
@@ -221,14 +230,17 @@ export default function CardServico({ servico, provided, snapshot, turno }) {
                 ) : (
                   <>
                     <ul
-                      className="mt-2 space-y-2 text-sm text-gray-700"
+                      className="mt-2 space-y-2 text-sm text-text"
                       style={estiloFonte}
                     >
                       {comentariosRestantes.map((comentario) => (
-                        <li key={comentario.id} className="pt-2 border-t">
+                        <li
+                          key={comentario.id}
+                          className="pt-2 border-t-2 border-border text-text"
+                        >
                           <p>{comentario.texto}</p>
                           <p
-                            className="mt-1 text-xs text-gray-500"
+                            className="mt-1 text-xs text-text"
                             style={estiloFonte}
                           >
                             {capitalizar(comentario.setor)} -{" "}
