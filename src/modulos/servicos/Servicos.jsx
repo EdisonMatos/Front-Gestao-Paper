@@ -31,7 +31,8 @@ export default function Servicos() {
     .filter(
       (s) =>
         s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-        s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase())
+        s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase()) ||
+        s.cliente?.representante?.toLowerCase().includes(filtro.toLowerCase())
     )
     .slice(0, 3);
 
@@ -42,7 +43,6 @@ export default function Servicos() {
 
   const handleDelete = async (id) => {
     try {
-      // Busca TODOS os comentários e filtra os do serviço atual
       const resComentarios = await axios.get(API_COMENTARIOS_URL);
       const comentarios = resComentarios.data.filter((c) => c.servicoId === id);
 
@@ -59,7 +59,6 @@ export default function Servicos() {
         return;
       }
 
-      // Exclui todos os comentários relacionados (se houver)
       if (comentarios.length > 0) {
         await Promise.all(
           comentarios.map((comentario) =>
@@ -68,7 +67,6 @@ export default function Servicos() {
         );
       }
 
-      // Exclui o serviço
       await axios.delete(`${API_URL}/${id}`);
       toast.success("Serviço e comentários excluídos com sucesso!", {
         autoClose: 1000,
@@ -122,30 +120,22 @@ export default function Servicos() {
         />
       )}
 
-      <div className="overflow-x-auto text-text">
-        <table className="min-w-full text-sm text-left border border-border">
-          <thead className="bg-containers border-solid border-[1px] border-containers text-text">
-            <tr>
-              <th className="p-2 border border-containers">Nome</th>
-              <th className="p-2 border border-containers">Empresa</th>
-              <th className="p-2 border border-containers">Turno</th>
-              <th className="p-2 border border-containers">Doc</th>
-              <th className="p-2 border border-containers">Prévia</th>
-              <th className="p-2 border border-containers">Datas</th>
-
-              <th className="p-2 border border-containers">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtro.trim() === "" ? (
+      {filtro.trim() !== "" && servicosFiltrados.length > 0 && (
+        <div className="overflow-x-auto text-text">
+          <table className="min-w-full text-sm text-left border border-border">
+            <thead className="bg-containers border-solid border-[1px] border-containers text-text">
               <tr>
-                <td colSpan="8" className="p-4 text-center text-gray-500">
-                  Digite o serviço ou cliente que deseja localizar no campo de
-                  busca
-                </td>
+                <th className="p-2 border border-containers">Nome</th>
+                <th className="p-2 border border-containers">Empresa</th>
+                <th className="p-2 border border-containers">Turno</th>
+                <th className="p-2 border border-containers">Doc</th>
+                <th className="p-2 border border-containers">Prévia</th>
+                <th className="p-2 border border-containers">Datas</th>
+                <th className="p-2 border border-containers">Ações</th>
               </tr>
-            ) : servicosFiltrados.length > 0 ? (
-              servicosFiltrados.map((servico) => (
+            </thead>
+            <tbody>
+              {servicosFiltrados.map((servico) => (
                 <tr key={servico.id} className="hover:bg-[#2E2C33] ">
                   <td className="p-2 border border-border">{servico.nome}</td>
                   <td className="p-2 border border-border">
@@ -200,7 +190,6 @@ export default function Servicos() {
                       {formatDate(servico.dataProximoPrazo)}
                     </div>
                   </td>
-
                   <td className="p-2 space-x-2 border border-border">
                     <button
                       onClick={() => handleEdit(servico)}
@@ -208,25 +197,25 @@ export default function Servicos() {
                     >
                       Editar
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleDelete(servico.id)}
                       className="text-red-600 hover:underline"
                     >
                       Excluir
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className="p-4 text-center text-gray-500">
-                  Nenhum serviço encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {filtro.trim() !== "" && servicosFiltrados.length === 0 && (
+        <p className="mt-4 text-left text-text opacity-60">
+          Nenhum resultado encontrado.
+        </p>
+      )}
     </div>
   );
 }
