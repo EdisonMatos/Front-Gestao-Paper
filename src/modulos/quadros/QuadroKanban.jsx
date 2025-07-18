@@ -81,6 +81,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         [origem]: novaLista,
       }));
 
+      const updatingToastId = toast.loading("Atualizando ordem...");
+
       try {
         const now = Date.now();
 
@@ -96,9 +98,17 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         );
 
         await carregarServicos();
-        toast.success("Ordem atualizada com sucesso!", { autoClose: 1000 });
+
+        toast.update(updatingToastId, {
+          render: "Ordem atualizada com sucesso!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+          closeButton: true,
+        });
       } catch (error) {
         console.error("Erro ao atualizar ordem dos serviços:", error);
+        toast.dismiss();
         toast.error("Erro ao atualizar ordem", { autoClose: 1000 });
       }
 
