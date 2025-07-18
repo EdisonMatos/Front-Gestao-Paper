@@ -83,14 +83,14 @@ export default function Clientes() {
       {!showForm ? (
         <button
           onClick={handleAdicionarNovo}
-          className="px-4 py-2 mb-4 ml-4 text-white rounded bg-buttons hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 text-white rounded desktop1:ml-4 bg-buttons hover:bg-buttonsHover"
         >
           Adicionar novo cliente
         </button>
       ) : (
         <button
           onClick={resetForm}
-          className="px-4 py-2 mb-4 ml-4 text-white bg-gray-500 rounded hover:bg-gray-600"
+          className="px-4 py-2 mb-4 text-white bg-gray-500 rounded desktop1:ml-4 hover:bg-gray-600"
         >
           Cancelar
         </button>
