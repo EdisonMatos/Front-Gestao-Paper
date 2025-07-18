@@ -7,7 +7,7 @@ export default function QuadroWebmaster() {
     apontarDns: { nome: "Apontar DNS", tipoCard: "normal" },
     criarEmailBlog: { nome: "Criar Email Blog", tipoCard: "normal" },
     deploy: { nome: "Deploy", tipoCard: "normal" },
-    aguardandoTerceiros: { nome: "Aguardando", tipoCard: "superCompacto" },
+    aguardandoTerceiros: { nome: "Aguardando", tipoCard: "compacto" },
   };
 
   return (
