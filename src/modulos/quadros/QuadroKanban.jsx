@@ -119,14 +119,35 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       return;
     }
 
+    // Se for mudança de coluna, solicitar comentário primeiro
+    const comentario = prompt(
+      "Comente no seguinte formato: \n O que foi feito. O que precisa ser feito agora."
+    );
+    if (!comentario || !comentario.trim()) {
+      toast.info("Movimentação cancelada.", { autoClose: 1000 });
+      return;
+    }
+
     try {
       const movingToastId = toast.loading("Movendo serviço...");
 
+      // 1. Cria comentário
+      await axios.post(
+        "https://backend-gestao-paper.onrender.com/comentarios",
+        {
+          servicoId: itemMovido.id,
+          texto: comentario.trim(),
+          feitoPor: turno.charAt(0).toUpperCase() + turno.slice(1),
+          setor: turno,
+        }
+      );
+
+      // 2. Atualiza serviço com nova coluna
       await axios.put(
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
         {
           posicaoNoQuadro: destino,
-          ordemVerticalNoQuadro: 0, // ou o destino.index, se você quiser usar a posição real do drop
+          ordemVerticalNoQuadro: 0,
         }
       );
 
