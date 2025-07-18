@@ -185,7 +185,7 @@ export default function AcoesCardServico({
             type="text"
             value={comentarioDirecionar}
             onChange={(e) => setComentarioDirecionar(e.target.value)}
-            placeholder="Adicione um comentário"
+            placeholder="Comente no padrão estabelecido."
             className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
           />
 
