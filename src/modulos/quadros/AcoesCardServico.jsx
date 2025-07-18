@@ -30,6 +30,8 @@ export default function AcoesCardServico({
   const [acaoSelecionada, setAcaoSelecionada] = useState("");
   const [setorSelecionado, setSetorSelecionado] = useState("");
   const [comentarioDirecionar, setComentarioDirecionar] = useState("");
+  const [novaComplexidadeDirecionar, setNovaComplexidadeDirecionar] =
+    useState(""); // NOVO STATE PARA DIRECIONAR
   const [novaDataPrazo, setNovaDataPrazo] = useState(
     toInputDateString(servico.dataProximoPrazo)
   );
@@ -41,6 +43,8 @@ export default function AcoesCardServico({
   const direcionarServico = async () => {
     if (!comentarioDirecionar.trim()) return alert("Comentário é obrigatório.");
     if (!setorSelecionado) return alert("Setor é obrigatório.");
+    if (!novaComplexidadeDirecionar)
+      return alert("Complexidade é obrigatória.");
 
     setLoading(true);
     try {
@@ -60,7 +64,8 @@ export default function AcoesCardServico({
           ...servico,
           turnoDaVez: setorSelecionado,
           posicaoNoQuadro: null,
-          ordemVerticalNoQuadro: null, // <-- aqui está a modificação para zerar ordem
+          ordemVerticalNoQuadro: null,
+          complexidade: parseFloat(novaComplexidadeDirecionar), // ENVIA COMPLEXIDADE COMO NÚMERO
         }
       );
 
@@ -161,6 +166,19 @@ export default function AcoesCardServico({
             <option value="dev">Dev</option>
             <option value="webmaster">Webmaster</option>
             <option value="feedbacks">Feedbacks</option>
+          </select>
+
+          <select
+            value={novaComplexidadeDirecionar}
+            onChange={(e) => setNovaComplexidadeDirecionar(e.target.value)}
+            className="w-full p-1 border rounded bg-inputBg text-text border-border"
+          >
+            <option value="">Selecione a complexidade</option>
+            <option value="1">1 - Muito simples (até 15 min)</option>
+            <option value="2">2 - Simples (até 30min)</option>
+            <option value="3">3 - Moderado (Até 1h)</option>
+            <option value="4">4 - Demorada (Acima 1h)</option>
+            <option value="5">5 - Muito longa (Conversar)</option>
           </select>
 
           <input
