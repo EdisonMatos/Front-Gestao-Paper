@@ -7,7 +7,7 @@ export default function QuadroSuporte() {
     infoColetadas: { nome: "Info Coletadas", tipoCard: "normal" },
     gerandoDoc: { nome: "Gerando Doc", tipoCard: "normal" },
     aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
-    revisar: { nome: "Revisar", tipoCard: "superCompacto" },
+    revisar: { nome: "Revisar", tipoCard: "normal" },
   };
 
   return (
