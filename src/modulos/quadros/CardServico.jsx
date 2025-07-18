@@ -126,14 +126,6 @@ export default function CardServico({
           {renderComplexidade}
         </>
       );
-    } else if ([2, 3].includes(diffDias)) {
-      return (
-        <>
-          {dataFormatada} -{" "}
-          <span className="font-semibold text-yellow-700">Breve</span>{" "}
-          {renderComplexidade}
-        </>
-      );
     } else {
       return (
         <>
