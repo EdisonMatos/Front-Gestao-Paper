@@ -41,9 +41,13 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       });
 
       Object.keys(servicosOrganizados).forEach((coluna) => {
-        servicosOrganizados[coluna].sort(
-          (a, b) => new Date(a.atualizadoEm) - new Date(b.atualizadoEm)
-        );
+        servicosOrganizados[coluna].sort((a, b) => {
+          const ordemA = a.ordemVerticalNoQuadro;
+          const ordemB = b.ordemVerticalNoQuadro;
+          if (ordemA === null && ordemB !== null) return -1;
+          if (ordemB === null && ordemA !== null) return 1;
+          return (ordemA ?? 0) - (ordemB ?? 0);
+        });
       });
 
       setServicos(servicosOrganizados);
@@ -81,6 +85,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         [origem]: novaLista,
       }));
 
+      const updatingToastId = toast.loading("Atualizando ordem...");
+
       try {
         const now = Date.now();
 
@@ -89,16 +95,24 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
             axios.put(
               `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
               {
-                atualizadoEm: new Date(now + index * 1000).toISOString(),
+                ordemVerticalNoQuadro: index,
               }
             )
           )
         );
 
         await carregarServicos();
-        toast.success("Ordem atualizada com sucesso!", { autoClose: 1000 });
+
+        toast.update(updatingToastId, {
+          render: "Ordem atualizada com sucesso!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+          closeButton: true,
+        });
       } catch (error) {
         console.error("Erro ao atualizar ordem dos serviços:", error);
+        toast.dismiss();
         toast.error("Erro ao atualizar ordem", { autoClose: 1000 });
       }
 
@@ -112,7 +126,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
         {
           posicaoNoQuadro: destino,
-          atualizadoEm: new Date().toISOString(),
+          ordemVerticalNoQuadro: 0, // ou o destino.index, se você quiser usar a posição real do drop
         }
       );
 
@@ -146,7 +160,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
-      <div className="relative flex justify-between gap-4 py-4 gap">
+      <div className="relative flex justify-between gap-4 py-4 overflow-x-auto desktop1:overflow-x-visible gap">
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(colunas).map(([key, config]) => (
             <Droppable key={key} droppableId={key}>

@@ -45,9 +45,15 @@ export default function AddNovoCliente({
       if (form.id) {
         await axios.put(`${API_URL}/${form.id}`, form);
         toast.success("Cliente atualizado com sucesso!", { autoClose: 1000 });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
         await axios.post(API_URL, form);
         toast.success("Cliente adicionado com sucesso!", { autoClose: 1000 });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
       onSalvo();
     } catch (err) {

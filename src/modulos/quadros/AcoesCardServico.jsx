@@ -60,6 +60,7 @@ export default function AcoesCardServico({
           ...servico,
           turnoDaVez: setorSelecionado,
           posicaoNoQuadro: null,
+          ordemVerticalNoQuadro: null, // <-- aqui está a modificação para zerar ordem
         }
       );
 

@@ -2,11 +2,12 @@ import QuadroKanban from "./QuadroKanban";
 
 export default function QuadroWebmaster() {
   const colunas = {
-    backlog: "Backlog",
-    comprarDominio: "Comprar Domínio",
-    apontarDns: "Apontar DNS",
-    criarEmailBlog: "Criar Email Blog",
-    deploy: "Deploy",
+    backlog: { nome: "Backlog", tipoCard: "normal" },
+    comprarDominio: { nome: "Comprar Domínio", tipoCard: "normal" },
+    apontarDns: { nome: "Apontar DNS", tipoCard: "normal" },
+    criarEmailBlog: { nome: "Criar Email Blog", tipoCard: "normal" },
+    deploy: { nome: "Deploy", tipoCard: "normal" },
+    aguardandoTerceiros: { nome: "Aguardando", tipoCard: "compacto" },
   };
 
   return (

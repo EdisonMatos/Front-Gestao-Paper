@@ -132,11 +132,16 @@ export default function AddNovoServico({
       if (form.id) {
         await axios.put(`${API_URL}/${form.id}`, payload);
         toast.success("Serviço atualizado com sucesso!", { autoClose: 1000 });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
         onSalvo();
       } else {
         await axios.post(API_URL, payload);
         toast.success("Serviço adicionado com sucesso!", { autoClose: 1000 });
-        window.location.reload(); // 🔁 refresh após adicionar novo serviço
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     } catch (err) {
       toast.error("Erro ao salvar serviço.", { autoClose: 1000 });
