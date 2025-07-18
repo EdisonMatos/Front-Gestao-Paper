@@ -196,9 +196,12 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                   {...provided.droppableProps}
                   className="min-w-[300px] w-[300px] bg-containers p-3 rounded-2xl shadow-md"
                 >
-                  <h2 className="px-2 py-4 mb-2 text-left text-text">
-                    {config.nome}
-                  </h2>
+                  <div className="flex items-center justify-between px-2 py-4 mb-2 text-left text-text">
+                    <span>{config.nome}</span>
+                    <span className="w-8 px-2 py-2 text-sm text-center text-text rounded-xl bg-background">
+                      {servicos[key]?.length || 0}
+                    </span>
+                  </div>
 
                   {isLoading
                     ? Array.from({ length: 3 }).map((_, i) => (
