@@ -216,6 +216,7 @@ export default function AddNovoServico({
           <option value="dev">Dev</option>
           <option value="suporte">Suporte</option>
           <option value="webmaster">Webmaster</option>
+          <option value="feedbacks">Feedbacks</option>
         </select>
       </div>
 
