@@ -5,7 +5,7 @@ export default function QuadroFeedbacks() {
     backlog: { nome: "Backlog", tipoCard: "normal" },
     solicitado: { nome: "Solicitado", tipoCard: "superCompacto" },
     emMaos: { nome: "Em mãos", tipoCard: "superCompacto" },
-    postado: { nome: "Postado", tipoCard: "normal" },
+    postado: { nome: "Postado / Descartado", tipoCard: "compacto" },
     finalizado: { nome: "Finalizado", tipoCard: "compacto" },
   };
 
