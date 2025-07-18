@@ -41,9 +41,13 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       });
 
       Object.keys(servicosOrganizados).forEach((coluna) => {
-        servicosOrganizados[coluna].sort(
-          (a, b) => new Date(a.atualizadoEm) - new Date(b.atualizadoEm)
-        );
+        servicosOrganizados[coluna].sort((a, b) => {
+          const ordemA = a.ordemVerticalNoQuadro;
+          const ordemB = b.ordemVerticalNoQuadro;
+          if (ordemA === null && ordemB !== null) return -1;
+          if (ordemB === null && ordemA !== null) return 1;
+          return (ordemA ?? 0) - (ordemB ?? 0);
+        });
       });
 
       setServicos(servicosOrganizados);
@@ -91,7 +95,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
             axios.put(
               `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
               {
-                atualizadoEm: new Date(now + index * 1000).toISOString(),
+                ordemVerticalNoQuadro: index,
               }
             )
           )
@@ -122,7 +126,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
         {
           posicaoNoQuadro: destino,
-          atualizadoEm: new Date().toISOString(),
+          ordemVerticalNoQuadro: 0, // ou o destino.index, se você quiser usar a posição real do drop
         }
       );
 
