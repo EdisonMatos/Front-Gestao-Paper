@@ -119,7 +119,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                     )}
 
                     <p className="mt-2 text-xs text-gray-500">
-                      ⏰ {card.horario}
+                      ⏰ {card.horario} - ({card.complexidade})
                     </p>
                   </div>
                 ))
