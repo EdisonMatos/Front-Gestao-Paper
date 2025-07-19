@@ -6,7 +6,6 @@ export default function QuadroFeedbacks() {
     solicitado: { nome: "Solicitado", tipoCard: "superCompacto" },
     emMaos: { nome: "Em mãos", tipoCard: "superCompacto" },
     postado: { nome: "Postado / Descartado", tipoCard: "compacto" },
-    finalizado: { nome: "Finalizado", tipoCard: "compacto" },
   };
 
   return (
