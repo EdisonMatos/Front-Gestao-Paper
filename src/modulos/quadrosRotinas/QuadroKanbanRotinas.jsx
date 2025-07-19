@@ -6,6 +6,7 @@ import SkeletonCard from "../quadros/SkeletonCard";
 export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   const [rotinas, setRotinas] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const [descricaoExpandida, setDescricaoExpandida] = useState({});
 
   useEffect(() => {
     async function fetchRotinas() {
@@ -60,6 +61,13 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
     return expandida;
   }
 
+  function toggleDescricao(id) {
+    setDescricaoExpandida((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }
+
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
@@ -90,8 +98,27 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                     className="p-3 mb-3 border-l-4 shadow border-links bg-background rounded-xl"
                   >
                     <p className="font-medium text-text">{card.nome}</p>
-                    <p className="text-sm text-text/30">{card.descricao}</p>
-                    <p className="mt-1 text-xs text-gray-500">
+
+                    {!descricaoExpandida[card.id] ? (
+                      <button
+                        onClick={() => toggleDescricao(card.id)}
+                        className="mt-1 text-sm text-links/50 hover:underline"
+                      >
+                        Instruções
+                      </button>
+                    ) : (
+                      <div className="mt-2">
+                        <p className="text-sm text-text/80">{card.descricao}</p>
+                        <button
+                          onClick={() => toggleDescricao(card.id)}
+                          className="mt-1 text-sm text-links/50 hover:underline"
+                        >
+                          Ocultar instruções
+                        </button>
+                      </div>
+                    )}
+
+                    <p className="mt-2 text-xs text-gray-500">
                       ⏰ {card.horario}
                     </p>
                   </div>
