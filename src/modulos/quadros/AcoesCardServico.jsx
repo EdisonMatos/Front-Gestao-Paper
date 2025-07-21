@@ -164,6 +164,8 @@ export default function AcoesCardServico({
             <option value="">Selecione o setor:</option>
             <option value="suporte">Suporte</option>
             <option value="dev">Dev</option>
+            <option value="comercial">Comercial</option>
+            <option value="financeiro">Financeiro</option>
             <option value="webmaster">Webmaster</option>
             <option value="feedbacks">Feedbacks</option>
           </select>

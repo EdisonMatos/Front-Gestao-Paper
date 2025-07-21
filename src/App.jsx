@@ -6,6 +6,8 @@ import QuadroSuporte from "./modulos/quadros/QuadroSuporte";
 import QuadroWebmaster from "./modulos/quadros/QuadroWebmaster";
 import Servicos from "./modulos/servicos/Servicos";
 import RotinaSuporte from "./modulos/quadrosRotinas/RotinaSuporte";
+import QuadroComercial from "./modulos/quadros/QuadroComercial";
+import QuadroFinanceiro from "./modulos/quadros/QuadroFinanceiro";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <RotinaSuporte />
         <QuadroSuporte />
         <QuadroDev />
+        <QuadroComercial />
+        <QuadroFinanceiro />
         <QuadroWebmaster />
         <QuadroFeedbacks />
       </div>
