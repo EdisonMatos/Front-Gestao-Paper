@@ -7,7 +7,14 @@ import "react-toastify/dist/ReactToastify.css";
 import CardServico from "./CardServico";
 import SkeletonCard from "./SkeletonCard";
 
-const opcoesSetores = ["dev", "suporte", "webmaster", "feedbacks"];
+const opcoesSetores = [
+  "dev",
+  "suporte",
+  "webmaster",
+  "feedbacks",
+  "comercial",
+  "financeiro",
+];
 
 export default function QuadroKanban({ titulo, turno, colunas }) {
   const [servicos, setServicos] = useState(

@@ -213,8 +213,10 @@ export default function AddNovoServico({
           className="p-2 border rounded text-placeholder bg-inputBg"
         >
           <option value="">Selecione</option>
-          <option value="dev">Dev</option>
           <option value="suporte">Suporte</option>
+          <option value="dev">Dev</option>
+          <option value="comercial">Comercial</option>
+          <option value="financeiro">Financeiro</option>
           <option value="webmaster">Webmaster</option>
           <option value="feedbacks">Feedbacks</option>
         </select>
