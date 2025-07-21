@@ -139,8 +139,8 @@ export default function CardServico({
     (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
   );
 
-  const comentarioMaisRecente = comentariosOrdenados[0];
-  const comentariosRestantes = comentariosOrdenados.slice(1);
+  const doisMaisRecentes = comentariosOrdenados.slice(0, 2);
+  const comentariosRestantes = comentariosOrdenados.slice(2);
 
   const modoCompacto = modoCard === "compacto" && !mostrarCompleto;
   const modoSuperCompacto = modoCard === "superCompacto" && !mostrarCompleto;
@@ -188,14 +188,17 @@ export default function CardServico({
               className="pt-2 border-t-2 border-border text-text"
               style={estiloFonte}
             >
-              {comentarioMaisRecente ? (
-                <>
-                  <p>{comentarioMaisRecente.texto}</p>
-                  <p className="mt-1 text-text" style={{ fontSize: "12px" }}>
-                    {capitalizar(comentarioMaisRecente.setor)} -{" "}
-                    {formatarDataHora(comentarioMaisRecente.criadoEm)}
+              {doisMaisRecentes.length > 0 ? (
+                <div key={doisMaisRecentes[0].id}>
+                  <p>{doisMaisRecentes[0].texto}</p>
+                  <p
+                    className="mt-1 opacity-50 text-text"
+                    style={{ fontSize: "12px" }}
+                  >
+                    {capitalizar(doisMaisRecentes[0].setor)} -{" "}
+                    {formatarDataHora(doisMaisRecentes[0].criadoEm)}
                   </p>
-                </>
+                </div>
               ) : (
                 <p className="italic text-text" style={estiloFonte}>
                   Sem comentários ainda.
@@ -346,22 +349,22 @@ export default function CardServico({
           )}
 
           <div className="mt-0">
-            {comentarioMaisRecente && (
+            {doisMaisRecentes.map((comentario) => (
               <div
+                key={comentario.id}
                 className="pt-2 text-sm border-t-2 border-border text-text"
                 style={estiloFonte}
               >
-                <p>{comentarioMaisRecente.texto}</p>
+                <p>{comentario.texto}</p>
                 <p
-                  className="mt-1 text-xs text-text opacity-80"
+                  className="mt-1 text-xs opacity-50 text-text"
                   style={estiloFonte}
                 >
-                  {capitalizar(comentarioMaisRecente.setor)} -{" "}
-                  {formatarDataHora(comentarioMaisRecente.criadoEm)}
+                  {capitalizar(comentario.setor)} -{" "}
+                  {formatarDataHora(comentario.criadoEm)}
                 </p>
               </div>
-            )}
-
+            ))}
             {comentariosRestantes.length > 0 && (
               <div className="mt-2">
                 {!mostrarTodos ? (
