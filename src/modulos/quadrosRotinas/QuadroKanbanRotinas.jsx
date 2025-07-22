@@ -1,7 +1,7 @@
 // components/QuadroKanbanRotinas.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SkeletonCard from "../quadros/SkeletonCard";
+import AddNovaRotina from "./AddNovaRotina";
 
 export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   const [rotinas, setRotinas] = useState([]);
@@ -9,22 +9,23 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   const [descricaoExpandida, setDescricaoExpandida] = useState({});
 
   useEffect(() => {
-    async function fetchRotinas() {
-      try {
-        const { data } = await axios.get(
-          "https://backend-gestao-paper.onrender.com/rotinas"
-        );
-        const filtradas = data.filter((r) => r.setor === setor);
-        setRotinas(filtradas);
-      } catch (error) {
-        console.error("Erro ao buscar rotinas:", error);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
     fetchRotinas();
   }, [setor]);
+
+  async function fetchRotinas() {
+    try {
+      const res = await fetch(
+        "https://backend-gestao-paper.onrender.com/rotinas"
+      );
+      const data = await res.json();
+      const filtradas = data.filter((r) => r.setor === setor);
+      setRotinas(filtradas);
+    } catch (error) {
+      console.error("Erro ao buscar rotinas:", error);
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   function filtrarPorDia(dia) {
     const doDia = rotinas.filter((r) => {
@@ -35,7 +36,6 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
       return dias.includes(dia) || dias.includes("todos");
     });
 
-    // Para cada rotina com múltiplos horários, desmembrar em múltiplos cards
     const expandida = [];
     doDia.forEach((r) => {
       const horarios = r.horario
@@ -46,12 +46,11 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
         expandida.push({
           ...r,
           horario: h,
-          id: `${r.id}-${h}`, // garantir key única
+          id: `${r.id}-${h}`,
         });
       });
     });
 
-    // Ordenar por horário crescente (24h)
     expandida.sort((a, b) => {
       const [hA, mA] = a.horario.split(":").map(Number);
       const [hB, mB] = b.horario.split(":").map(Number);
@@ -71,6 +70,11 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   return (
     <div className="p-6">
       <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
+
+      {/* CRUD Separado */}
+      <AddNovaRotina setor={setor} onAtualizarRotinas={fetchRotinas} />
+
+      {/* Quadro Kanban */}
       <div className="relative flex gap-4 py-4 overflow-x-auto">
         {Object.entries(colunas).map(([key, config]) => {
           const cards = filtrarPorDia(key);
