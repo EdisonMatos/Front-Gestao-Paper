@@ -43,6 +43,7 @@ export default function AddNovoServico({
     dataEnvioPrevia: "",
     dataConclusao: "",
     dataProximoPrazo: "",
+    dataPrazoProjeto: "", // novo campo adicionado aqui
   });
 
   const [clienteBusca, setClienteBusca] = useState("");
@@ -78,6 +79,9 @@ export default function AddNovoServico({
         dataProximoPrazo: servicoParaEditar.dataProximoPrazo
           ? toInputDateString(servicoParaEditar.dataProximoPrazo)
           : "",
+        dataPrazoProjeto: servicoParaEditar.dataPrazoProjeto
+          ? toInputDateString(servicoParaEditar.dataPrazoProjeto)
+          : "", // atribuição do valor
       });
       setClienteBusca(servicoParaEditar.cliente?.empresa || "");
     }
@@ -126,6 +130,7 @@ export default function AddNovoServico({
       payload.dataEnvioPrevia = fromInputDateString(form.dataEnvioPrevia);
       payload.dataConclusao = fromInputDateString(form.dataConclusao);
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
+      payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto); // nova conversão aqui
 
       delete payload.clienteNome;
 
@@ -326,6 +331,20 @@ export default function AddNovoServico({
           type="date"
           name="dataProximoPrazo"
           value={form.dataProximoPrazo}
+          onChange={handleChange}
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
+        />
+      </div>
+
+      {/* Novo campo de data do prazo do projeto */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-sm font-medium">
+          Data do Prazo do Projeto
+        </label>
+        <input
+          type="date"
+          name="dataPrazoProjeto"
+          value={form.dataPrazoProjeto}
           onChange={handleChange}
           className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />

@@ -45,9 +45,12 @@ export default function AcoesCardServico({
     if (!setorSelecionado) return alert("Setor é obrigatório.");
     if (!novaComplexidadeDirecionar)
       return alert("Complexidade é obrigatória.");
+    if (!novaDataPrazo) return alert("Atualizar prazo é obrigatório.");
 
     setLoading(true);
     try {
+      const novaDataISO = fromInputDateString(novaDataPrazo).toISOString();
+
       await axios.post(
         "https://backend-gestao-paper.onrender.com/comentarios",
         {
@@ -66,6 +69,7 @@ export default function AcoesCardServico({
           posicaoNoQuadro: null,
           ordemVerticalNoQuadro: null,
           complexidade: parseFloat(novaComplexidadeDirecionar), // ENVIA COMPLEXIDADE COMO NÚMERO
+          dataProximoPrazo: novaDataISO, // ATUALIZA O PRAZO
         }
       );
 
@@ -150,8 +154,8 @@ export default function AcoesCardServico({
       >
         <option value="">Selecione a ação:</option>
         <option value="direcionar">Direcionar serviço</option>
-        <option value="mudarPrazo">Mudar prazo</option>
-        <option value="mudarComplexidade">Mudar complexidade</option>
+        <option value="mudarPrazo">Mudar prazo tarefa</option>
+        <option value="mudarComplexidade">Mudar complexidade tarefa</option>
       </select>
 
       {acaoSelecionada === "direcionar" && (
@@ -182,6 +186,13 @@ export default function AcoesCardServico({
             <option value="4">4 - Demorada (Acima 1h)</option>
             <option value="5">5 - Muito longa (Conversar)</option>
           </select>
+          <p className="text-text/80">Selecione o novo prazo da tarefa:</p>
+          <input
+            type="date"
+            value={novaDataPrazo}
+            onChange={(e) => setNovaDataPrazo(e.target.value)}
+            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+          />
 
           <input
             type="text"
@@ -211,7 +222,9 @@ export default function AcoesCardServico({
 
       {acaoSelecionada === "mudarPrazo" && (
         <>
-          <label className="block text-text">Selecione a nova data:</label>
+          <label className="block text-text">
+            Selecione o novo prazo da tarefa:
+          </label>
           <input
             type="date"
             value={novaDataPrazo}
