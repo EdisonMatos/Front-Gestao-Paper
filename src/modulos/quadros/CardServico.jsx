@@ -28,9 +28,63 @@ export default function CardServico({
     servico.dataProximoPrazo || null
   );
 
+  const [dataPrazoProjetoLocal] = useState(servico.dataPrazoProjeto || null);
+
   const docDisponivel = !!servico.linkDoc;
   const previaDisponivel = !!servico.linkPreviaVercel;
   const repoDisponivel = !!servico.linkRepoGithub;
+
+  const formatarDataPrazoProjeto = (dataISO) => {
+    if (!dataISO) return "Prazo projeto: -";
+    const data = new Date(dataISO);
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const ano = data.getFullYear();
+    return `Prazo projeto: ${dia}/${mes}/${ano}`;
+  };
+
+  const formatarDataPrazoProjetoDetalhado = (dataISO) => {
+    if (!dataISO) {
+      return (
+        <>
+          <span className="text-text/50">Sem prazo</span> (
+          <span className="text-text/50">-</span>)
+        </>
+      );
+    }
+
+    const hoje = new Date();
+    const prazo = new Date(dataISO);
+
+    const diffMs = prazo.setHours(0, 0, 0, 0) - hoje.setHours(0, 0, 0, 0);
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    const dataFormatada = `${String(prazo.getDate()).padStart(2, "0")}/${String(
+      prazo.getMonth() + 1
+    ).padStart(2, "0")}/${prazo.getFullYear()}`;
+
+    if (diffDias === 0) {
+      return (
+        <>
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-red-500">Hoje</span>
+        </>
+      );
+    } else if (diffDias === 1) {
+      return (
+        <>
+          {dataFormatada} -{" "}
+          <span className="font-semibold text-yellow-300">Amanhã</span>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {dataFormatada} - {diffDias} dias
+        </>
+      );
+    }
+  };
 
   const capitalizar = (texto) =>
     texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
@@ -76,8 +130,8 @@ export default function CardServico({
     if (!dataPrazoISO) {
       return (
         <>
-          <span className="text-green-500">Sem prazo</span> (
-          <span className="text-red-400">-</span>)
+          <span className="text-text/50">Sem prazo</span> (
+          <span className="text-text/50">-</span>)
         </>
       );
     }
@@ -240,8 +294,13 @@ export default function CardServico({
               servico.cliente?.representante || "Sem representante"
             )}
           </p>
+          <p className="mt-4 text-sm text-text" style={estiloFonte}>
+            <span className="font-bold">Projeto:</span>{" "}
+            {formatarDataPrazoProjetoDetalhado(dataPrazoProjetoLocal)}
+          </p>
 
-          <p className="mt-2 text-sm text-text" style={estiloFonte}>
+          <p className="mb-4 text-sm text-text" style={estiloFonte}>
+            <span className="font-bold">Tarefa:</span>{" "}
             {formatarDataPrazo(dataProximoPrazoLocal)}
           </p>
 

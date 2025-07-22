@@ -150,8 +150,8 @@ export default function AcoesCardServico({
       >
         <option value="">Selecione a ação:</option>
         <option value="direcionar">Direcionar serviço</option>
-        <option value="mudarPrazo">Mudar prazo</option>
-        <option value="mudarComplexidade">Mudar complexidade</option>
+        <option value="mudarPrazo">Mudar prazo tarefa</option>
+        <option value="mudarComplexidade">Mudar complexidade tarefa</option>
       </select>
 
       {acaoSelecionada === "direcionar" && (
@@ -211,7 +211,9 @@ export default function AcoesCardServico({
 
       {acaoSelecionada === "mudarPrazo" && (
         <>
-          <label className="block text-text">Selecione a nova data:</label>
+          <label className="block text-text">
+            Selecione o novo prazo da tarefa:
+          </label>
           <input
             type="date"
             value={novaDataPrazo}
