@@ -9,7 +9,7 @@ export default function QuadroFinanceiro() {
   return (
     <QuadroKanban
       titulo="Quadro Financeiro"
-      turno="comercial"
+      turno="financeiro"
       colunas={colunas}
     />
   );
