@@ -7,6 +7,10 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   const [rotinas, setRotinas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [descricaoExpandida, setDescricaoExpandida] = useState({});
+  const [rotinasConcluidas, setRotinasConcluidas] = useState({});
+  const [foraDoPrazo, setForaDoPrazo] = useState({});
+  const [horasConclusao, setHorasConclusao] = useState({});
+  const [horasLimite, setHorasLimite] = useState({});
 
   useEffect(() => {
     fetchRotinas();
@@ -43,10 +47,23 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
         .map((h) => h.trim())
         .filter(Boolean);
       horarios.forEach((h) => {
+        const [hora, minuto] = h.split(":").map(Number);
+        const horarioRotina = new Date();
+        horarioRotina.setHours(hora, minuto, 0, 0);
+        const fimDaJanela = new Date(
+          horarioRotina.getTime() + r.janela * 60000
+        );
+        const limite = fimDaJanela
+          .toTimeString()
+          .split(":")
+          .slice(0, 2)
+          .join(":");
+
         expandida.push({
           ...r,
           horario: h,
           id: `${r.id}-${h}`,
+          limite,
         });
       });
     });
@@ -65,6 +82,73 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
       ...prev,
       [id]: !prev[id],
     }));
+  }
+
+  async function toggleConclusao(card) {
+    if (rotinasConcluidas[card.id]) return;
+
+    const agora = new Date();
+
+    const [hora, minuto] = card.horario.split(":").map(Number);
+    const horarioRotina = new Date();
+    horarioRotina.setHours(hora, minuto, 0, 0);
+
+    const fimDaJanela = new Date(horarioRotina.getTime() + card.janela * 60000);
+    const dentroDoPrazo = agora <= fimDaJanela;
+
+    let comentario = "Concluído";
+    if (!dentroDoPrazo) {
+      const justificativa = window.prompt(
+        "Tarefa fora do prazo. Informe a justificativa:"
+      );
+      if (!justificativa || justificativa.trim() === "") {
+        return;
+      }
+      comentario = justificativa;
+    }
+
+    try {
+      await fetch("https://backend-gestao-paper.onrender.com/registros", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dataConclusao: agora,
+          comentario,
+          feitoPor: setor,
+          rotinaId: card.id.split("-")[0],
+        }),
+      });
+
+      setRotinasConcluidas((prev) => ({
+        ...prev,
+        [card.id]: true,
+      }));
+
+      const horaConclusao = agora
+        .toTimeString()
+        .split(":")
+        .slice(0, 2)
+        .join(":");
+
+      setHorasConclusao((prev) => ({
+        ...prev,
+        [card.id]: horaConclusao,
+      }));
+
+      setHorasLimite((prev) => ({
+        ...prev,
+        [card.id]: card.limite,
+      }));
+
+      if (!dentroDoPrazo) {
+        setForaDoPrazo((prev) => ({
+          ...prev,
+          [card.id]: true,
+        }));
+      }
+    } catch (error) {
+      console.error("Erro ao registrar conclusão:", error);
+    }
   }
 
   return (
@@ -99,19 +183,35 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                 cards.map((card) => (
                   <div
                     key={card.id}
-                    className="p-3 mb-3 border-l-4 shadow border-links bg-background rounded-xl"
+                    className={`p-3 mb-3 border-l-4 shadow bg-background rounded-xl relative group transition-opacity duration-300 ${
+                      rotinasConcluidas[card.id] ? "opacity-40" : ""
+                    } ${
+                      foraDoPrazo[card.id] ? "border-red-500" : "border-links"
+                    }`}
                   >
-                    <p className="font-medium text-text">{card.nome}</p>
+                    <button
+                      onClick={() => toggleConclusao(card)}
+                      disabled={rotinasConcluidas[card.id]}
+                      className={`absolute flex items-center justify-center w-4 h-4 transition-transform duration-200 bg-white border-2 border-gray-400 rounded-full top-2 left-2 group-hover:scale-125 ${
+                        rotinasConcluidas[card.id] ? "cursor-not-allowed" : ""
+                      }`}
+                    >
+                      {rotinasConcluidas[card.id] && (
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      )}
+                    </button>
+
+                    <p className="pl-6 font-medium text-text">{card.nome}</p>
 
                     {!descricaoExpandida[card.id] ? (
                       <button
                         onClick={() => toggleDescricao(card.id)}
-                        className="mt-1 text-sm text-links/50 hover:underline"
+                        className="pl-6 mt-1 text-sm text-links/50 hover:underline"
                       >
                         Instruções
                       </button>
                     ) : (
-                      <div className="mt-2">
+                      <div className="pl-6 mt-2">
                         <p className="text-sm text-text/80">{card.descricao}</p>
                         <button
                           onClick={() => toggleDescricao(card.id)}
@@ -122,9 +222,22 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                       </div>
                     )}
 
-                    <p className="mt-2 text-xs text-gray-500">
+                    <p className="pl-6 mt-2 text-xs text-gray-500">
                       ⏰ {card.horario} - ({card.complexidade})
                     </p>
+
+                    <p className="pl-6 text-xs text-gray-400">
+                      🕓 {card.limite}
+                    </p>
+
+                    {horasConclusao[card.id] && (
+                      <p className="pl-6 mt-1 text-xs text-gray-500">
+                        ✅ {horasConclusao[card.id]}{" "}
+                        {foraDoPrazo[card.id] && (
+                          <span className="text-red-500">(fora do prazo)</span>
+                        )}
+                      </p>
+                    )}
                   </div>
                 ))
               ) : (
