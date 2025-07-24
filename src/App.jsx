@@ -52,7 +52,7 @@ function App() {
           <QuadroWebmaster />
         </AcordionDepartamentos>
 
-        <AcordionDepartamentos titulo="TRÁFEGO">
+        <AcordionDepartamentos titulo="TRÁFEGO PAGO">
           <RotinaTrafego />
           <QuadroTrafego />
         </AcordionDepartamentos>
