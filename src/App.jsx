@@ -18,6 +18,7 @@ import RotinaFinanceiro from "./modulos/quadrosRotinas/RotinaFinanceiro";
 import AcordionDepartamentos from "./AcordionDepartamentos";
 import RotinaSocialMedia from "./modulos/quadrosRotinas/RotinaSocialMedia";
 import QuadroSocialMedia from "./modulos/quadros/QuadroSocialMedia";
+import QuadroResumoRotinas from "./modulos/quadros/QuadroResumoRotinas";
 
 function App() {
   return (
@@ -30,7 +31,6 @@ function App() {
         <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
           <Servicos />
         </div>
-
         <AcordionDepartamentos titulo="SUPORTE">
           <RotinaSuporte />
           <QuadroSuporte />
@@ -68,10 +68,12 @@ function App() {
           <RotinaFinanceiro />
           <QuadroFinanceiro />
         </AcordionDepartamentos>
-
         <AcordionDepartamentos titulo="DIRETORIA">
           <RotinaDiretoria />
           <QuadroDiretoria />
+        </AcordionDepartamentos>
+        <AcordionDepartamentos titulo="RESUMO ROTINAS">
+          <QuadroResumoRotinas />
         </AcordionDepartamentos>
       </div>
     </div>

@@ -297,7 +297,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               required
             >
               <option value="segunda">Segunda</option>
-              <option value="terça">Terça</option>
+              <option value="terca">Terça</option>
               <option value="quarta">Quarta</option>
               <option value="quinta">Quinta</option>
               <option value="sexta">Sexta</option>
