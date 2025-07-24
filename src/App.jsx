@@ -10,6 +10,8 @@ import QuadroComercial from "./modulos/quadros/QuadroComercial";
 import QuadroFinanceiro from "./modulos/quadros/QuadroFinanceiro";
 import RotinaWebmaster from "./modulos/quadrosRotinas/RotinaWebmaster";
 import RotinaFeedbacks from "./modulos/quadrosRotinas/RotinaFeedbacks";
+import RotinaTrafego from "./modulos/quadrosRotinas/RotinaTrafego";
+import QuadroTrafego from "./modulos/quadros/QuadroTrafego";
 
 function App() {
   return (
@@ -38,6 +40,10 @@ function App() {
         <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
           <RotinaWebmaster />
           <QuadroWebmaster />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <RotinaTrafego />
+          <QuadroTrafego />
         </div>
         <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
           <RotinaFeedbacks />

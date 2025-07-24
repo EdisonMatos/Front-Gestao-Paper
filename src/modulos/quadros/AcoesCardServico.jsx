@@ -170,6 +170,7 @@ export default function AcoesCardServico({
             <option value="dev">Dev</option>
             <option value="comercial">Comercial</option>
             <option value="financeiro">Financeiro</option>
+            <option value="trafego">Tráfego Pago</option>
             <option value="webmaster">Webmaster</option>
             <option value="feedbacks">Feedbacks</option>
           </select>
