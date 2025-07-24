@@ -173,6 +173,7 @@ export default function AcoesCardServico({
             <option value="trafego">Tráfego Pago</option>
             <option value="webmaster">Webmaster</option>
             <option value="feedbacks">Feedbacks</option>
+            <option value="diretoria">Diretoria</option>
           </select>
 
           <select
