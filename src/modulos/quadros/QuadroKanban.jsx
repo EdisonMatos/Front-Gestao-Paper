@@ -14,6 +14,8 @@ const opcoesSetores = [
   "feedbacks",
   "comercial",
   "financeiro",
+  "trafego",
+  "diretoria",
 ];
 
 export default function QuadroKanban({ titulo, turno, colunas }) {

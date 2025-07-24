@@ -10,6 +10,12 @@ import QuadroComercial from "./modulos/quadros/QuadroComercial";
 import QuadroFinanceiro from "./modulos/quadros/QuadroFinanceiro";
 import RotinaWebmaster from "./modulos/quadrosRotinas/RotinaWebmaster";
 import RotinaFeedbacks from "./modulos/quadrosRotinas/RotinaFeedbacks";
+import RotinaTrafego from "./modulos/quadrosRotinas/RotinaTrafego";
+import QuadroTrafego from "./modulos/quadros/QuadroTrafego";
+import RotinaDiretoria from "./modulos/quadrosRotinas/RotinaDiretoria";
+import QuadroDiretoria from "./modulos/quadros/QuadroDiretoria";
+import RotinaFinanceiro from "./modulos/quadrosRotinas/RotinaFinanceiro";
+import AcordionDepartamentos from "./AcordionDepartamentos";
 
 function App() {
   return (
@@ -22,27 +28,44 @@ function App() {
         <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
           <Servicos />
         </div>
-        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+
+        <AcordionDepartamentos titulo="SUPORTE">
           <RotinaSuporte />
           <QuadroSuporte />
-        </div>
-        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit ">
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="DESENVOLVIMENTO">
           <QuadroDev />
-        </div>
-        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="COMERCIAL">
           <QuadroComercial />
-        </div>
-        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="FINANCEIRO">
+          <RotinaFinanceiro />
           <QuadroFinanceiro />
-        </div>
-        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="WEBMASTER">
           <RotinaWebmaster />
           <QuadroWebmaster />
-        </div>
-        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="TRÁFEGO PAGO">
+          <RotinaTrafego />
+          <QuadroTrafego />
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="FEEDBACKS">
           <RotinaFeedbacks />
           <QuadroFeedbacks />
-        </div>
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="DIRETORIA">
+          <RotinaDiretoria />
+          <QuadroDiretoria />
+        </AcordionDepartamentos>
       </div>
     </div>
   );
