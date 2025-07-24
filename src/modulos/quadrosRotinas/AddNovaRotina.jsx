@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
   const [rotinas, setRotinas] = useState([]);
@@ -60,20 +61,25 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
   async function handleAdicionar(e) {
     e.preventDefault();
     if (!novaRotina.nome.trim()) {
-      alert("Nome é obrigatório");
+      toast.error("Nome é obrigatório");
       return;
     }
 
+    const toastId = toast.loading("Adicionando rotina...");
     try {
       const res = await fetch(
         "https://backend-gestao-paper.onrender.com/rotinas",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(novaRotina),
+          body: JSON.stringify({
+            ...novaRotina,
+            conclusao: new Date(0).toISOString(), // <- adicionado aqui
+          }),
         }
       );
       if (!res.ok) throw new Error("Erro ao criar rotina");
+
       setNovaRotina({
         nome: "",
         descricao: "",
@@ -84,10 +90,23 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         diaDaSemana: "segunda",
         setor,
       });
-      buscarRotinas();
+
+      await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
+
+      toast.update(toastId, {
+        render: "Rotina adicionada com sucesso!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
     } catch (error) {
-      alert(error.message || "Erro ao adicionar rotina");
+      toast.update(toastId, {
+        render: error.message || "Erro ao adicionar rotina",
+        type: "error",
+        isLoading: false,
+        autoClose: 1000,
+      });
     }
   }
 
@@ -122,10 +141,11 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
   async function salvarEdicao(id) {
     const rotinaEditada = editando[id];
     if (!rotinaEditada.nome.trim()) {
-      alert("Nome é obrigatório");
+      toast.error("Nome é obrigatório");
       return;
     }
 
+    const toastId = toast.loading("Salvando edição...");
     try {
       const res = await fetch(
         `https://backend-gestao-paper.onrender.com/rotinas/${id}`,
@@ -136,16 +156,31 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         }
       );
       if (!res.ok) throw new Error("Erro ao atualizar rotina");
+
       cancelarEdicao(id);
-      buscarRotinas();
+      await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
+
+      toast.update(toastId, {
+        render: "Rotina atualizada com sucesso!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
     } catch (error) {
-      alert(error.message || "Erro ao salvar edição");
+      toast.update(toastId, {
+        render: error.message || "Erro ao salvar edição",
+        type: "error",
+        isLoading: false,
+        autoClose: 1000,
+      });
     }
   }
 
   async function excluirRotina(id) {
     if (!window.confirm("Deseja realmente excluir essa rotina?")) return;
+
+    const toastId = toast.loading("Excluindo rotina...");
     try {
       const res = await fetch(
         `https://backend-gestao-paper.onrender.com/rotinas/${id}`,
@@ -154,10 +189,23 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         }
       );
       if (!res.ok) throw new Error("Erro ao excluir rotina");
-      buscarRotinas();
+
+      await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
+
+      toast.update(toastId, {
+        render: "Rotina excluída com sucesso!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
     } catch (error) {
-      alert(error.message || "Erro ao excluir rotina");
+      toast.update(toastId, {
+        render: error.message || "Erro ao excluir rotina",
+        type: "error",
+        isLoading: false,
+        autoClose: 1000,
+      });
     }
   }
 

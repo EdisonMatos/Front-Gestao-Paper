@@ -12,7 +12,7 @@ export default function RotinaSocialMedia() {
 
   return (
     <QuadroKanbanRotinas
-      titulo="Rotinas Diretoria"
+      titulo="Rotinas Social Media"
       setor="socialmedia"
       colunas={colunas}
     />
