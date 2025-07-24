@@ -31,6 +31,35 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
     }
   }
 
+  function isDataDessaSemana(dateStr) {
+    const date = new Date(dateStr);
+    const hoje = new Date();
+    const primeiroDiaDaSemana = new Date(hoje);
+    const ultimoDiaDaSemana = new Date(hoje);
+    primeiroDiaDaSemana.setDate(hoje.getDate() - hoje.getDay() + 1); // Segunda
+    ultimoDiaDaSemana.setDate(primeiroDiaDaSemana.getDate() + 6); // Domingo
+
+    return date >= primeiroDiaDaSemana && date <= ultimoDiaDaSemana;
+  }
+
+  function calcularStatus(rotina, horario) {
+    const registroAtual = rotina.registros
+      ?.filter((reg) => isDataDessaSemana(reg.dataConclusao))
+      .sort((a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao))[0];
+
+    if (!registroAtual) return "pendente";
+
+    const [hora, minuto] = horario.split(":").map(Number);
+    const dataLimite = new Date();
+    dataLimite.setHours(hora, minuto, 0, 0);
+    dataLimite.setTime(dataLimite.getTime() + rotina.janela * 60000);
+
+    const dataConclusao = new Date(registroAtual.dataConclusao);
+
+    if (dataConclusao <= dataLimite) return "concluida";
+    return "atrasada";
+  }
+
   function filtrarPorDia(dia) {
     const doDia = rotinas.filter((r) => {
       const dias = r.diaDaSemana
@@ -64,6 +93,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
           horario: h,
           id: `${r.id}-${h}`,
           limite,
+          statusCalculado: calcularStatus(r, h),
         });
       });
     });
@@ -183,10 +213,13 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                 cards.map((card) => (
                   <div
                     key={card.id}
-                    className={`p-3 mb-3 border-l-4 shadow bg-background rounded-xl relative group transition-opacity duration-300 ${
-                      rotinasConcluidas[card.id] ? "opacity-40" : ""
-                    } ${
-                      foraDoPrazo[card.id] ? "border-red-500" : "border-links"
+                    className={`p-3 mb-3 border-l-4 shadow bg-background rounded-xl relative group transition-opacity duration-300
+                    ${
+                      card.statusCalculado === "concluida"
+                        ? "border-green-500"
+                        : card.statusCalculado === "atrasada"
+                        ? "border-red-500"
+                        : "border-black"
                     }`}
                   >
                     <button
@@ -222,12 +255,12 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                       </div>
                     )}
 
-                    <p className="pl-6 mt-2 text-xs text-gray-500">
-                      ⏰ {card.horario} - ({card.complexidade})
+                    <p className="pl-6 mt-2 text-xs text-text">
+                      ⏰ Horário: {card.horario} - ({card.complexidade})
                     </p>
 
-                    <p className="pl-6 text-xs text-gray-400">
-                      🕓 {card.limite}
+                    <p className="pl-6 text-xs text-text">
+                      🕓 Prazo: {card.limite}
                     </p>
 
                     {horasConclusao[card.id] && (
