@@ -138,7 +138,7 @@ export default function Servicos() {
 
       <input
         type="text"
-        placeholder="Pesquisar por serviço ou empresa..."
+        placeholder="Buscar..."
         value={filtro}
         onChange={(e) => setFiltro(e.target.value)}
         className="w-full p-2 mb-4 border rounded md:w-1/4 bg-inputBg text-placeholder border-border"

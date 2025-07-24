@@ -8,21 +8,41 @@ import Servicos from "./modulos/servicos/Servicos";
 import RotinaSuporte from "./modulos/quadrosRotinas/RotinaSuporte";
 import QuadroComercial from "./modulos/quadros/QuadroComercial";
 import QuadroFinanceiro from "./modulos/quadros/QuadroFinanceiro";
+import RotinaWebmaster from "./modulos/quadrosRotinas/RotinaWebmaster";
+import RotinaFeedbacks from "./modulos/quadrosRotinas/RotinaFeedbacks";
 
 function App() {
   return (
     <div className="bg-background font-mainFont">
       <ToastContainer />
-      <div className="flex flex-col max-w-[1400px] ">
-        <Clientes />
-        <Servicos />
-        <RotinaSuporte />
-        <QuadroSuporte />
-        <QuadroDev />
-        <QuadroComercial />
-        <QuadroFinanceiro />
-        <QuadroWebmaster />
-        <QuadroFeedbacks />
+      <div className="flex flex-col max-w-[1400px] overflow-x-auto">
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <Clientes />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <Servicos />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <RotinaSuporte />
+          <QuadroSuporte />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit ">
+          <QuadroDev />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <QuadroComercial />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <QuadroFinanceiro />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <RotinaWebmaster />
+          <QuadroWebmaster />
+        </div>
+        <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+          <RotinaFeedbacks />
+          <QuadroFeedbacks />
+        </div>
       </div>
     </div>
   );
