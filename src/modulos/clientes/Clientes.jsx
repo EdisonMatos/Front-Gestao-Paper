@@ -75,7 +75,7 @@ export default function Clientes() {
       <h2 className="mb-4 text-2xl font-bold text-text">Gestão de Clientes</h2>
       <input
         type="text"
-        placeholder="Pesquisar por empresa ou representante..."
+        placeholder="Buscar..."
         value={filtro}
         onChange={(e) => setFiltro(e.target.value)}
         className="w-full p-2 mb-4 border rounded md:w-1/4 bg-inputBg text-placeholder border-border"
