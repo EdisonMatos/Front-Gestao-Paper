@@ -1,173 +1,430 @@
-// components/AddNovaRotina.jsx
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
+  const [rotinas, setRotinas] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
+  const [visivel, setVisivel] = useState(false);
+
   const [novaRotina, setNovaRotina] = useState({
     nome: "",
     descricao: "",
-    diaDaSemana: "",
+    status: "pendente",
+    complexidade: 1,
     horario: "",
-    complexidade: "",
-    setor: setor,
+    janela: 60,
+    diaDaSemana: "segunda",
+    setor,
   });
 
-  const [editandoId, setEditandoId] = useState(null);
-  const [rotinas, setRotinas] = useState([]);
+  const [editando, setEditando] = useState({});
 
   useEffect(() => {
-    fetchRotinas();
+    if (!setor) return;
+    buscarRotinas();
   }, [setor]);
 
-  async function fetchRotinas() {
+  useEffect(() => {
+    setNovaRotina((prev) => ({
+      ...prev,
+      setor,
+    }));
+  }, [setor]);
+
+  async function buscarRotinas() {
+    setCarregando(true);
+    setErro(null);
     try {
-      const { data } = await axios.get(
+      const res = await fetch(
         "https://backend-gestao-paper.onrender.com/rotinas"
       );
+      const data = await res.json();
       const filtradas = data.filter((r) => r.setor === setor);
       setRotinas(filtradas);
-    } catch (error) {
-      console.error("Erro ao buscar rotinas:", error);
+    } catch (e) {
+      setErro("Erro ao carregar rotinas");
+    } finally {
+      setCarregando(false);
     }
   }
 
-  async function salvarRotina(e) {
-    e.preventDefault();
-    try {
-      if (editandoId) {
-        await axios.put(
-          `https://backend-gestao-paper.onrender.com/rotinas/${editandoId}`,
-          novaRotina
-        );
-      } else {
-        await axios.post(
-          "https://backend-gestao-paper.onrender.com/rotinas",
-          novaRotina
-        );
-      }
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setNovaRotina((prev) => ({
+      ...prev,
+      [name]:
+        name === "complexidade" || name === "janela" ? Number(value) : value,
+    }));
+  }
 
+  async function handleAdicionar(e) {
+    e.preventDefault();
+    if (!novaRotina.nome.trim()) {
+      alert("Nome é obrigatório");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "https://backend-gestao-paper.onrender.com/rotinas",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(novaRotina),
+        }
+      );
+      if (!res.ok) throw new Error("Erro ao criar rotina");
       setNovaRotina({
         nome: "",
         descricao: "",
-        diaDaSemana: "",
+        status: "pendente",
+        complexidade: 1,
         horario: "",
-        complexidade: "",
-        setor: setor,
+        janela: 60,
+        diaDaSemana: "segunda",
+        setor,
       });
-      setEditandoId(null);
-      fetchRotinas();
-      onAtualizarRotinas();
+      buscarRotinas();
+      if (onAtualizarRotinas) onAtualizarRotinas();
     } catch (error) {
-      console.error("Erro ao salvar rotina:", error);
+      alert(error.message || "Erro ao adicionar rotina");
     }
   }
 
-  function editarRotina(rotina) {
-    setNovaRotina(rotina);
-    setEditandoId(rotina.id);
+  function iniciarEdicao(id) {
+    const rotina = rotinas.find((r) => r.id === id);
+    setEditando((prev) => ({
+      ...prev,
+      [id]: { ...rotina },
+    }));
+  }
+
+  function cancelarEdicao(id) {
+    setEditando((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
+  }
+
+  function handleEditarChange(id, e) {
+    const { name, value } = e.target;
+    setEditando((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [name]:
+          name === "complexidade" || name === "janela" ? Number(value) : value,
+      },
+    }));
+  }
+
+  async function salvarEdicao(id) {
+    const rotinaEditada = editando[id];
+    if (!rotinaEditada.nome.trim()) {
+      alert("Nome é obrigatório");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://backend-gestao-paper.onrender.com/rotinas/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(rotinaEditada),
+        }
+      );
+      if (!res.ok) throw new Error("Erro ao atualizar rotina");
+      cancelarEdicao(id);
+      buscarRotinas();
+      if (onAtualizarRotinas) onAtualizarRotinas();
+    } catch (error) {
+      alert(error.message || "Erro ao salvar edição");
+    }
   }
 
   async function excluirRotina(id) {
-    if (!window.confirm("Deseja realmente excluir esta rotina?")) return;
-
+    if (!window.confirm("Deseja realmente excluir essa rotina?")) return;
     try {
-      await axios.delete(
-        `https://backend-gestao-paper.onrender.com/rotinas/${id}`
+      const res = await fetch(
+        `https://backend-gestao-paper.onrender.com/rotinas/${id}`,
+        {
+          method: "DELETE",
+        }
       );
-      setRotinas(rotinas.filter((r) => r.id !== id));
-      onAtualizarRotinas();
+      if (!res.ok) throw new Error("Erro ao excluir rotina");
+      buscarRotinas();
+      if (onAtualizarRotinas) onAtualizarRotinas();
     } catch (error) {
-      console.error("Erro ao excluir rotina:", error);
+      alert(error.message || "Erro ao excluir rotina");
     }
   }
 
   return (
-    <div>
-      <form onSubmit={salvarRotina} className="mb-6 space-y-2">
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            className="p-2 border rounded bg-inputBg text-text border-border"
-            placeholder="Nome"
-            value={novaRotina.nome}
-            onChange={(e) =>
-              setNovaRotina({ ...novaRotina, nome: e.target.value })
-            }
-            required
-          />
-          <input
-            className="p-2 border rounded bg-inputBg text-text border-border"
-            placeholder="Dias (ex: seg,qua)"
-            value={novaRotina.diaDaSemana}
-            onChange={(e) =>
-              setNovaRotina({ ...novaRotina, diaDaSemana: e.target.value })
-            }
-            required
-          />
-          <input
-            className="p-2 border rounded bg-inputBg text-text border-border"
-            placeholder="Horário(s) (ex: 08:00,14:00)"
-            value={novaRotina.horario}
-            onChange={(e) =>
-              setNovaRotina({ ...novaRotina, horario: e.target.value })
-            }
-            required
-          />
-          <input
-            className="p-2 border rounded bg-inputBg text-text border-border"
-            placeholder="Complexidade (ex: 1)"
-            value={novaRotina.complexidade}
-            onChange={(e) =>
-              setNovaRotina({ ...novaRotina, complexidade: e.target.value })
-            }
-            required
-          />
-        </div>
-        <textarea
-          className="w-full p-2 border rounded bg-inputBg text-text border-border"
-          placeholder="Descrição"
-          value={novaRotina.descricao}
-          onChange={(e) =>
-            setNovaRotina({ ...novaRotina, descricao: e.target.value })
-          }
-          required
-        ></textarea>
+    <>
+      {!visivel && (
         <button
-          type="submit"
-          className="px-4 py-2 text-white rounded bg-buttons hover:bg-buttonsHover"
+          onClick={() => setVisivel(true)}
+          className="px-4 py-2 mb-4 font-bold text-white rounded bg-buttons hover:bg-buttonsHover"
         >
-          {editandoId ? "Atualizar" : "Adicionar"} Rotina
+          Adicionar nova rotina
         </button>
-      </form>
+      )}
 
-      <div className="mb-6 space-y-2">
-        {rotinas.map((r) => (
-          <div
-            key={r.id}
-            className="p-3 border rounded bg-background border-border"
-          >
-            <p className="text-sm font-semibold text-text">{r.nome}</p>
-            <p className="text-xs text-text/80">
-              Dias: {r.diaDaSemana} | Horário: {r.horario} | Complexidade:{" "}
-              {r.complexidade}
-            </p>
-            <p className="text-xs text-text/60">{r.descricao}</p>
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => editarRotina(r)}
-                className="px-2 py-1 text-xs text-white bg-blue-500 rounded hover:bg-blue-600"
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => excluirRotina(r.id)}
-                className="px-2 py-1 text-xs text-white bg-red-500 rounded hover:bg-red-600"
-              >
-                Excluir
-              </button>
-            </div>
+      {visivel && (
+        <div className="max-w-full p-4 mb-8 overflow-x-auto border rounded-lg shadow-md bg-background text-text">
+          <div className="flex justify-between mb-4">
+            <h3 className="text-lg font-bold text-text">
+              Gerenciar Rotinas - Setor: {setor}
+            </h3>
+            <button
+              onClick={() => setVisivel(false)}
+              className="px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-600"
+            >
+              Ocultar
+            </button>
           </div>
-        ))}
-      </div>
-    </div>
+
+          <form
+            onSubmit={handleAdicionar}
+            className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-4"
+          >
+            <input
+              type="text"
+              name="nome"
+              placeholder="Nome da rotina"
+              value={novaRotina.nome}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              required
+            />
+            <input
+              type="text"
+              name="descricao"
+              placeholder="Descrição"
+              value={novaRotina.descricao}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+            <input
+              type="text"
+              name="horario"
+              placeholder="Horário (ex: 9:30)"
+              value={novaRotina.horario}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              pattern="^\d{1,2}:\d{2}$"
+              title="Formato HH:MM"
+              required
+            />
+            <input
+              type="number"
+              name="janela"
+              placeholder="Janela (minutos)"
+              value={novaRotina.janela}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              min={1}
+              required
+            />
+
+            <input
+              type="number"
+              name="complexidade"
+              placeholder="Complexidade"
+              value={novaRotina.complexidade}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              min={1}
+              max={10}
+              required
+            />
+
+            <select
+              name="diaDaSemana"
+              value={novaRotina.diaDaSemana}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              required
+            >
+              <option value="segunda">Segunda</option>
+              <option value="terça">Terça</option>
+              <option value="quarta">Quarta</option>
+              <option value="quinta">Quinta</option>
+              <option value="sexta">Sexta</option>
+              <option value="sábado">Sábado</option>
+              <option value="domingo">Domingo</option>
+              <option value="todos">Todos</option>
+            </select>
+
+            <button
+              type="submit"
+              className="px-4 py-2 font-bold text-white rounded bg-buttons col-span-full md:col-auto hover:bg-buttonsHover"
+            >
+              Adicionar
+            </button>
+          </form>
+
+          {carregando ? (
+            <p>Carregando rotinas...</p>
+          ) : erro ? (
+            <p className="text-red-500">{erro}</p>
+          ) : rotinas.length === 0 ? (
+            <p>Nenhuma rotina encontrada para o setor {setor}.</p>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-gray-300">
+                  <th className="px-3 py-2">Nome</th>
+                  <th className="px-3 py-2">Descrição</th>
+                  <th className="px-3 py-2">Horário</th>
+                  <th className="px-3 py-2">Janela (min)</th>
+                  <th className="px-3 py-2">Complexidade</th>
+                  <th className="px-3 py-2">Dia da Semana</th>
+                  <th className="px-3 py-2">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rotinas.map((r) => {
+                  const edit = editando[r.id];
+                  return (
+                    <tr
+                      key={r.id}
+                      className="border-b border-gray-200 hover:bg-links/50"
+                    >
+                      <td className="px-3 py-2">
+                        {edit ? (
+                          <input
+                            type="text"
+                            name="nome"
+                            value={edit.nome}
+                            onChange={(e) => handleEditarChange(r.id, e)}
+                            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border "
+                          />
+                        ) : (
+                          r.nome
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        {edit ? (
+                          <input
+                            type="text"
+                            name="descricao"
+                            value={edit.descricao}
+                            onChange={(e) => handleEditarChange(r.id, e)}
+                            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                          />
+                        ) : (
+                          r.descricao
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        {edit ? (
+                          <input
+                            type="text"
+                            name="horario"
+                            value={edit.horario}
+                            onChange={(e) => handleEditarChange(r.id, e)}
+                            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                            pattern="^\d{1,2}:\d{2}$"
+                            title="Formato HH:MM"
+                          />
+                        ) : (
+                          r.horario
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        {edit ? (
+                          <input
+                            type="number"
+                            name="janela"
+                            value={edit.janela}
+                            onChange={(e) => handleEditarChange(r.id, e)}
+                            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                            min={1}
+                          />
+                        ) : (
+                          r.janela
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        {edit ? (
+                          <input
+                            type="number"
+                            name="complexidade"
+                            value={edit.complexidade}
+                            onChange={(e) => handleEditarChange(r.id, e)}
+                            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                            min={1}
+                            max={10}
+                          />
+                        ) : (
+                          r.complexidade
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        {edit ? (
+                          <select
+                            name="diaDaSemana"
+                            value={edit.diaDaSemana}
+                            onChange={(e) => handleEditarChange(r.id, e)}
+                            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                          >
+                            <option value="segunda">Segunda</option>
+                            <option value="terça">Terça</option>
+                            <option value="quarta">Quarta</option>
+                            <option value="quinta">Quinta</option>
+                            <option value="sexta">Sexta</option>
+                            <option value="sábado">Sábado</option>
+                            <option value="domingo">Domingo</option>
+                            <option value="todos">Todos</option>
+                          </select>
+                        ) : (
+                          r.diaDaSemana
+                        )}
+                      </td>
+                      <td className="px-3 py-2 space-x-2">
+                        {edit ? (
+                          <>
+                            <button
+                              onClick={() => salvarEdicao(r.id)}
+                              className="px-2 py-1 text-white bg-green-600 rounded hover:bg-green-700"
+                            >
+                              Salvar
+                            </button>
+                            <button
+                              onClick={() => cancelarEdicao(r.id)}
+                              className="px-2 py-1 text-white bg-gray-400 rounded hover:bg-gray-500"
+                            >
+                              Cancelar
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => iniciarEdicao(r.id)}
+                              className="px-2 py-1 text-white rounded bg-buttons hover:bg-buttonsHover"
+                            >
+                              Editar
+                            </button>
+                            <button
+                              onClick={() => excluirRotina(r.id)}
+                              className="px-2 py-1 text-white rounded bg-buttons hover:bg-buttonsHover"
+                            >
+                              Excluir
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+    </>
   );
 }
