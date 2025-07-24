@@ -16,6 +16,8 @@ import RotinaDiretoria from "./modulos/quadrosRotinas/RotinaDiretoria";
 import QuadroDiretoria from "./modulos/quadros/QuadroDiretoria";
 import RotinaFinanceiro from "./modulos/quadrosRotinas/RotinaFinanceiro";
 import AcordionDepartamentos from "./AcordionDepartamentos";
+import RotinaSocialMedia from "./modulos/quadrosRotinas/RotinaSocialMedia";
+import QuadroSocialMedia from "./modulos/quadros/QuadroSocialMedia";
 
 function App() {
   return (
@@ -38,15 +40,6 @@ function App() {
           <QuadroDev />
         </AcordionDepartamentos>
 
-        <AcordionDepartamentos titulo="COMERCIAL">
-          <QuadroComercial />
-        </AcordionDepartamentos>
-
-        <AcordionDepartamentos titulo="FINANCEIRO">
-          <RotinaFinanceiro />
-          <QuadroFinanceiro />
-        </AcordionDepartamentos>
-
         <AcordionDepartamentos titulo="WEBMASTER">
           <RotinaWebmaster />
           <QuadroWebmaster />
@@ -57,9 +50,23 @@ function App() {
           <QuadroTrafego />
         </AcordionDepartamentos>
 
+        <AcordionDepartamentos titulo="SOCIAL MEDIA">
+          <RotinaSocialMedia />
+          <QuadroSocialMedia />
+        </AcordionDepartamentos>
+
         <AcordionDepartamentos titulo="FEEDBACKS">
           <RotinaFeedbacks />
           <QuadroFeedbacks />
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="COMERCIAL">
+          <QuadroComercial />
+        </AcordionDepartamentos>
+
+        <AcordionDepartamentos titulo="FINANCEIRO">
+          <RotinaFinanceiro />
+          <QuadroFinanceiro />
         </AcordionDepartamentos>
 
         <AcordionDepartamentos titulo="DIRETORIA">

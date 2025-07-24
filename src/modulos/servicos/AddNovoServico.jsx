@@ -220,11 +220,12 @@ export default function AddNovoServico({
           <option value="">Selecione</option>
           <option value="suporte">Suporte</option>
           <option value="dev">Dev</option>
-          <option value="comercial">Comercial</option>
-          <option value="financeiro">Financeiro</option>
-          <option value="trafego">Tráfego Pago</option>
           <option value="webmaster">Webmaster</option>
+          <option value="comercial">Comercial</option>
+          <option value="trafego">Tráfego Pago</option>
+          <option value="socialmedia">Social Media</option>
           <option value="feedbacks">Feedbacks</option>
+          <option value="financeiro">Financeiro</option>
           <option value="diretoria">Diretoria</option>
         </select>
       </div>
