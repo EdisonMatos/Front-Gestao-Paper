@@ -50,7 +50,7 @@ function App() {
           <QuadroTrafego />
         </div>
         <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
-          {/* <RotinaFeedbacks /> */}
+          <RotinaFeedbacks />
           <QuadroFeedbacks />
         </div>
         <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
