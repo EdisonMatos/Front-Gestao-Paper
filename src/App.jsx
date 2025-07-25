@@ -19,6 +19,7 @@ import AcordionDepartamentos from "./AcordionDepartamentos";
 import RotinaSocialMedia from "./modulos/quadrosRotinas/RotinaSocialMedia";
 import QuadroSocialMedia from "./modulos/quadros/QuadroSocialMedia";
 import QuadroResumoRotinas from "./modulos/quadros/QuadroResumoRotinas";
+import DashboardTarefasEmProgresso from "./modulos/quadros/DashboardTarefasEmProgresso";
 
 function App() {
   return (
@@ -72,8 +73,15 @@ function App() {
           <RotinaDiretoria />
           <QuadroDiretoria />
         </AcordionDepartamentos>
-        <AcordionDepartamentos titulo="RESUMO ROTINAS">
-          <QuadroResumoRotinas />
+        <AcordionDepartamentos titulo="DASHBOARDS">
+          <div className="">
+            <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+              <QuadroResumoRotinas />
+            </div>
+            <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
+              <DashboardTarefasEmProgresso />
+            </div>
+          </div>
         </AcordionDepartamentos>
       </div>
     </div>
