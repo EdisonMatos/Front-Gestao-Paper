@@ -114,6 +114,25 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
     }));
   }
 
+  function calcularStatus(rotina, horario) {
+    const registroAtual = rotina.registros
+      ?.filter((reg) => isDataDessaSemana(reg.dataConclusao))
+      .sort((a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao))[0];
+
+    if (!registroAtual) return "pendente";
+
+    const dataConclusao = new Date(registroAtual.dataConclusao);
+
+    const [hora, minuto] = horario.split(":").map(Number);
+
+    const dataLimite = new Date(dataConclusao);
+    dataLimite.setHours(hora, minuto, 0, 0);
+    dataLimite.setTime(dataLimite.getTime() + rotina.janela * 60000);
+
+    if (dataConclusao <= dataLimite) return "concluida";
+    return "atrasada";
+  }
+
   async function toggleConclusao(card) {
     if (rotinasConcluidas[card.id]) return;
 
