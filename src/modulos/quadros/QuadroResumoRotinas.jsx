@@ -44,12 +44,12 @@ export default function QuadroResumoRotinas() {
     const registroAtual = registrosSemana?.[0];
     if (!registroAtual) return "pendente";
 
+    const dataConclusao = new Date(registroAtual.dataConclusao);
     const [hora, minuto] = horario.split(":").map(Number);
-    const dataLimite = new Date();
+
+    const dataLimite = new Date(dataConclusao);
     dataLimite.setHours(hora, minuto, 0, 0);
     dataLimite.setTime(dataLimite.getTime() + rotina.janela * 60000);
-
-    const dataConclusao = new Date(registroAtual.dataConclusao);
 
     return dataConclusao <= dataLimite ? "concluida" : "atrasada";
   }
