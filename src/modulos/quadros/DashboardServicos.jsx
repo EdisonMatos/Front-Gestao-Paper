@@ -59,7 +59,7 @@ export default function DashboardServicos() {
             <table className="min-w-full border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
-                  <th className="px-4 py-2 w-[300px]">Serviço</th>
+                  <th className="px-4 py-2 w-[500px]">Serviço</th>
                   <th className="px-4 py-2 w-[200px]">Cliente</th>
                   <th className="px-4 py-2 w-[120px]">Turno</th>
                   <th className="px-4 py-2 w-[140px]">Contratação</th>

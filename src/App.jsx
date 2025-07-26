@@ -23,6 +23,7 @@ import DashboardTarefasEmProgresso from "./modulos/quadros/DashboardTarefasEmPro
 import Agrupamento from "./componentes/Agrupamento";
 import Titulos from "./componentes/Titulos";
 import DashboardServicos from "./modulos/quadros/DashboardServicos";
+import QuadroPrazos from "./modulos/quadros/QuadroPrazos";
 
 function App() {
   return (
@@ -85,8 +86,12 @@ function App() {
           <Titulos>📈 Gestão</Titulos>
           <AcordionDepartamentos titulo="Dashboards">
             <Agrupamento>
+              <QuadroPrazos />
+            </Agrupamento>
+            <Agrupamento>
               <DashboardServicos />
             </Agrupamento>
+
             <div className="">
               <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
                 <QuadroResumoRotinas />
