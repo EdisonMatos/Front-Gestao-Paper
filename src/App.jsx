@@ -22,6 +22,7 @@ import QuadroResumoRotinas from "./modulos/quadros/QuadroResumoRotinas";
 import DashboardTarefasEmProgresso from "./modulos/quadros/DashboardTarefasEmProgresso";
 import Agrupamento from "./componentes/Agrupamento";
 import Titulos from "./componentes/Titulos";
+import DashboardServicos from "./modulos/quadros/DashboardServicos";
 
 function App() {
   return (
@@ -83,6 +84,9 @@ function App() {
         <Agrupamento>
           <Titulos>📈 Gestão</Titulos>
           <AcordionDepartamentos titulo="Dashboards">
+            <Agrupamento>
+              <DashboardServicos />
+            </Agrupamento>
             <div className="">
               <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
                 <QuadroResumoRotinas />
