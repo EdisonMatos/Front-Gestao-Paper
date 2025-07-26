@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export default function DashboardServicos() {
   const [servicos, setServicos] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const [filtro, setFiltro] = useState("");
 
   useEffect(() => {
     fetch("https://backend-gestao-paper.onrender.com/servicos")
@@ -36,8 +37,16 @@ export default function DashboardServicos() {
     return dataB - dataA; // mais recente primeiro
   });
 
-  const ativos = servicosOrdenados.filter((s) => !s.dataConclusao);
-  const finalizados = servicosOrdenados.filter((s) => s.dataConclusao);
+  // Filtra pelo input de busca, buscando em nome do serviço e cliente (case insensitive)
+  const servicosFiltrados = servicosOrdenados.filter((s) => {
+    const termo = filtro.toLowerCase();
+    const nomeServico = s.nome?.toLowerCase() || "";
+    const nomeCliente = s.cliente?.empresa?.toLowerCase() || "";
+    return nomeServico.includes(termo) || nomeCliente.includes(termo);
+  });
+
+  const ativos = servicosFiltrados.filter((s) => !s.dataConclusao);
+  const finalizados = servicosFiltrados.filter((s) => s.dataConclusao);
 
   function renderTabelaAtivos(titulo, lista) {
     return (
@@ -160,6 +169,14 @@ export default function DashboardServicos() {
   return (
     <div className="">
       <h2 className="mb-4 text-2xl font-bold text-text">Serviços</h2>
+
+      <input
+        type="text"
+        placeholder="Buscar serviço ou cliente..."
+        className="w-full max-w-md px-3 py-2 mb-4 border rounded border-border bg-inputBg text-text placeholder:text-gray-400 focus:outline-none focus:ring-2 "
+        value={filtro}
+        onChange={(e) => setFiltro(e.target.value)}
+      />
 
       {carregando ? (
         <p className="text-gray-500">Carregando serviços...</p>
