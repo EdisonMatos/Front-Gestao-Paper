@@ -13,7 +13,6 @@ export default function DashboardPrazos() {
       .finally(() => setCarregando(false));
   }, []);
 
-  // Filtra pelo input (busca por nome do serviço ou cliente)
   const servicosFiltrados = servicos.filter((s) => {
     const termo = filtro.toLowerCase();
     const nomeServico = s.nome?.toLowerCase() || "";
@@ -31,20 +30,36 @@ export default function DashboardPrazos() {
     return new Date(dataString).toLocaleDateString();
   }
 
-  // Calcula dias restantes para a data alvo (prazo)
   function calcularDiasRestantes(dataAlvo) {
     if (!dataAlvo) return null;
     const hoje = new Date();
     const prazo = new Date(dataAlvo);
     const diff = prazo.getTime() - hoje.getTime();
-    return Math.ceil(diff / (1000 * 60 * 60 * 24)); // positivo se no prazo, negativo se atrasado
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
   }
 
-  // Define a cor do texto para dias restantes
   function corDiasRestantes(dias) {
     if (dias === null) return "text-text/50";
-    if (dias < 0) return "text-red-600"; // atraso
-    return "text-white"; // dentro do prazo
+    if (dias < 0) return "text-red-600";
+    return "text-white";
+  }
+
+  function formatarDuracao(contratado, concluido) {
+    const inicio = new Date(contratado);
+    const fim = concluido ? new Date(concluido) : new Date();
+    const diff = fim - inicio;
+    const dias = Math.round(diff / (1000 * 60 * 60 * 24));
+
+    if (dias > 30) {
+      const meses = Math.floor(dias / 30);
+      const diasRestantes = dias % 30;
+      return {
+        texto: `${meses} mes${meses > 1 ? "es" : ""} ${diasRestantes} dias`,
+        dias,
+      };
+    }
+
+    return { texto: `${dias} dias`, dias };
   }
 
   function ordenarPrazosProjeto(lista) {
@@ -53,21 +68,20 @@ export default function DashboardPrazos() {
       const diasB = calcularDiasRestantes(b.dataPrazoProjeto);
 
       if (diasA !== null && diasB !== null) {
-        // Ambos têm data
-        if (diasA < 0 && diasB < 0) return diasA - diasB; // Mais atraso primeiro
-        if (diasA < 0) return -1; // A tem atraso, B não
-        if (diasB < 0) return 1; // B tem atraso, A não
-        return diasA - diasB; // Menor prazo primeiro
+        if (diasA < 0 && diasB < 0) return diasA - diasB;
+        if (diasA < 0) return -1;
+        if (diasB < 0) return 1;
+        return diasA - diasB;
       }
 
       if (diasA === null && diasB === null) {
         const dataContratoA = new Date(a.dataContratacao || 0);
         const dataContratoB = new Date(b.dataContratacao || 0);
-        return dataContratoA - dataContratoB; // mais antiga primeiro
+        return dataContratoA - dataContratoB;
       }
 
-      if (diasA === null) return 1; // A sem prazo vai para o fim
-      if (diasB === null) return -1; // B sem prazo vai para o fim
+      if (diasA === null) return 1;
+      if (diasB === null) return -1;
 
       return 0;
     });
@@ -81,13 +95,8 @@ export default function DashboardPrazos() {
     });
   }
 
-  // Serviços ativos (sem dataConclusao)
   const servicosAtivos = servicosFiltrados.filter((s) => !s.dataConclusao);
-
-  // Serviços com ou sem prazo do projeto
   const servicosComPrazoProjeto = ordenarPrazosProjeto(servicosAtivos);
-
-  // Serviços com próximo prazo definido e ativos (sem dataConclusao)
   const servicosComProximoPrazo = ordenarPorData(
     servicosAtivos.filter((s) => s.dataProximoPrazo),
     "dataProximoPrazo"
@@ -101,17 +110,29 @@ export default function DashboardPrazos() {
         </h3>
         <div className="overflow-x-auto">
           <div className="max-h-[400px] overflow-y-auto border border-border rounded-lg">
-            <table className="min-w-full border-collapse table-auto">
+            <table className="min-w-full text-sm border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
-                  <th className="px-4 py-2 w-[560px]">Serviço</th>
+                  <th className="px-4 py-2 w-[360px]">Serviço</th>
                   <th className="px-4 py-2 w-[200px]">Cliente</th>
                   <th className="px-4 py-2 w-[140px]">
                     {titulo === "Prazos do Projeto"
                       ? "Prazo do Projeto"
                       : "Próximo Prazo"}
                   </th>
-                  <th className="px-4 py-2 w-[240px]">Dias Restantes</th>
+                  <th className="px-4 py-2 w-[160px]">Dias Restantes</th>
+                  {titulo === "Prazos do Projeto" && (
+                    <>
+                      <th className="px-4 py-2 w-[180px]">
+                        Duração do Projeto
+                      </th>
+                      <th className="px-4 py-2 w-[140px]">Contratação</th>
+                      <th className="px-4 py-2 w-[100px]">Turno</th>
+                    </>
+                  )}
+                  {titulo === "Prazo das Tarefas" && (
+                    <th className="px-4 py-2 w-[100px]">Turno</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -124,10 +145,19 @@ export default function DashboardPrazos() {
                       : diasRestantes < 0
                       ? `Atraso há ${Math.abs(diasRestantes)} dia(s)`
                       : diasRestantes;
+                  const duracao = s.dataContratacao
+                    ? formatarDuracao(s.dataContratacao, s.dataConclusao)
+                    : null;
+                  const corDuracao =
+                    duracao?.dias > 60
+                      ? "text-red-600"
+                      : duracao?.dias > 30
+                      ? "text-yellow-500"
+                      : "";
                   return (
                     <tr
                       key={s.id}
-                      className="border-t border-border bg-background text-text"
+                      className="border-t border-border bg-background text-text hover:bg-buttonsHover"
                     >
                       <td className="px-4 py-2">{s.nome}</td>
                       <td className="px-4 py-2">{s.cliente?.empresa}</td>
@@ -137,6 +167,24 @@ export default function DashboardPrazos() {
                       <td className={`px-4 py-2 font-semibold ${corTexto}`}>
                         {textoDias}
                       </td>
+                      {titulo === "Prazos do Projeto" && (
+                        <>
+                          <td className={`px-4 py-2 ${corDuracao}`}>
+                            {duracao ? duracao.texto : "—"}
+                          </td>
+                          <td className="px-4 py-2">
+                            {formatarData(s.dataContratacao)}
+                          </td>
+                          <td className="px-4 py-2 capitalize">
+                            {s.turnoDaVez || "—"}
+                          </td>
+                        </>
+                      )}
+                      {titulo === "Prazo das Tarefas" && (
+                        <td className="px-4 py-2 capitalize">
+                          {s.turnoDaVez || "—"}
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
@@ -170,7 +218,7 @@ export default function DashboardPrazos() {
             "dataPrazoProjeto"
           )}
           {renderTabelaPrazos(
-            "Próximos Prazos",
+            "Prazo das Tarefas",
             servicosComProximoPrazo,
             "dataProximoPrazo"
           )}

@@ -97,7 +97,7 @@ export default function DashboardResumoRotinas() {
   const resumo = gerarResumoPorSetorEDia();
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-[1250px]">
       <h2 className="mb-4 text-2xl font-bold text-text">Resumo da Semana</h2>
 
       {carregando ? (
