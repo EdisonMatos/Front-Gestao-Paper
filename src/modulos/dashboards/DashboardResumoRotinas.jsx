@@ -14,7 +14,7 @@ const setores = [
 
 const diasDaSemana = ["segunda", "terca", "quarta", "quinta", "sexta"];
 
-export default function QuadroResumoRotinas() {
+export default function DashboardResumoRotinas() {
   const [rotinas, setRotinas] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
@@ -97,7 +97,7 @@ export default function QuadroResumoRotinas() {
   const resumo = gerarResumoPorSetorEDia();
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-[1250px]">
       <h2 className="mb-4 text-2xl font-bold text-text">Resumo da Semana</h2>
 
       {carregando ? (
