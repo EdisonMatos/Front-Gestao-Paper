@@ -14,7 +14,7 @@ const setores = [
 
 const diasDaSemana = ["segunda", "terca", "quarta", "quinta", "sexta"];
 
-export default function QuadroResumoRotinas() {
+export default function DashboardResumoRotinas() {
   const [rotinas, setRotinas] = useState([]);
   const [carregando, setCarregando] = useState(true);
 

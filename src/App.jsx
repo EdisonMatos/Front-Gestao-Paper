@@ -18,12 +18,12 @@ import RotinaFinanceiro from "./modulos/quadrosRotinas/RotinaFinanceiro";
 import AcordionDepartamentos from "./componentes/AcordionDepartamentos";
 import RotinaSocialMedia from "./modulos/quadrosRotinas/RotinaSocialMedia";
 import QuadroSocialMedia from "./modulos/quadros/QuadroSocialMedia";
-import QuadroResumoRotinas from "./modulos/quadros/QuadroResumoRotinas";
-import DashboardTarefasEmProgresso from "./modulos/quadros/DashboardTarefasEmProgresso";
+import QuadroResumoRotinas from "./modulos/dashboards/DashboardResumoRotinas";
+import DashboardTarefasEmProgresso from "./modulos/dashboards/DashboardTarefasEmProgresso";
 import Agrupamento from "./componentes/Agrupamento";
 import Titulos from "./componentes/Titulos";
-import DashboardServicos from "./modulos/quadros/DashboardServicos";
-import QuadroPrazos from "./modulos/quadros/QuadroPrazos";
+import DashboardServicos from "./modulos/dashboards/DashboardDuracao";
+import QuadroPrazos from "./modulos/dashboards/DashboardPrazos";
 
 function App() {
   return (

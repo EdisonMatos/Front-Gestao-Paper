@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function QuadroPrazos() {
+export default function DashboardPrazos() {
   const [servicos, setServicos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [filtro, setFiltro] = useState("");
@@ -150,7 +150,7 @@ export default function QuadroPrazos() {
 
   return (
     <div>
-      <h2 className="mb-4 text-2xl font-bold text-text">Prazos dos Serviços</h2>
+      <h2 className="mb-4 text-2xl font-bold text-text">Prazos</h2>
 
       <input
         type="text"

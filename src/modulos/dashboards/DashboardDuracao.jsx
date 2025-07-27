@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function DashboardServicos() {
+export default function DashboardDuracao() {
   const [servicos, setServicos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [filtro, setFiltro] = useState("");

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CardServico from "./CardServico";
+import CardServico from "../quadros/CardServico";
 
 const setores = [
   "suporte",
