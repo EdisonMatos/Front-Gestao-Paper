@@ -47,6 +47,9 @@ export default function DashboardServicos() {
 
   const ativos = servicosFiltrados.filter((s) => !s.dataConclusao);
   const finalizados = servicosFiltrados.filter((s) => s.dataConclusao);
+  finalizados.sort(
+    (a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao)
+  );
 
   function renderTabelaAtivos(titulo, lista) {
     return (

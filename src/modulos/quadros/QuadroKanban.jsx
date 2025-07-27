@@ -129,9 +129,16 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       return;
     }
 
-    // Se for mudança de coluna para emProgresso, não exige comentário
     let comentario = null;
-    if (destino !== "emProgresso") {
+    if (destino === "finalizar") {
+      comentario = "Serviço finalizado. Pegar feedback";
+    } else if (destino === "solicitado") {
+      comentario = "Feedback solicitado. Aguardar";
+    } else if (destino === "emMaos") {
+      comentario = "Feedback recebido. Postar";
+    } else if (destino === "semFbFinalizar") {
+      comentario = "Sem feedback. Serviço finalizado.";
+    } else if (destino !== "emProgresso") {
       comentario = prompt(
         "Comente no seguinte formato: \n O que foi feito. O que precisa ser feito agora."
       );
@@ -144,7 +151,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     try {
       const movingToastId = toast.loading("Movendo serviço...");
 
-      // 1. Cria comentário (caso necessário)
       if (comentario) {
         await axios.post(
           "https://backend-gestao-paper.onrender.com/comentarios",
@@ -157,13 +163,29 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         );
       }
 
-      // 2. Atualiza serviço com nova coluna
+      const payload = {
+        posicaoNoQuadro: destino,
+        ordemVerticalNoQuadro: 0,
+      };
+
+      if (destino === "finalizar") {
+        payload.dataConclusao = new Date().toISOString();
+      }
+
+      if (destino === "emMaos") {
+        payload.turnoDaVez = "socialmedia";
+        payload.posicaoNoQuadro = "postarFeedbacks";
+      }
+
+      if (destino === "semFbFinalizar") {
+        payload.turnoDaVez = "finalizado";
+        payload.posicaoNoQuadro = "finalizado";
+        payload.dataConclusao = new Date().toISOString();
+      }
+
       await axios.put(
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
-        {
-          posicaoNoQuadro: destino,
-          ordemVerticalNoQuadro: 0,
-        }
+        payload
       );
 
       await carregarServicos();
