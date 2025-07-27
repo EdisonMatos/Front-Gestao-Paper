@@ -113,8 +113,8 @@ export default function DashboardPrazos() {
             <table className="min-w-full text-sm border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
-                  <th className="px-4 py-2 w-[360px]">Serviço</th>
                   <th className="px-4 py-2 w-[200px]">Cliente</th>
+                  <th className="px-4 py-2 w-[360px]">Serviço</th>
                   <th className="px-4 py-2 w-[140px]">
                     {titulo === "Prazos do Projeto"
                       ? "Prazo do Projeto"
@@ -159,8 +159,8 @@ export default function DashboardPrazos() {
                       key={s.id}
                       className="border-t border-border bg-background text-text hover:bg-buttonsHover"
                     >
-                      <td className="px-4 py-2">{s.nome}</td>
                       <td className="px-4 py-2">{s.cliente?.empresa}</td>
+                      <td className="px-4 py-2">{s.nome}</td>
                       <td className="px-4 py-2">
                         {formatarData(s[colunaData], true)}
                       </td>
