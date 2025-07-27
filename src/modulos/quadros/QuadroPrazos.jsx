@@ -21,8 +21,13 @@ export default function QuadroPrazos() {
     return nomeServico.includes(termo) || nomeCliente.includes(termo);
   });
 
-  function formatarData(dataString) {
-    if (!dataString) return "—";
+  function formatarData(dataString, aplicarClasse = false) {
+    if (!dataString)
+      return aplicarClasse ? (
+        <span className="text-text/50">Não informado</span>
+      ) : (
+        "Não informado"
+      );
     return new Date(dataString).toLocaleDateString();
   }
 
@@ -37,9 +42,35 @@ export default function QuadroPrazos() {
 
   // Define a cor do texto para dias restantes
   function corDiasRestantes(dias) {
-    if (dias === null) return "";
+    if (dias === null) return "text-text/50";
     if (dias < 0) return "text-red-600"; // atraso
     return "text-white"; // dentro do prazo
+  }
+
+  function ordenarPrazosProjeto(lista) {
+    return [...lista].sort((a, b) => {
+      const diasA = calcularDiasRestantes(a.dataPrazoProjeto);
+      const diasB = calcularDiasRestantes(b.dataPrazoProjeto);
+
+      if (diasA !== null && diasB !== null) {
+        // Ambos têm data
+        if (diasA < 0 && diasB < 0) return diasA - diasB; // Mais atraso primeiro
+        if (diasA < 0) return -1; // A tem atraso, B não
+        if (diasB < 0) return 1; // B tem atraso, A não
+        return diasA - diasB; // Menor prazo primeiro
+      }
+
+      if (diasA === null && diasB === null) {
+        const dataContratoA = new Date(a.dataContratacao || 0);
+        const dataContratoB = new Date(b.dataContratacao || 0);
+        return dataContratoA - dataContratoB; // mais antiga primeiro
+      }
+
+      if (diasA === null) return 1; // A sem prazo vai para o fim
+      if (diasB === null) return -1; // B sem prazo vai para o fim
+
+      return 0;
+    });
   }
 
   function ordenarPorData(lista, chave) {
@@ -50,15 +81,15 @@ export default function QuadroPrazos() {
     });
   }
 
-  // Serviços com prazo do projeto definido e ativos (sem dataConclusao)
-  const servicosComPrazoProjeto = ordenarPorData(
-    servicosFiltrados.filter((s) => s.dataPrazoProjeto && !s.dataConclusao),
-    "dataPrazoProjeto"
-  );
+  // Serviços ativos (sem dataConclusao)
+  const servicosAtivos = servicosFiltrados.filter((s) => !s.dataConclusao);
+
+  // Serviços com ou sem prazo do projeto
+  const servicosComPrazoProjeto = ordenarPrazosProjeto(servicosAtivos);
 
   // Serviços com próximo prazo definido e ativos (sem dataConclusao)
   const servicosComProximoPrazo = ordenarPorData(
-    servicosFiltrados.filter((s) => s.dataProximoPrazo && !s.dataConclusao),
+    servicosAtivos.filter((s) => s.dataProximoPrazo),
     "dataProximoPrazo"
   );
 
@@ -101,7 +132,7 @@ export default function QuadroPrazos() {
                       <td className="px-4 py-2">{s.nome}</td>
                       <td className="px-4 py-2">{s.cliente?.empresa}</td>
                       <td className="px-4 py-2">
-                        {formatarData(s[colunaData])}
+                        {formatarData(s[colunaData], true)}
                       </td>
                       <td className={`px-4 py-2 font-semibold ${corTexto}`}>
                         {textoDias}
