@@ -3,9 +3,13 @@ import QuadroKanban from "./QuadroKanban";
 export default function QuadroFeedbacks() {
   const colunas = {
     backlog: { nome: "Backlog", tipoCard: "normal" },
+    finalizar: { nome: "Adicionar data conclusão", tipoCard: "superCompacto" },
     solicitado: { nome: "Solicitado", tipoCard: "superCompacto" },
-    emMaos: { nome: "Em mãos", tipoCard: "superCompacto" },
-    postado: { nome: "Postado / Descartado", tipoCard: "compacto" },
+    emMaos: { nome: "Recebidos, direcionar", tipoCard: "superCompacto" },
+    semFbFinalizar: {
+      nome: "Sem feedback, finalizar",
+      tipoCard: "superCompacto",
+    },
   };
 
   return (
