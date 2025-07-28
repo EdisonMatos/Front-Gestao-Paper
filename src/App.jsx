@@ -36,7 +36,7 @@ function App() {
         Sistema de Gerenciamento
       </h1>
       <p className="ml-6 text-text/50">Versão 0.8 (Em desenvolvimento)</p>
-      <div className="mt-10 flex flex-col max-w-[1400px] overflow-x-auto">
+      <div className="mt-10 flex flex-col max-w-[1700px] overflow-x-auto">
         <Agrupamento>
           <Titulos>💼 Clientes e Serviços</Titulos>
           <div className="mb-6 overflow-x-auto border border-border rounded-xl w-fit">
