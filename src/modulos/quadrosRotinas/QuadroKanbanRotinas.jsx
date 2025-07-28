@@ -34,10 +34,17 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   function isDataDessaSemana(dateStr) {
     const date = new Date(dateStr);
     const hoje = new Date();
+
+    // Ajusta para o início da semana (segunda-feira)
+    const diaDaSemana = hoje.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
+    const diffSegunda = diaDaSemana === 0 ? -6 : 1 - diaDaSemana;
     const primeiroDiaDaSemana = new Date(hoje);
-    const ultimoDiaDaSemana = new Date(hoje);
-    primeiroDiaDaSemana.setDate(hoje.getDate() - hoje.getDay() + 1); // Segunda
-    ultimoDiaDaSemana.setDate(primeiroDiaDaSemana.getDate() + 6); // Domingo
+    primeiroDiaDaSemana.setDate(hoje.getDate() + diffSegunda);
+    primeiroDiaDaSemana.setHours(0, 0, 0, 0);
+
+    const ultimoDiaDaSemana = new Date(primeiroDiaDaSemana);
+    ultimoDiaDaSemana.setDate(primeiroDiaDaSemana.getDate() + 6);
+    ultimoDiaDaSemana.setHours(23, 59, 59, 999);
 
     return date >= primeiroDiaDaSemana && date <= ultimoDiaDaSemana;
   }

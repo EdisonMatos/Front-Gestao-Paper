@@ -29,11 +29,20 @@ export default function DashboardResumoRotinas() {
   function isDataDessaSemana(dateStr) {
     const date = new Date(dateStr);
     const hoje = new Date();
-    const segunda = new Date(hoje);
-    const domingo = new Date(hoje);
-    segunda.setDate(hoje.getDate() - hoje.getDay() + 1);
-    domingo.setDate(segunda.getDate() + 6);
-    return date >= segunda && date <= domingo;
+
+    // Ajusta para o início da semana (segunda-feira)
+    const diaDaSemana = hoje.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
+    const diffSegunda = diaDaSemana === 0 ? -6 : 1 - diaDaSemana;
+
+    const primeira = new Date(hoje);
+    primeira.setDate(hoje.getDate() + diffSegunda);
+    primeira.setHours(0, 0, 0, 0);
+
+    const ultima = new Date(primeira);
+    ultima.setDate(primeira.getDate() + 6);
+    ultima.setHours(23, 59, 59, 999);
+
+    return date >= primeira && date <= ultima;
   }
 
   function calcularStatus(rotina, horario) {
