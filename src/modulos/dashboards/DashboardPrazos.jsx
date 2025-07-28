@@ -101,19 +101,29 @@ export default function DashboardPrazos() {
     return nomeServico.includes(termo) || nomeCliente.includes(termo);
   });
 
-  const servicosAtivos = servicosFiltrados.filter((s) => !s.dataConclusao);
+  const ausentes = servicosFiltrados.filter(
+    (s) => s.posicaoNoQuadro === "ausentes"
+  );
+
+  const servicosAtivos = servicosFiltrados.filter(
+    (s) => !s.dataConclusao && s.posicaoNoQuadro !== "ausentes"
+  );
+
   const aguardandoCliente = servicosAtivos.filter(
     (s) => s.posicaoNoQuadro === "aguardandoCliente"
   );
+
   const servicosComPrazoProjeto = ordenarPrazosProjeto(
     servicosAtivos.filter((s) => s.posicaoNoQuadro !== "aguardandoCliente")
   );
+
   const servicosComProximoPrazo = ordenarPorData(
     servicosAtivos.filter(
       (s) => s.dataProximoPrazo && s.posicaoNoQuadro !== "aguardandoCliente"
     ),
     "dataProximoPrazo"
   );
+
   const finalizados = servicosFiltrados
     .filter((s) => s.dataConclusao)
     .sort((a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao));
@@ -289,18 +299,23 @@ export default function DashboardPrazos() {
       ) : (
         <>
           {renderTabelaPrazos(
-            "Prazos do Projeto",
+            "Serviços ativos",
             servicosComPrazoProjeto,
             "dataPrazoProjeto"
           )}
           {renderTabelaPrazos(
-            "Prazo das Tarefas",
+            "Tarefas ativas",
             servicosComProximoPrazo,
             "dataProximoPrazo"
           )}
           {renderTabelaPrazos(
             "Aguardando Cliente",
             aguardandoCliente,
+            "dataPrazoProjeto"
+          )}
+          {renderTabelaPrazos(
+            "Clientes Ausentes",
+            ausentes,
             "dataPrazoProjeto"
           )}
           {renderTabelaFinalizados("Serviços Finalizados", finalizados)}
