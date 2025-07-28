@@ -125,7 +125,7 @@ export default function DashboardPrazos() {
           {titulo} ({lista.length})
         </h3>
         <div className="overflow-x-auto">
-          <div className="max-h-[400px] overflow-y-auto border border-border rounded-lg">
+          <div className="max-h-[200px] overflow-y-auto border border-border rounded-lg">
             <table className="min-w-full text-sm border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
@@ -219,7 +219,7 @@ export default function DashboardPrazos() {
           {titulo} ({lista.length})
         </h3>
         <div className="overflow-x-auto">
-          <div className="max-h-[400px] overflow-y-auto border border-border rounded-lg">
+          <div className="max-h-[200px] overflow-y-auto border border-border rounded-lg">
             <table className="min-w-full text-sm border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
