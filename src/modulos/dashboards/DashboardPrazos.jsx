@@ -13,12 +13,23 @@ export default function DashboardPrazos() {
       .finally(() => setCarregando(false));
   }, []);
 
-  const servicosFiltrados = servicos.filter((s) => {
-    const termo = filtro.toLowerCase();
-    const nomeServico = s.nome?.toLowerCase() || "";
-    const nomeCliente = s.cliente?.empresa?.toLowerCase() || "";
-    return nomeServico.includes(termo) || nomeCliente.includes(termo);
-  });
+  function formatarDuracao(contratado, concluido) {
+    const inicio = new Date(contratado);
+    const fim = concluido ? new Date(concluido) : new Date();
+    const diff = fim - inicio;
+    const dias = Math.round(diff / (1000 * 60 * 60 * 24));
+
+    if (dias > 30) {
+      const meses = Math.floor(dias / 30);
+      const diasRestantes = dias % 30;
+      return {
+        texto: `${meses} mes${meses > 1 ? "es" : ""} ${diasRestantes} dias`,
+        dias,
+      };
+    }
+
+    return { texto: `${dias} dias`, dias };
+  }
 
   function formatarData(dataString, aplicarClasse = false) {
     if (!dataString)
@@ -42,24 +53,6 @@ export default function DashboardPrazos() {
     if (dias === null) return "text-text/50";
     if (dias < 0) return "text-red-600";
     return "text-white";
-  }
-
-  function formatarDuracao(contratado, concluido) {
-    const inicio = new Date(contratado);
-    const fim = concluido ? new Date(concluido) : new Date();
-    const diff = fim - inicio;
-    const dias = Math.round(diff / (1000 * 60 * 60 * 24));
-
-    if (dias > 30) {
-      const meses = Math.floor(dias / 30);
-      const diasRestantes = dias % 30;
-      return {
-        texto: `${meses} mes${meses > 1 ? "es" : ""} ${diasRestantes} dias`,
-        dias,
-      };
-    }
-
-    return { texto: `${dias} dias`, dias };
   }
 
   function ordenarPrazosProjeto(lista) {
@@ -95,12 +88,35 @@ export default function DashboardPrazos() {
     });
   }
 
+  const servicosOrdenados = [...servicos].sort((a, b) => {
+    const dataA = new Date(a.dataContratacao);
+    const dataB = new Date(b.dataContratacao);
+    return dataB - dataA;
+  });
+
+  const servicosFiltrados = servicosOrdenados.filter((s) => {
+    const termo = filtro.toLowerCase();
+    const nomeServico = s.nome?.toLowerCase() || "";
+    const nomeCliente = s.cliente?.empresa?.toLowerCase() || "";
+    return nomeServico.includes(termo) || nomeCliente.includes(termo);
+  });
+
   const servicosAtivos = servicosFiltrados.filter((s) => !s.dataConclusao);
-  const servicosComPrazoProjeto = ordenarPrazosProjeto(servicosAtivos);
+  const aguardandoCliente = servicosAtivos.filter(
+    (s) => s.posicaoNoQuadro === "aguardandoCliente"
+  );
+  const servicosComPrazoProjeto = ordenarPrazosProjeto(
+    servicosAtivos.filter((s) => s.posicaoNoQuadro !== "aguardandoCliente")
+  );
   const servicosComProximoPrazo = ordenarPorData(
-    servicosAtivos.filter((s) => s.dataProximoPrazo),
+    servicosAtivos.filter(
+      (s) => s.dataProximoPrazo && s.posicaoNoQuadro !== "aguardandoCliente"
+    ),
     "dataProximoPrazo"
   );
+  const finalizados = servicosFiltrados
+    .filter((s) => s.dataConclusao)
+    .sort((a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao));
 
   function renderTabelaPrazos(titulo, lista, colunaData) {
     return (
@@ -116,12 +132,12 @@ export default function DashboardPrazos() {
                   <th className="px-4 py-2 w-[200px]">Cliente</th>
                   <th className="px-4 py-2 w-[360px]">Serviço</th>
                   <th className="px-4 py-2 w-[140px]">
-                    {titulo === "Prazos do Projeto"
-                      ? "Prazo do Projeto"
-                      : "Próximo Prazo"}
+                    {titulo === "Prazo das Tarefas"
+                      ? "Próximo Prazo"
+                      : "Prazo do Projeto"}
                   </th>
                   <th className="px-4 py-2 w-[160px]">Dias Restantes</th>
-                  {titulo === "Prazos do Projeto" && (
+                  {titulo !== "Prazo das Tarefas" && (
                     <>
                       <th className="px-4 py-2 w-[180px]">
                         Duração do Projeto
@@ -167,7 +183,7 @@ export default function DashboardPrazos() {
                       <td className={`px-4 py-2 font-semibold ${corTexto}`}>
                         {textoDias}
                       </td>
-                      {titulo === "Prazos do Projeto" && (
+                      {titulo !== "Prazo das Tarefas" && (
                         <>
                           <td className={`px-4 py-2 ${corDuracao}`}>
                             {duracao ? duracao.texto : "—"}
@@ -185,6 +201,66 @@ export default function DashboardPrazos() {
                           {s.turnoDaVez || "—"}
                         </td>
                       )}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderTabelaFinalizados(titulo, lista) {
+    return (
+      <div className="mb-12">
+        <h3 className="mb-2 text-xl font-semibold text-text">
+          {titulo} ({lista.length})
+        </h3>
+        <div className="overflow-x-auto">
+          <div className="max-h-[400px] overflow-y-auto border border-border rounded-lg">
+            <table className="min-w-full text-sm border-collapse table-auto">
+              <thead className="sticky top-0 bg-containers text-text">
+                <tr className="text-left">
+                  <th className="px-4 py-2 w-[200px]">Cliente</th>
+                  <th className="px-4 py-2 w-[530px]">Serviço</th>
+                  <th className="px-4 py-2 w-[140px]">Contratação</th>
+                  <th className="px-4 py-2 w-[140px]">Conclusão</th>
+                  <th className="px-4 py-2 w-[180px]">Duração do Projeto</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lista.map((s) => {
+                  const duracao = s.dataContratacao
+                    ? formatarDuracao(s.dataContratacao, s.dataConclusao)
+                    : null;
+                  const corDuracao =
+                    duracao?.dias > 60
+                      ? "text-red-600"
+                      : duracao?.dias > 30
+                      ? "text-yellow-500"
+                      : "";
+                  return (
+                    <tr
+                      key={s.id}
+                      className="border-t border-border bg-background text-text hover:bg-buttonsHover"
+                    >
+                      <td className="px-4 py-2">{s.cliente?.empresa}</td>
+                      <td className="px-4 py-2">{s.nome}</td>
+                      <td className="px-4 py-2">
+                        {s.dataContratacao
+                          ? new Date(s.dataContratacao).toLocaleDateString()
+                          : "—"}
+                      </td>
+                      <td className="px-4 py-2">
+                        {s.dataConclusao
+                          ? new Date(s.dataConclusao).toLocaleDateString()
+                          : "—"}
+                      </td>
+                      <td className={`px-4 py-2 ${corDuracao}`}>
+                        {duracao ? duracao.texto : "—"}
+                      </td>
                     </tr>
                   );
                 })}
@@ -222,6 +298,12 @@ export default function DashboardPrazos() {
             servicosComProximoPrazo,
             "dataProximoPrazo"
           )}
+          {renderTabelaPrazos(
+            "Aguardando Cliente",
+            aguardandoCliente,
+            "dataPrazoProjeto"
+          )}
+          {renderTabelaFinalizados("Serviços Finalizados", finalizados)}
         </>
       )}
     </div>
