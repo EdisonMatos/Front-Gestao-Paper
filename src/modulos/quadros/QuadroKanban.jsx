@@ -183,6 +183,12 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         payload.dataConclusao = new Date().toISOString();
       }
 
+      if (destino === "aguardandoCliente" || destino === "ausentes") {
+        payload.dataProximoPrazo = null;
+        payload.dataPrazoProjeto = null;
+        payload.complexidade = null;
+      }
+
       await axios.put(
         `https://backend-gestao-paper.onrender.com/servicos/${itemMovido.id}`,
         payload
