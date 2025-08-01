@@ -5,6 +5,11 @@ export default function QuadroFinanceiro() {
     backlog: { nome: "Backlog", tipoCard: "normal" },
     emProgresso: { nome: "Em progresso", tipoCard: "normal" },
     aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
+    finalizar: { nome: "Adicionar data conclusão", tipoCard: "superCompacto" },
+    semFbFinalizar: {
+      nome: "Sem feedback, finalizar",
+      tipoCard: "superCompacto",
+    },
   };
 
   return (
