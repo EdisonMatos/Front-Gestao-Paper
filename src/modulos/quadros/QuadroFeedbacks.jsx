@@ -5,7 +5,7 @@ export default function QuadroFeedbacks() {
     backlog: { nome: "Backlog", tipoCard: "normal" },
     finalizar: { nome: "Adicionar data conclusão", tipoCard: "superCompacto" },
     solicitado: { nome: "Solicitado", tipoCard: "superCompacto" },
-    emMaos: { nome: "Recebidos, direcionar", tipoCard: "superCompacto" },
+    emMaos: { nome: "Recebidos, direcionar social", tipoCard: "superCompacto" },
     semFbFinalizar: {
       nome: "Sem feedback, finalizar",
       tipoCard: "superCompacto",
