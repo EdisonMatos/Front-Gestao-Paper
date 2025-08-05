@@ -27,14 +27,12 @@ export default function Servicos() {
     fetchServicos();
   }, []);
 
-  const servicosFiltrados = servicos
-    .filter(
-      (s) =>
-        s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-        s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase()) ||
-        s.cliente?.representante?.toLowerCase().includes(filtro.toLowerCase())
-    )
-    .slice(0, 3);
+  const servicosFiltrados = servicos.filter(
+    (s) =>
+      s.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+      s.cliente?.empresa?.toLowerCase().includes(filtro.toLowerCase()) ||
+      s.cliente?.representante?.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   const handleEdit = (servico) => {
     setServicoParaEditar(servico);
@@ -168,20 +166,32 @@ export default function Servicos() {
       )}
 
       {filtro.trim() !== "" && servicosFiltrados.length > 0 && (
-        <div className="overflow-x-auto text-text">
+        <div className="overflow-x-auto text-text max-h-[500px] overflow-y-auto">
           <table className="min-w-full text-sm text-left border border-border">
             <thead className="bg-containers border-solid border-[1px] border-containers text-text">
               <tr>
-                <th className="p-2 border border-containers">Nome</th>
-                <th className="p-2 border border-containers">Empresa</th>
-                <th className="p-2 border border-containers">Status</th>
-                <th className="p-2 border border-containers">Turno</th>
-                <th className="p-2 border border-containers">Doc</th>
-                <th className="p-2 border border-containers">Prévia</th>
-                <th className="p-2 border border-containers">Git</th>
-                <th className="p-2 border border-containers">Datas</th>
-                <th className="p-2 border border-containers">Comentários</th>
-                <th className="p-2 border border-containers">Ações</th>
+                <th className="w-[200px] p-2 border border-containers">Nome</th>
+                <th className="w-[200px] p-2 border border-containers">
+                  Empresa
+                </th>
+                <th className="w-[100px] p-2 border border-containers">
+                  Status
+                </th>
+                <th className="w-[100px] p-2 border border-containers">
+                  Turno
+                </th>
+                <th className="w-[50px] p-2 border border-containers">Doc</th>
+                <th className="w-[50px] p-2 border border-containers">
+                  Prévia
+                </th>
+                <th className="w-[50px] p-2 border border-containers">Git</th>
+                <th className="w-[180px] p-2 border border-containers">
+                  Datas
+                </th>
+                <th className="w-[300px] p-2 border border-containers">
+                  Comentários
+                </th>
+                <th className="w-[75px] p-2 border border-containers">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -194,7 +204,7 @@ export default function Servicos() {
                   <td className="p-2 border border-border">
                     {renderStatus(servico)}
                   </td>
-                  <td className="p-2 border border-border">
+                  <td className="p-2 capitalize border border-border">
                     {servico.turnoDaVez}
                   </td>
                   <td className="p-2 border border-border">
