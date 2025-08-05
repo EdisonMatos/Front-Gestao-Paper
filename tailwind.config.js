@@ -5,19 +5,19 @@ export const theme = {
     colors: {
       primary: "#722630", // destaque, botões, ações principais
       secondary: "#000000", // uso estratégico em textos ou contornos
-      background: "#1A191E", // fundo geral
-      cards: "#1A191E", // cards e containers
+      background: "#000000", // fundo geral
+      cards: "#000000", // cards e containers
       containers: "#3B4048",
       text: "#CECECE", // textos principais
       textMuted: "#B0B0C0", // textos secundários, data, descrição etc.
       border: "#3A3A4D", // bordas suaves
       inputBg: "#212024", // fundo de inputs
       placeholder: "#6C6C80", // placeholder dos campos
-      buttons: "#373770",
-      buttonsHover: "#242448", // hover do botão primário (versão mais clara do primary)
+      buttons: "#5D4C09",
+      buttonsHover: "#473A08", // hover do botão primário (versão mais clara do primary)
       secondaryButtons: "#6B7280",
       secondaryButtonsHover: "#4B5563",
-      links: "#8282DE", // links e interações
+      links: "#facc15", // links e interações
     },
     boxShadow: {
       "custom-opacity": "-20px 20px 0px",
