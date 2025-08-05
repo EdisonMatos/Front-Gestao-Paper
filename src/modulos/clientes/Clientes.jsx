@@ -112,13 +112,27 @@ export default function Clientes() {
           <table className="min-w-full text-sm text-left border border-border">
             <thead className="bg-containers border-solid border-[1px] border-containers">
               <tr className="">
-                <th className="p-2 border border-containers">Empresa</th>
-                <th className="p-2 border border-containers">Representante</th>
-                <th className="p-2 border border-containers">Telefone</th>
-                <th className="p-2 border border-containers">Email</th>
-                <th className="p-2 border border-containers">Domínio</th>
-                <th className="p-2 border border-containers">Serviços</th>
-                <th className="p-2 border border-containers">Ações</th>
+                <th className="w-[200px] p-2 border border-containers">
+                  Empresa
+                </th>
+                <th className="w-[180px] p-2 border border-containers">
+                  Representante
+                </th>
+                <th className="w-[130px] p-2 border border-containers">
+                  Telefone
+                </th>
+                <th className="w-[245px] p-2 border border-containers">
+                  Email
+                </th>
+                <th className="w-[275px] p-2 border border-containers">
+                  Domínio
+                </th>
+                <th className="w-[200px] p-2 border border-containers">
+                  Serviços
+                </th>
+                <th className="w-[100px] p-2 border border-containers">
+                  Ações
+                </th>
               </tr>
             </thead>
             <tbody>
