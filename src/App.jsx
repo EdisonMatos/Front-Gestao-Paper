@@ -23,6 +23,7 @@ import DashboardTarefasEmProgresso from "./modulos/dashboards/DashboardTarefasEm
 import Agrupamento from "./componentes/Agrupamento";
 import Titulos from "./componentes/Titulos";
 import QuadroPrazos from "./modulos/dashboards/DashboardPrazos";
+import RotinaComercial from "./modulos/quadrosRotinas/RotinaComercial";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <QuadroSuporte />
           </AcordionDepartamentos>
           <AcordionDepartamentos titulo="Comercial">
+            <RotinaComercial />
             <QuadroComercial />
           </AcordionDepartamentos>
         </Agrupamento>
