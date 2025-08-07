@@ -80,6 +80,9 @@ export default function AcoesCardServico({
       );
 
       toast.success("Datas atualizadas com sucesso!", { autoClose: 1000 });
+
+      onAtualizarPrazo(datas.dataPrazoProjeto || null);
+
       onFechar();
     } catch (err) {
       console.error("Erro ao salvar datas:", err);
@@ -108,6 +111,11 @@ export default function AcoesCardServico({
       );
 
       toast.success("Prazos atualizados com sucesso!", { autoClose: 1000 });
+
+      if (onAtualizarPrazo) {
+        onAtualizarPrazo(datas.dataProximoPrazo || null);
+      }
+
       onFechar();
     } catch (err) {
       console.error("Erro ao salvar prazos:", err);
@@ -163,32 +171,6 @@ export default function AcoesCardServico({
     }
   };
 
-  const mudarPrazo = async () => {
-    if (!novaDataPrazo) return alert("Selecione uma nova data.");
-
-    setLoading(true);
-    try {
-      const novaDataISO = fromInputDateString(novaDataPrazo).toISOString();
-
-      await axios.put(
-        `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
-        {
-          ...servico,
-          dataProximoPrazo: novaDataISO,
-        }
-      );
-
-      toast.success("Prazo alterado com sucesso!", { autoClose: 1000 });
-      onAtualizarPrazo(novaDataISO);
-      onFechar();
-    } catch (err) {
-      console.error("Erro ao mudar prazo:", err);
-      alert("Erro ao mudar prazo.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const mudarComplexidade = async () => {
     if (!novaComplexidade) return alert("Selecione uma complexidade.");
 
@@ -227,7 +209,7 @@ export default function AcoesCardServico({
       >
         <option value="">Selecione a ação:</option>
         <option value="direcionar">Direcionar serviço</option>
-        <option value="mudarPrazo">Mudar prazo tarefa</option>
+        {/* Removida opção 'mudarPrazo' */}
         <option value="mudarComplexidade">Mudar complexidade tarefa</option>
         <option value="mudarDatasPrazos">Mudar datas e prazos</option>
       </select>
@@ -408,36 +390,6 @@ export default function AcoesCardServico({
               className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
             >
               {loading ? "Enviando..." : "Direcionar"}
-            </button>
-            <button
-              onClick={onFechar}
-              className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
-            >
-              Cancelar
-            </button>
-          </div>
-        </>
-      )}
-
-      {acaoSelecionada === "mudarPrazo" && (
-        <>
-          <label className="block text-text">
-            Selecione o novo prazo da tarefa:
-          </label>
-          <input
-            type="date"
-            value={novaDataPrazo}
-            onChange={(e) => setNovaDataPrazo(e.target.value)}
-            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-          />
-
-          <div className="flex gap-2">
-            <button
-              onClick={mudarPrazo}
-              disabled={loading}
-              className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
-            >
-              {loading ? "Salvando..." : "Salvar"}
             </button>
             <button
               onClick={onFechar}
