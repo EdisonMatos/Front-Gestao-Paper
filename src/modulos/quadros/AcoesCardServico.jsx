@@ -112,6 +112,14 @@ export default function AcoesCardServico({
 
       toast.success("Prazos atualizados com sucesso!", { autoClose: 1000 });
 
+      // if (onAtualizarPrazo) {
+      //   onAtualizarPrazo(datas.dataProximoPrazo || null);
+      // }
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
       if (onAtualizarPrazo) {
         onAtualizarPrazo(datas.dataProximoPrazo || null);
       }
