@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
 const CLIENTES_URL = "https://backend-gestao-paper.onrender.com/clientes";
 
-// Função para converter ISO datetime para string yyyy-mm-dd para input type=date
 function toInputDateString(isoDate) {
   if (!isoDate) return "";
   const date = new Date(isoDate);
@@ -15,7 +14,6 @@ function toInputDateString(isoDate) {
   return localISO.split("T")[0];
 }
 
-// Função para converter string yyyy-mm-dd do input para objeto Date local
 function fromInputDateString(dateStr) {
   if (!dateStr) return null;
   const [year, month, day] = dateStr.split("-");
@@ -34,20 +32,23 @@ export default function AddNovoServico({
     clienteNome: "",
     linkDoc: "",
     linkPreviaVercel: "",
-    linkRepoGithub: "", // novo campo adicionado aqui
+    linkRepoGithub: "",
     turnoDaVez: "",
-    comentariosTexto: "", // ainda presente no state
+    comentariosTexto: "",
     dataContratacao: "",
     dataInfosColetadas: "",
     dataDocPronto: "",
     dataEnvioPrevia: "",
     dataConclusao: "",
     dataProximoPrazo: "",
-    dataPrazoProjeto: "", // novo campo adicionado aqui
+    dataPrazoProjeto: "",
   });
 
   const [clienteBusca, setClienteBusca] = useState("");
   const [sugestoesClientes, setSugestoesClientes] = useState([]);
+  const [mostrarOutroNome, setMostrarOutroNome] = useState(false);
+
+  const isEdicao = !!servicoParaEditar;
 
   useEffect(() => {
     if (servicoParaEditar) {
@@ -58,7 +59,7 @@ export default function AddNovoServico({
         clienteNome: servicoParaEditar.cliente?.empresa || "",
         linkDoc: servicoParaEditar.linkDoc || "",
         linkPreviaVercel: servicoParaEditar.linkPreviaVercel || "",
-        linkRepoGithub: servicoParaEditar.linkRepoGithub || "", // atribuição do valor
+        linkRepoGithub: servicoParaEditar.linkRepoGithub || "",
         turnoDaVez: servicoParaEditar.turnoDaVez || "",
         comentariosTexto: servicoParaEditar.comentariosTexto || "",
         dataContratacao: servicoParaEditar.dataContratacao
@@ -81,7 +82,7 @@ export default function AddNovoServico({
           : "",
         dataPrazoProjeto: servicoParaEditar.dataPrazoProjeto
           ? toInputDateString(servicoParaEditar.dataPrazoProjeto)
-          : "", // atribuição do valor
+          : "",
       });
       setClienteBusca(servicoParaEditar.cliente?.empresa || "");
     }
@@ -120,36 +121,52 @@ export default function AddNovoServico({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const toastId = toast.loading("Salvando serviço...");
+
     try {
       const payload = { ...form };
 
-      // Converter as datas para objetos Date antes de enviar
       payload.dataContratacao = fromInputDateString(form.dataContratacao);
       payload.dataInfosColetadas = fromInputDateString(form.dataInfosColetadas);
       payload.dataDocPronto = fromInputDateString(form.dataDocPronto);
       payload.dataEnvioPrevia = fromInputDateString(form.dataEnvioPrevia);
       payload.dataConclusao = fromInputDateString(form.dataConclusao);
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
-      payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto); // nova conversão aqui
+      payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto);
 
       delete payload.clienteNome;
 
       if (form.id) {
         await axios.put(`${API_URL}/${form.id}`, payload);
-        toast.success("Serviço atualizado com sucesso!", { autoClose: 1000 });
+        toast.update(toastId, {
+          render: "Serviço atualizado com sucesso!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+        });
         setTimeout(() => {
           window.location.reload();
         }, 2000);
         onSalvo();
       } else {
         await axios.post(API_URL, payload);
-        toast.success("Serviço adicionado com sucesso!", { autoClose: 1000 });
+        toast.update(toastId, {
+          render: "Serviço adicionado com sucesso!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+        });
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       }
     } catch (err) {
-      toast.error("Erro ao salvar serviço.", { autoClose: 1000 });
+      toast.update(toastId, {
+        render: "Erro ao salvar serviço.",
+        type: "error",
+        isLoading: false,
+        autoClose: 1000,
+      });
     }
   };
 
@@ -158,16 +175,63 @@ export default function AddNovoServico({
       onSubmit={handleSubmit}
       className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded border-border md:grid-cols-3 bg-background text-text"
     >
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
-        <input
-          name="nome"
-          value={form.nome}
-          onChange={handleChange}
-          required
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
+      {!isEdicao ? (
+        <>
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
+            <select
+              name="nome"
+              value={mostrarOutroNome ? "Outro" : form.nome}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "Outro") {
+                  setMostrarOutroNome(true);
+                  setForm((prev) => ({ ...prev, nome: "" }));
+                } else {
+                  setMostrarOutroNome(false);
+                  setForm((prev) => ({ ...prev, nome: value }));
+                }
+              }}
+              required
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            >
+              <option value="">Selecione</option>
+              <option value="Criação de LP">Criação de LP</option>
+              <option value="Manutenção de LP">Manutenção de LP</option>
+              <option value="Contrato e Faturamento">
+                Contrato e Faturamento
+              </option>
+              <option value="Criação de Artes">Criação de Artes</option>
+              <option value="Template Paper">Template Paper</option>
+              <option value="Outro">Outro... (digitar)</option>
+            </select>
+          </div>
+          {mostrarOutroNome && (
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium">Digite o nome</label>
+              <input
+                name="nome"
+                value={form.nome}
+                onChange={handleChange}
+                placeholder="Digite o nome"
+                className="p-2 border rounded bg-inputBg text-placeholder border-border"
+                required
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
+          <input
+            name="nome"
+            value={form.nome}
+            onChange={handleChange}
+            required
+            className="p-2 border rounded bg-inputBg text-placeholder border-border"
+          />
+        </div>
+      )}
 
       <div className="relative flex flex-col">
         <label className="mb-1 text-sm font-medium">Selecione o Cliente*</label>
@@ -242,90 +306,6 @@ export default function AddNovoServico({
         />
       </div>
 
-      {/* Campos opcionais */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Link do Documento</label>
-        <input
-          name="linkDoc"
-          value={form.linkDoc}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Link Prévia Vercel</label>
-        <input
-          name="linkPreviaVercel"
-          value={form.linkPreviaVercel}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      {/* Novo campo para link do repositório GitHub */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">
-          Link do Repositório Github
-        </label>
-        <input
-          name="linkRepoGithub"
-          value={form.linkRepoGithub}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">
-          Data de Coleta de Informações
-        </label>
-        <input
-          type="date"
-          name="dataInfosColetadas"
-          value={form.dataInfosColetadas}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">
-          Data do Documento Pronto
-        </label>
-        <input
-          type="date"
-          name="dataDocPronto"
-          value={form.dataDocPronto}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">
-          Data de Envio da Prévia
-        </label>
-        <input
-          type="date"
-          name="dataEnvioPrevia"
-          value={form.dataEnvioPrevia}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Data de Conclusão</label>
-        <input
-          type="date"
-          name="dataConclusao"
-          value={form.dataConclusao}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
       <div className="flex flex-col">
         <label className="mb-1 text-sm font-medium">
           Data do Próximo Prazo
@@ -339,7 +319,6 @@ export default function AddNovoServico({
         />
       </div>
 
-      {/* Novo campo de data do prazo do projeto */}
       <div className="flex flex-col">
         <label className="mb-1 text-sm font-medium">
           Data do Prazo do Projeto
@@ -352,6 +331,112 @@ export default function AddNovoServico({
           className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
+
+      <div className="flex flex-col md:col-span-3">
+        <label className="mb-1 text-sm font-medium">
+          Descrição / Comentários
+        </label>
+        <textarea
+          name="comentariosTexto"
+          value={form.comentariosTexto}
+          onChange={handleChange}
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
+          rows={3}
+          placeholder="Digite aqui comentários ou uma descrição do serviço..."
+        />
+      </div>
+
+      {isEdicao && (
+        <>
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Link do Documento
+            </label>
+            <input
+              name="linkDoc"
+              value={form.linkDoc}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Link Prévia Vercel
+            </label>
+            <input
+              name="linkPreviaVercel"
+              value={form.linkPreviaVercel}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Link do Repositório Github
+            </label>
+            <input
+              name="linkRepoGithub"
+              value={form.linkRepoGithub}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Coleta de Informações
+            </label>
+            <input
+              type="date"
+              name="dataInfosColetadas"
+              value={form.dataInfosColetadas}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data do Documento Pronto
+            </label>
+            <input
+              type="date"
+              name="dataDocPronto"
+              value={form.dataDocPronto}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Envio da Prévia
+            </label>
+            <input
+              type="date"
+              name="dataEnvioPrevia"
+              value={form.dataEnvioPrevia}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Conclusão
+            </label>
+            <input
+              type="date"
+              name="dataConclusao"
+              value={form.dataConclusao}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+        </>
+      )}
 
       <div className="flex col-span-1 gap-4 md:col-span-3">
         <button

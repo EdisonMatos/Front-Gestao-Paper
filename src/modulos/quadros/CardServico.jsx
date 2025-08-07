@@ -19,6 +19,8 @@ export default function CardServico({
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarDirecionar, setMostrarDirecionar] = useState(false);
+  const [mostrarDescricaoCompleta, setMostrarDescricaoCompleta] =
+    useState(false);
 
   // Estado local do serviço para refletir atualizações (prazo, complexidade etc)
   const [servico, setServico] = useState(servicoInicial);
@@ -221,6 +223,12 @@ export default function CardServico({
     }));
   };
 
+  // Tratamento para descrição (comentariosTexto) - mostrar 3 primeiras linhas e botão ver mais/ocultar
+  const linhasDescricao = servico.comentariosTexto
+    ? servico.comentariosTexto.split("\n")
+    : [];
+  const descricaoCurta = linhasDescricao.slice(0, 3).join("\n");
+
   return (
     <div
       ref={provided.innerRef}
@@ -278,7 +286,7 @@ export default function CardServico({
             {servico.cliente?.empresa || "Sem empresa"}
           </p>
 
-          <p className="text-xs text-text opacity-70" style={estiloFonte}>
+          <p className="text-xs text-text" style={estiloFonte}>
             {servico.cliente?.telefone ? (
               <a
                 href={`https://wa.me/+55${formatarTelefoneParaWhatsApp(
@@ -294,6 +302,28 @@ export default function CardServico({
               servico.cliente?.representante || "Sem representante"
             )}
           </p>
+
+          {/* DESCRIÇÃO DO SERVIÇO (comentariosTexto) - mostrar 3 primeiras linhas + botão ver mais/ocultar */}
+          {linhasDescricao.length > 0 && (
+            <div
+              className="p-2 my-2 text-sm whitespace-pre-line rounded-lg bg-neutral-900 text-text opacity-80"
+              style={estiloFonte}
+            >
+              {mostrarDescricaoCompleta
+                ? servico.comentariosTexto
+                : descricaoCurta}
+              {linhasDescricao.length > 3 && (
+                <button
+                  onClick={() => setMostrarDescricaoCompleta((prev) => !prev)}
+                  className="block mt-1 text-xs text-links hover:underline"
+                  style={estiloFonte}
+                >
+                  {mostrarDescricaoCompleta ? "Ocultar" : "Ver mais"}
+                </button>
+              )}
+            </div>
+          )}
+
           <p className="mt-4 text-sm text-text" style={estiloFonte}>
             <span className="font-bold">Projeto:</span>{" "}
             {formatarDataPrazoProjetoDetalhado(dataPrazoProjetoLocal)}
@@ -432,7 +462,7 @@ export default function CardServico({
                     className="text-sm text-links hover:underline"
                     style={estiloFonte}
                   >
-                    Ver todos
+                    Ver todos comentários
                   </button>
                 ) : (
                   <>
@@ -461,7 +491,7 @@ export default function CardServico({
                       className="mt-2 text-sm text-links hover:underline"
                       style={estiloFonte}
                     >
-                      Ocultar
+                      Ocultar comentários
                     </button>
                   </>
                 )}
@@ -475,7 +505,7 @@ export default function CardServico({
               onClick={() => setMostrarCompleto(false)}
               className="mt-4 text-sm text-links hover:underline"
             >
-              Ocultar
+              Mostrar card resumido
             </button>
           )}
         </>
