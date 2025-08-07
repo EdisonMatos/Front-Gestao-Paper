@@ -432,7 +432,7 @@ export default function CardServico({
                     className="text-sm text-links hover:underline"
                     style={estiloFonte}
                   >
-                    Ver todos
+                    Ver todos comentários
                   </button>
                 ) : (
                   <>
@@ -461,7 +461,7 @@ export default function CardServico({
                       className="mt-2 text-sm text-links hover:underline"
                       style={estiloFonte}
                     >
-                      Ocultar
+                      Ocultar comentários
                     </button>
                   </>
                 )}
@@ -475,7 +475,7 @@ export default function CardServico({
               onClick={() => setMostrarCompleto(false)}
               className="mt-4 text-sm text-links hover:underline"
             >
-              Ocultar
+              Mostrar card resumido
             </button>
           )}
         </>
