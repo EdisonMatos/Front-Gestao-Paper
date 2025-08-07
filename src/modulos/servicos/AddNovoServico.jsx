@@ -46,6 +46,7 @@ export default function AddNovoServico({
 
   const [clienteBusca, setClienteBusca] = useState("");
   const [sugestoesClientes, setSugestoesClientes] = useState([]);
+  const [mostrarOutroNome, setMostrarOutroNome] = useState(false);
 
   const isEdicao = !!servicoParaEditar;
 
@@ -174,16 +175,63 @@ export default function AddNovoServico({
       onSubmit={handleSubmit}
       className="grid grid-cols-1 gap-4 p-4 mb-6 border rounded border-border md:grid-cols-3 bg-background text-text"
     >
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
-        <input
-          name="nome"
-          value={form.nome}
-          onChange={handleChange}
-          required
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
+      {!isEdicao ? (
+        <>
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
+            <select
+              name="nome"
+              value={mostrarOutroNome ? "Outro" : form.nome}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "Outro") {
+                  setMostrarOutroNome(true);
+                  setForm((prev) => ({ ...prev, nome: "" }));
+                } else {
+                  setMostrarOutroNome(false);
+                  setForm((prev) => ({ ...prev, nome: value }));
+                }
+              }}
+              required
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            >
+              <option value="">Selecione</option>
+              <option value="Criação de LP">Criação de LP</option>
+              <option value="Manutenção de LP">Manutenção de LP</option>
+              <option value="Contrato e Faturamento">
+                Contrato e Faturamento
+              </option>
+              <option value="Criação de Artes">Criação de Artes</option>
+              <option value="Template Paper">Template Paper</option>
+              <option value="Outro">Outro... (digitar)</option>
+            </select>
+          </div>
+          {mostrarOutroNome && (
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium">Digite o nome</label>
+              <input
+                name="nome"
+                value={form.nome}
+                onChange={handleChange}
+                placeholder="Digite o nome"
+                className="p-2 border rounded bg-inputBg text-placeholder border-border"
+                required
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">Nome do serviço*</label>
+          <input
+            name="nome"
+            value={form.nome}
+            onChange={handleChange}
+            required
+            className="p-2 border rounded bg-inputBg text-placeholder border-border"
+          />
+        </div>
+      )}
 
       <div className="relative flex flex-col">
         <label className="mb-1 text-sm font-medium">Selecione o Cliente*</label>
