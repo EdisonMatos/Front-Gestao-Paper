@@ -286,7 +286,7 @@ export default function CardServico({
             {servico.cliente?.empresa || "Sem empresa"}
           </p>
 
-          <p className="text-xs text-text opacity-70" style={estiloFonte}>
+          <p className="text-xs text-text" style={estiloFonte}>
             {servico.cliente?.telefone ? (
               <a
                 href={`https://wa.me/+55${formatarTelefoneParaWhatsApp(
