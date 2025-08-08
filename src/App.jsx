@@ -25,6 +25,14 @@ import Titulos from "./componentes/Titulos";
 import QuadroPrazos from "./modulos/dashboards/DashboardPrazos";
 import RotinaComercial from "./modulos/quadrosRotinas/RotinaComercial";
 import paperClubLogo from "./assets/imgs/logoPaperClub.png";
+import {
+  Award,
+  BriefcaseBusiness,
+  ChartColumnIncreasing,
+  MessageCircle,
+  Trophy,
+  Wrench,
+} from "lucide-react";
 
 function App() {
   return (
@@ -33,19 +41,23 @@ function App() {
       <div className="flex items-center">
         <img className="pl-6 w-[200px]" src={paperClubLogo}></img>
         <div>
-          <h1 className="ml-6 text-3xl font-bold text-text">Paper Club</h1>
+          <h1 className="ml-6 text-3xl font-bold text-white">Paper Club</h1>
           <h1 className="ml-6 text-md text-text">
             Sistema de Controle Interno
           </h1>
-          <p className="ml-6 text-sm text-text/50">Paper Street Softwares ®</p>
-          <p className="ml-6 text-sm text-text/50">
+          <p className="ml-6 text-xs text-text/50">Paper Street Softwares ®</p>
+          <p className="ml-6 text-xs text-text/50">
             2025 - Versão 0.9 (Em desenvolvimento)
           </p>
         </div>
       </div>
       <div className=" flex flex-col max-w-[1700px] overflow-x-auto">
         <Agrupamento>
-          <Titulos>💼 Clientes e Serviços</Titulos>
+          <Titulos>
+            <div className="flex items-center gap-2">
+              <BriefcaseBusiness className="text-links" /> Clientes e Serviços
+            </div>
+          </Titulos>
           <div className="mb-6 overflow-x-auto border border-border rounded-xl w-fit">
             <Clientes />
           </div>
@@ -54,7 +66,11 @@ function App() {
           </div>
         </Agrupamento>
         <Agrupamento>
-          <Titulos>💬 Atendimento ao cliente</Titulos>
+          <Titulos>
+            <div className="flex items-center gap-2">
+              <MessageCircle className="text-links" /> Atendimento ao cliente
+            </div>
+          </Titulos>
           <AcordionDepartamentos titulo="Suporte">
             <RotinaSuporte />
             <QuadroSuporte />
@@ -65,7 +81,11 @@ function App() {
           </AcordionDepartamentos>
         </Agrupamento>
         <Agrupamento>
-          <Titulos>🛠️ Operacional</Titulos>
+          <Titulos>
+            <div className="flex items-center gap-2">
+              <Wrench className="text-links" /> Operacional
+            </div>
+          </Titulos>
           <AcordionDepartamentos titulo="Desenvolvimento">
             <QuadroDev />
           </AcordionDepartamentos>
@@ -83,14 +103,23 @@ function App() {
           </AcordionDepartamentos>
         </Agrupamento>
         <Agrupamento>
-          <Titulos>🏅 Controle de Qualidade</Titulos>
+          <Titulos>
+            <div className="flex items-center gap-2">
+              <Award className="text-links" /> Controle de Qualidade
+            </div>
+          </Titulos>
           <AcordionDepartamentos titulo="Feedbacks">
             <RotinaFeedbacks />
             <QuadroFeedbacks />
           </AcordionDepartamentos>
         </Agrupamento>
         <Agrupamento>
-          <Titulos>📈 Gestão</Titulos>
+          <Titulos>
+            {" "}
+            <div className="flex items-center gap-2">
+              <ChartColumnIncreasing className="text-links" /> Gestão
+            </div>
+          </Titulos>
           <AcordionDepartamentos titulo="Dashboards">
             <Agrupamento>
               <QuadroPrazos />
