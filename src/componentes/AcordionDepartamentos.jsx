@@ -8,7 +8,7 @@ export default function AcordionDepartamentos({ titulo, children }) {
     <div className="mb-4">
       <button
         onClick={() => setAberto(!aberto)}
-        className="flex items-center gap-2 py-2 pl-6 pr-4 text-2xl font-bold text-left transition-colors  text-text font-mainFont hover:bg-buttonsHover bg-buttons  rounded-xl min-w-[300px] desktop1:min-w-[450px]"
+        className="flex items-center gap-2 py-2 pl-6 pr-4 text-xl font-bold text-left transition-colors  text-white font-mainFont hover:bg-buttonsHover hover:text-black bg-neutral-900  rounded-md min-w-[300px] desktop1:min-w-[450px]"
       >
         {aberto ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
         {titulo}

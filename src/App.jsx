@@ -24,20 +24,18 @@ import Agrupamento from "./componentes/Agrupamento";
 import Titulos from "./componentes/Titulos";
 import QuadroPrazos from "./modulos/dashboards/DashboardPrazos";
 import RotinaComercial from "./modulos/quadrosRotinas/RotinaComercial";
+import paperClubLogo from "./assets/imgs/logoPaperClub.png";
 
 function App() {
   return (
     <div className="min-h-screen bg-background font-mainFont">
       <ToastContainer />
-      <img
-        className="py-10 pl-6 w-[350px]"
-        src="https://www.paperstreet.com.br/assets/logo-CbJtwANr.webp"
-      ></img>
-      <h1 className="ml-6 text-3xl font-bold text-text/70">
+      <img className="pl-6 w-[350px]" src={paperClubLogo}></img>
+      {/* <h1 className="ml-6 text-3xl font-bold text-text/70">
         Sistema de Gerenciamento
       </h1>
-      <p className="ml-6 text-text/50">Versão 0.8 (Em desenvolvimento)</p>
-      <div className="mt-10 flex flex-col max-w-[1700px] overflow-x-auto">
+      <p className="ml-6 text-text/50">Versão 0.8 (Em desenvolvimento)</p> */}
+      <div className=" flex flex-col max-w-[1700px] overflow-x-auto">
         <Agrupamento>
           <Titulos>💼 Clientes e Serviços</Titulos>
           <div className="mb-6 overflow-x-auto border border-border rounded-xl w-fit">

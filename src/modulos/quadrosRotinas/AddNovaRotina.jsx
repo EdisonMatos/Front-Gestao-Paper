@@ -214,7 +214,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
       {!visivel && (
         <button
           onClick={() => setVisivel(true)}
-          className="px-4 py-2 mb-4 font-bold text-white rounded bg-buttons hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 text-black rounded bg-buttons hover:bg-buttonsHover"
         >
           Adicionar nova rotina
         </button>
@@ -228,7 +228,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
             </h3>
             <button
               onClick={() => setVisivel(false)}
-              className="px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-600"
+              className="px-8 py-2 text-white rounded bg-secondaryButtons hover:bg-secondaryButtonsHover"
             >
               Ocultar
             </button>
@@ -308,7 +308,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
 
             <button
               type="submit"
-              className="px-4 py-2 font-bold text-white rounded bg-buttons col-span-full md:col-auto hover:bg-buttonsHover"
+              className="px-4 py-2 text-black rounded bg-buttons col-span-full md:col-auto hover:bg-buttonsHover"
             >
               Adicionar
             </button>
@@ -452,13 +452,13 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                           <>
                             <button
                               onClick={() => iniciarEdicao(r.id)}
-                              className="px-2 py-1 text-white rounded bg-buttons hover:bg-buttonsHover"
+                              className="px-2 py-1 text-black rounded bg-buttons hover:bg-buttonsHover"
                             >
                               Editar
                             </button>
                             <button
                               onClick={() => excluirRotina(r.id)}
-                              className="px-2 py-1 text-white rounded bg-buttons hover:bg-buttonsHover"
+                              className="px-2 py-1 text-black rounded bg-buttons hover:bg-buttonsHover"
                             >
                               Excluir
                             </button>
