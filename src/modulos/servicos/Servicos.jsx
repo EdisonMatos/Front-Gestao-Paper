@@ -148,7 +148,7 @@ export default function Servicos() {
             setServicoParaEditar(null);
             setShowForm(true);
           }}
-          className="px-4 py-2 mb-4 text-black transition rounded desktop1:ml-4 bg-buttons hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 text-black transition rounded desktop1:ml-4 bg-buttonsHover hover:bg-buttons"
         >
           Adicionar novo serviço
         </button>

@@ -122,7 +122,7 @@ export default function AddNovoCliente({
       <div className="flex items-end">
         <button
           type="submit"
-          className="w-full px-4 py-2 text-black transition rounded bg-buttons hover:bg-buttonsHover"
+          className="w-full px-4 py-2 text-black transition rounded bg-buttonsHover hover:bg-buttons"
         >
           {form.id ? "Atualizar Cliente" : "Adicionar Cliente"}
         </button>

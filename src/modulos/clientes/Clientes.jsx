@@ -83,7 +83,7 @@ export default function Clientes() {
       {!showForm ? (
         <button
           onClick={handleAdicionarNovo}
-          className="px-4 py-2 mb-4 text-black border rounded border-neutral-500 desktop1:ml-4 bg-buttons hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 text-black border rounded border-neutral-500 desktop1:ml-4 bg-buttonsHover hover:bg-buttons"
         >
           Adicionar novo cliente
         </button>

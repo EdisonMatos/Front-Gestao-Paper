@@ -214,7 +214,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
       {!visivel && (
         <button
           onClick={() => setVisivel(true)}
-          className="px-4 py-2 mb-4 text-black rounded bg-buttons hover:bg-buttonsHover"
+          className="px-4 py-2 mb-4 text-black rounded bg-buttonsHover hover:bg-buttons"
         >
           Adicionar nova rotina
         </button>
@@ -308,7 +308,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
 
             <button
               type="submit"
-              className="px-4 py-2 text-black rounded bg-buttons col-span-full md:col-auto hover:bg-buttonsHover"
+              className="px-4 py-2 text-black rounded bg-buttonsHover col-span-full md:col-auto hover:bg-buttons"
             >
               Adicionar
             </button>

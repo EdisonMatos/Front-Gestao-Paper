@@ -441,7 +441,7 @@ export default function AddNovoServico({
       <div className="flex col-span-1 gap-4 md:col-span-3">
         <button
           type="submit"
-          className="px-6 text-black transition rounded bg-buttons hover:bg-buttonsHover"
+          className="px-6 text-black transition rounded bg-buttonsHover hover:bg-buttons"
         >
           {form.id ? "Atualizar Serviço" : "Adicionar Serviço"}
         </button>
