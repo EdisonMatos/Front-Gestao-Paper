@@ -11,12 +11,13 @@ export const theme = {
       text: "#CECECE", // textos principais
       textMuted: "#B0B0C0", // textos secundários, data, descrição etc.
       border: "#3A3A4D", // bordas suaves
-      inputBg: "#212024", // fundo de inputs
+      inputBg: "#101010", // fundo de inputs
       placeholder: "#6C6C80", // placeholder dos campos
-      buttons: "#5D4C09",
-      buttonsHover: "#473A08", // hover do botão primário (versão mais clara do primary)
-      secondaryButtons: "#6B7280",
-      secondaryButtonsHover: "#4B5563",
+      buttons: "#ffffff",
+      buttonsBorder: "151515",
+      buttonsHover: "#facc15", // hover do botão primário (versão mais clara do primary)
+      secondaryButtons: "#111111",
+      secondaryButtonsHover: "#0B0B0B",
       links: "#facc15", // links e interações
     },
     boxShadow: {

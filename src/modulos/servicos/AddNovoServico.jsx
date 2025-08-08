@@ -441,14 +441,14 @@ export default function AddNovoServico({
       <div className="flex col-span-1 gap-4 md:col-span-3">
         <button
           type="submit"
-          className="p-2 text-white transition rounded bg-buttons hover:bg-buttonsHover"
+          className="px-6 text-black transition rounded bg-buttons hover:bg-buttonsHover"
         >
           {form.id ? "Atualizar Serviço" : "Adicionar Serviço"}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="p-2 text-white transition rounded bg-secondaryButtons hover:bg-secondaryButtonsHover"
+          className="px-6 py-2 text-white transition rounded bg-secondaryButtons hover:bg-secondaryButtonsHover"
         >
           Cancelar
         </button>

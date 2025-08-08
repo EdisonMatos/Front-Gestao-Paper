@@ -24,20 +24,26 @@ import Agrupamento from "./componentes/Agrupamento";
 import Titulos from "./componentes/Titulos";
 import QuadroPrazos from "./modulos/dashboards/DashboardPrazos";
 import RotinaComercial from "./modulos/quadrosRotinas/RotinaComercial";
+import paperClubLogo from "./assets/imgs/logoPaperClub.png";
 
 function App() {
   return (
     <div className="min-h-screen bg-background font-mainFont">
       <ToastContainer />
-      <img
-        className="py-10 pl-6 w-[350px]"
-        src="https://www.paperstreet.com.br/assets/logo-CbJtwANr.webp"
-      ></img>
-      <h1 className="ml-6 text-3xl font-bold text-text/70">
-        Sistema de Gerenciamento
-      </h1>
-      <p className="ml-6 text-text/50">Versão 0.8 (Em desenvolvimento)</p>
-      <div className="mt-10 flex flex-col max-w-[1700px] overflow-x-auto">
+      <div className="flex items-center">
+        <img className="pl-6 w-[200px]" src={paperClubLogo}></img>
+        <div>
+          <h1 className="ml-6 text-3xl font-bold text-text">Paper Club</h1>
+          <h1 className="ml-6 text-md text-text">
+            Sistema de Controle Interno
+          </h1>
+          <p className="ml-6 text-sm text-text/50">Paper Street Softwares ®</p>
+          <p className="ml-6 text-sm text-text/50">
+            2025 - Versão 0.9 (Em desenvolvimento)
+          </p>
+        </div>
+      </div>
+      <div className=" flex flex-col max-w-[1700px] overflow-x-auto">
         <Agrupamento>
           <Titulos>💼 Clientes e Serviços</Titulos>
           <div className="mb-6 overflow-x-auto border border-border rounded-xl w-fit">

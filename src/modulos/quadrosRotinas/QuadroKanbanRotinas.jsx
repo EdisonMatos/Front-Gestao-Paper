@@ -242,7 +242,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                     className={`p-3 mb-3 border-l-4 shadow bg-background rounded-xl relative group transition-opacity duration-300
                     ${
                       card.statusCalculado === "concluida"
-                        ? "border-green-500"
+                        ? "border-links"
                         : card.statusCalculado === "atrasada"
                         ? "border-red-500"
                         : "border-black"
@@ -256,7 +256,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                       }`}
                     >
                       {rotinasConcluidas[card.id] && (
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div className="w-2 h-2 rounded-full bg-links"></div>
                       )}
                     </button>
 
@@ -265,7 +265,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                     {!descricaoExpandida[card.id] ? (
                       <button
                         onClick={() => toggleDescricao(card.id)}
-                        className="pl-6 mt-1 text-sm text-links/50 hover:underline"
+                        className="pl-6 mt-1 text-sm text-links hover:underline"
                       >
                         Instruções
                       </button>
@@ -274,7 +274,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                         <p className="text-sm text-text/80">{card.descricao}</p>
                         <button
                           onClick={() => toggleDescricao(card.id)}
-                          className="mt-1 text-sm text-links/50 hover:underline"
+                          className="mt-1 text-sm text-links hover:underline"
                         >
                           Ocultar instruções
                         </button>
