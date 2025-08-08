@@ -73,7 +73,7 @@ export default function CardServico({
       return (
         <>
           {dataFormatada} -{" "}
-          <span className="font-semibold text-yellow-300">Amanhã</span>
+          <span className="font-semibold text-links">Amanhã</span>
         </>
       );
     } else {
@@ -175,7 +175,7 @@ export default function CardServico({
       return (
         <>
           {dataFormatada} -{" "}
-          <span className="font-semibold text-yellow-300">Amanhã</span>{" "}
+          <span className="font-semibold text-links">Amanhã</span>{" "}
           {renderComplexidade}
         </>
       );
