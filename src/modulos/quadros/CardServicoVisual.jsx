@@ -231,7 +231,7 @@ export default function CardServicoVisual({
                 <button
                   onClick={adicionarComentario}
                   disabled={loading}
-                  className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
+                  className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
                 >
                   {loading ? "Adicionando..." : "Adicionar"}
                 </button>
