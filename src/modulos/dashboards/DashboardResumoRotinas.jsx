@@ -158,12 +158,12 @@ export default function DashboardResumoRotinas() {
                         >
                           <ul className="space-y-1">
                             {info.concluida.map((nome, i) => (
-                              <li key={`c-${i}`} className="text-green-600">
-                                ✅ {nome}
+                              <li key={`c-${i}`} className="text-links">
+                                ✓ {nome}
                               </li>
                             ))}
                             {info.atrasada.map((nome, i) => (
-                              <li key={`a-${i}`} className="text-yellow-600">
+                              <li key={`a-${i}`} className="text-red-500">
                                 ⚠️ {nome}
                               </li>
                             ))}
