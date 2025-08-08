@@ -39,10 +39,10 @@ function App() {
     <div className="min-h-screen bg-background font-mainFont">
       <ToastContainer />
       <div className="flex items-center">
-        <img className="pl-6 w-[200px]" src={paperClubLogo}></img>
+        <img className="pl-2 w-[200px]" src={paperClubLogo}></img>
         <div>
           <h1 className="ml-6 text-3xl font-bold text-white">Paper Club</h1>
-          <h1 className="ml-6 text-md text-text">
+          <h1 className="ml-6 text-sm text-text">
             Sistema de Controle Interno
           </h1>
           <p className="ml-6 text-xs text-text/50">Paper Street Softwares ®</p>
