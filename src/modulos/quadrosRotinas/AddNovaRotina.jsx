@@ -437,7 +437,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                           <>
                             <button
                               onClick={() => salvarEdicao(r.id)}
-                              className="px-2 py-1 text-white bg-green-600 rounded hover:bg-green-700"
+                              className="px-2 py-1 text-black rounded bg-buttonsHover hover:bg-buttons"
                             >
                               Salvar
                             </button>

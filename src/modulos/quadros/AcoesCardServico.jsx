@@ -286,7 +286,7 @@ export default function AcoesCardServico({
                 <button
                   onClick={salvarDatas}
                   disabled={loading}
-                  className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
+                  className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
                 >
                   {loading ? "Salvando..." : "Salvar"}
                 </button>
@@ -326,7 +326,7 @@ export default function AcoesCardServico({
                 <button
                   onClick={salvarPrazos}
                   disabled={loading}
-                  className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
+                  className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
                 >
                   {loading ? "Salvando..." : "Salvar"}
                 </button>
@@ -391,7 +391,7 @@ export default function AcoesCardServico({
             <button
               onClick={direcionarServico}
               disabled={loading}
-              className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
+              className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
             >
               {loading ? "Enviando..." : "Direcionar"}
             </button>
@@ -425,7 +425,7 @@ export default function AcoesCardServico({
             <button
               onClick={mudarComplexidade}
               disabled={loading}
-              className="px-2 py-1 text-sm text-white rounded bg-buttons hover:bg-buttonsHover"
+              className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
             >
               {loading ? "Salvando..." : "Salvar"}
             </button>
