@@ -183,7 +183,7 @@ export default function DashboardPrazos() {
                   return (
                     <tr
                       key={s.id}
-                      className="border-t border-border bg-background text-text hover:bg-buttonsHover"
+                      className="border-t border-border bg-background text-text hover:bg-links hover:text-black"
                     >
                       <td className="px-4 py-2">{s.cliente?.empresa}</td>
                       <td className="px-4 py-2">{s.nome}</td>
@@ -254,7 +254,7 @@ export default function DashboardPrazos() {
                   return (
                     <tr
                       key={s.id}
-                      className="border-t border-border bg-background text-text hover:bg-buttonsHover"
+                      className="border-t border-border bg-background text-text hover:bg-links hover:text-black"
                     >
                       <td className="px-4 py-2">{s.cliente?.empresa}</td>
                       <td className="px-4 py-2">{s.nome}</td>
