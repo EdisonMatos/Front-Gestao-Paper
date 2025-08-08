@@ -223,7 +223,7 @@ export default function CardServico({
   const linhasDescricao = servico.comentariosTexto
     ? servico.comentariosTexto.split("\n")
     : [];
-  const descricaoCurta = linhasDescricao.slice(0, 3).join("\n");
+  const descricaoCurta = linhasDescricao.slice(0, 2).join("\n");
 
   return (
     <CardServicoVisual

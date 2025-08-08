@@ -1,4 +1,6 @@
 // components/CardServicoVisual.jsx
+import { useState, useRef } from "react";
+import { Copy, Check } from "lucide-react";
 import AcoesCardServico from "./AcoesCardServico";
 
 export default function CardServicoVisual({
@@ -41,6 +43,46 @@ export default function CardServicoVisual({
   linhasDescricao,
   descricaoCurta,
 }) {
+  // estado para feedback de cópia
+  const [copied, setCopied] = useState(false);
+  // optional ref caso queira pegar o conteúdo renderizado (não é obrigatório)
+  const descriptionRef = useRef(null);
+
+  async function handleCopyDescription() {
+    try {
+      // pega exatamente o texto que está dentro da div de descrição
+      const textToCopy = mostrarDescricaoCompleta
+        ? servico?.comentariosTexto ?? ""
+        : descricaoCurta ?? "";
+
+      if (!textToCopy || !textToCopy.trim()) {
+        // nada a copiar
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(textToCopy);
+      } else {
+        // fallback antigo
+        const textarea = document.createElement("textarea");
+        textarea.value = textToCopy;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // volta ao ícone normal em 2s
+    } catch (err) {
+      console.error("Erro ao copiar descrição:", err);
+      // opcional: mostrar toast ou outro feedback de erro
+    }
+  }
+
   return (
     <div
       ref={provided.innerRef}
@@ -116,13 +158,31 @@ export default function CardServicoVisual({
           </p>
 
           {linhasDescricao.length > 0 && (
+            // NOTE: adicionei "relative" e "pr-8" para dar espaço ao ícone flutuante
             <div
-              className="p-2 my-2 text-sm whitespace-pre-line rounded-lg bg-neutral-900 text-text opacity-80"
+              ref={descriptionRef}
+              className="relative p-2 pr-8 my-2 text-sm whitespace-pre-line rounded-lg bg-neutral-900 text-text opacity-80"
               style={estiloFonte}
             >
               {mostrarDescricaoCompleta
                 ? servico.comentariosTexto
                 : descricaoCurta}
+
+              {/* Ícone flutuante de cópia (top-right) */}
+              <button
+                onClick={handleCopyDescription}
+                className="absolute p-1 rounded top-2 right-2 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-1"
+                aria-label={copied ? "Descrição copiada" : "Copiar descrição"}
+                title={copied ? "Copiado!" : "Copiar descrição"}
+                type="button"
+              >
+                {copied ? (
+                  <Check size={16} className="text-green-400" />
+                ) : (
+                  <Copy size={16} className="text-text" />
+                )}
+              </button>
+
               {linhasDescricao.length > 3 && (
                 <button
                   onClick={() => setMostrarDescricaoCompleta((prev) => !prev)}
