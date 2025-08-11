@@ -105,6 +105,13 @@ export default function CardServicoVisual({
     }
   }
 
+  function renderCommentText(texto) {
+    if (texto.startsWith("http")) {
+      return texto.length > 20 ? texto.substring(0, 22) + "..." : texto;
+    }
+    return texto;
+  }
+
   return (
     <div
       ref={provided.innerRef}
@@ -133,7 +140,7 @@ export default function CardServicoVisual({
                   style={estiloFonte}
                 >
                   <p className="group-hover:opacity-30">
-                    {doisMaisRecentes[0].texto}
+                    {renderCommentText(doisMaisRecentes[0].texto)}
                   </p>
                   <p
                     className="mt-1 opacity-50 text-text group-hover:opacity-30"
@@ -142,20 +149,32 @@ export default function CardServicoVisual({
                     {capitalizar(doisMaisRecentes[0].setor)} -{" "}
                     {formatarDataHora(doisMaisRecentes[0].criadoEm)}
                   </p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCopyComment(
-                        doisMaisRecentes[0].id,
-                        doisMaisRecentes[0].texto
-                      );
-                    }}
-                    className="absolute px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 bg-links top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100"
-                  >
-                    {copiedCommentId === doisMaisRecentes[0].id
-                      ? "Copiado!"
-                      : "Copiar"}
-                  </button>
+                  <div className="absolute flex gap-2 px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyComment(
+                          doisMaisRecentes[0].id,
+                          doisMaisRecentes[0].texto
+                        );
+                      }}
+                      className="px-2 py-1 text-black rounded bg-links"
+                    >
+                      {copiedCommentId === doisMaisRecentes[0].id
+                        ? "Copiado!"
+                        : "Copiar"}
+                    </button>
+                    {doisMaisRecentes[0].texto.startsWith("http") && (
+                      <a
+                        href={doisMaisRecentes[0].texto}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 text-black bg-white rounded"
+                      >
+                        Acessar
+                      </a>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <p className="italic text-text" style={estiloFonte}>
@@ -355,7 +374,9 @@ export default function CardServicoVisual({
                 className="relative pt-2 text-sm border-t-2 border-border text-text group"
                 style={estiloFonte}
               >
-                <p className="group-hover:opacity-30">{comentario.texto}</p>
+                <p className="group-hover:opacity-30">
+                  {renderCommentText(comentario.texto)}
+                </p>
                 <p
                   className="mt-1 text-xs opacity-50 text-text group-hover:opacity-30"
                   style={estiloFonte}
@@ -364,16 +385,28 @@ export default function CardServicoVisual({
                   {formatarDataHora(comentario.criadoEm)}
                 </p>
 
-                {/* Botão de copiar sobreposto */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleCopyComment(comentario.id, comentario.texto);
-                  }}
-                  className="absolute px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 bg-links top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100"
-                >
-                  {copiedCommentId === comentario.id ? "Copiado! ✅" : "Copiar"}
-                </button>
+                {/* Botões sobrepostos */}
+                <div className="absolute flex gap-2 px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyComment(comentario.id, comentario.texto);
+                    }}
+                    className="px-2 py-1 text-black rounded bg-links"
+                  >
+                    {copiedCommentId === comentario.id ? "Copiado!" : "Copiar"}
+                  </button>
+                  {comentario.texto.startsWith("http") && (
+                    <a
+                      href={comentario.texto}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2 py-1 text-black bg-white rounded"
+                    >
+                      Acessar
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
             {comentariosRestantes.length > 0 && (
@@ -398,7 +431,7 @@ export default function CardServicoVisual({
                           className="relative pt-2 border-t-2 border-border text-text group"
                         >
                           <p className="group-hover:opacity-30">
-                            {comentario.texto}
+                            {renderCommentText(comentario.texto)}
                           </p>
                           <p
                             className="mt-1 text-xs text-text group-hover:opacity-30"
@@ -408,21 +441,33 @@ export default function CardServicoVisual({
                             {formatarDataHora(comentario.criadoEm)}
                           </p>
 
-                          {/* Botão de copiar sobreposto */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCopyComment(
-                                comentario.id,
-                                comentario.texto
-                              );
-                            }}
-                            className="absolute px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 bg-links top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100"
-                          >
-                            {copiedCommentId === comentario.id
-                              ? "Copiado!"
-                              : "Copiar"}
-                          </button>
+                          {/* Botões sobrepostos */}
+                          <div className="absolute flex gap-2 px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopyComment(
+                                  comentario.id,
+                                  comentario.texto
+                                );
+                              }}
+                              className="px-2 py-1 text-black rounded bg-links"
+                            >
+                              {copiedCommentId === comentario.id
+                                ? "Copiado!"
+                                : "Copiar"}
+                            </button>
+                            {comentario.texto.startsWith("http") && (
+                              <a
+                                href={comentario.texto}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2 py-1 bg-green-600 rounded"
+                              >
+                                Acessar Link
+                              </a>
+                            )}
+                          </div>
                         </li>
                       ))}
                     </ul>
