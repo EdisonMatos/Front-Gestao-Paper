@@ -118,7 +118,7 @@ export default function CardServicoVisual({
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={`bg-cards rounded-2xl p-5 mb-2 shadow ${
-        snapshot.isDragging ? "scale-105" : ""
+        snapshot.isDragging ? "scale-110 transition-all" : ""
       }`}
     >
       {modoCompacto || modoSuperCompacto ? (
@@ -158,7 +158,7 @@ export default function CardServicoVisual({
                           doisMaisRecentes[0].texto
                         );
                       }}
-                      className="px-2 py-1 text-black rounded bg-links"
+                      className="px-2 py-1 text-black transition-all rounded bg-links hover:scale-110"
                     >
                       {copiedCommentId === doisMaisRecentes[0].id
                         ? "Copiado!"
@@ -169,7 +169,7 @@ export default function CardServicoVisual({
                         href={doisMaisRecentes[0].texto}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-2 py-1 text-black bg-white rounded"
+                        className="px-2 py-1 text-black transition-all bg-white rounded hover:scale-110"
                       >
                         Acessar
                       </a>
@@ -392,7 +392,7 @@ export default function CardServicoVisual({
                       e.stopPropagation();
                       handleCopyComment(comentario.id, comentario.texto);
                     }}
-                    className="px-2 py-1 text-black rounded bg-links"
+                    className="px-2 py-1 text-black transition-all rounded bg-links hover:scale-110"
                   >
                     {copiedCommentId === comentario.id ? "Copiado!" : "Copiar"}
                   </button>
@@ -401,7 +401,7 @@ export default function CardServicoVisual({
                       href={comentario.texto}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-2 py-1 text-black bg-white rounded"
+                      className="px-2 py-1 text-black transition-all bg-white rounded hover:scale-110"
                     >
                       Acessar
                     </a>
@@ -451,7 +451,7 @@ export default function CardServicoVisual({
                                   comentario.texto
                                 );
                               }}
-                              className="px-2 py-1 text-black rounded bg-links"
+                              className="px-2 py-1 text-black transition-all rounded bg-links hover:scale-110"
                             >
                               {copiedCommentId === comentario.id
                                 ? "Copiado!"
@@ -462,9 +462,9 @@ export default function CardServicoVisual({
                                 href={comentario.texto}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2 py-1 bg-green-600 rounded"
+                                className="px-2 py-1 text-black transition-all bg-white rounded hover:scale-110"
                               >
-                                Acessar Link
+                                Acessar
                               </a>
                             )}
                           </div>
