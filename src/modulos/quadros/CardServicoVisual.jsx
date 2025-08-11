@@ -43,27 +43,25 @@ export default function CardServicoVisual({
   linhasDescricao,
   descricaoCurta,
 }) {
-  // estado para feedback de cópia
   const [copied, setCopied] = useState(false);
-  // optional ref caso queira pegar o conteúdo renderizado (não é obrigatório)
   const descriptionRef = useRef(null);
+
+  // estado para copiar comentários individuais
+  const [copiedCommentId, setCopiedCommentId] = useState(null);
 
   async function handleCopyDescription() {
     try {
-      // pega exatamente o texto que está dentro da div de descrição
       const textToCopy = mostrarDescricaoCompleta
         ? servico?.comentariosTexto ?? ""
         : descricaoCurta ?? "";
 
       if (!textToCopy || !textToCopy.trim()) {
-        // nada a copiar
         return;
       }
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(textToCopy);
       } else {
-        // fallback antigo
         const textarea = document.createElement("textarea");
         textarea.value = textToCopy;
         textarea.setAttribute("readonly", "");
@@ -76,11 +74,42 @@ export default function CardServicoVisual({
       }
 
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // volta ao ícone normal em 2s
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Erro ao copiar descrição:", err);
-      // opcional: mostrar toast ou outro feedback de erro
     }
+  }
+
+  async function handleCopyComment(commentId, commentText) {
+    try {
+      if (!commentText || !commentText.trim()) return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(commentText);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = commentText;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      setCopiedCommentId(commentId);
+      setTimeout(() => setCopiedCommentId(null), 2000);
+    } catch (err) {
+      console.error("Erro ao copiar comentário:", err);
+    }
+  }
+
+  function renderCommentText(texto) {
+    if (texto.startsWith("http")) {
+      return texto.length > 20 ? texto.substring(0, 22) + "..." : texto;
+    }
+    return texto;
   }
 
   return (
@@ -89,7 +118,7 @@ export default function CardServicoVisual({
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={`bg-cards rounded-2xl p-5 mb-2 shadow ${
-        snapshot.isDragging ? "scale-105" : ""
+        snapshot.isDragging ? "scale-110 transition-all" : ""
       }`}
     >
       {modoCompacto || modoSuperCompacto ? (
@@ -105,15 +134,47 @@ export default function CardServicoVisual({
               style={estiloFonte}
             >
               {doisMaisRecentes.length > 0 ? (
-                <div key={doisMaisRecentes[0].id}>
-                  <p>{doisMaisRecentes[0].texto}</p>
+                <div
+                  key={doisMaisRecentes[0].id}
+                  className="relative group"
+                  style={estiloFonte}
+                >
+                  <p className="group-hover:opacity-30">
+                    {renderCommentText(doisMaisRecentes[0].texto)}
+                  </p>
                   <p
-                    className="mt-1 opacity-50 text-text"
+                    className="mt-1 opacity-50 text-text group-hover:opacity-30"
                     style={{ fontSize: "12px" }}
                   >
                     {capitalizar(doisMaisRecentes[0].setor)} -{" "}
                     {formatarDataHora(doisMaisRecentes[0].criadoEm)}
                   </p>
+                  <div className="absolute flex gap-2 px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyComment(
+                          doisMaisRecentes[0].id,
+                          doisMaisRecentes[0].texto
+                        );
+                      }}
+                      className="px-2 py-1 text-black transition-all rounded bg-links hover:scale-110"
+                    >
+                      {copiedCommentId === doisMaisRecentes[0].id
+                        ? "Copiado!"
+                        : "Copiar"}
+                    </button>
+                    {doisMaisRecentes[0].texto.startsWith("http") && (
+                      <a
+                        href={doisMaisRecentes[0].texto}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 text-black transition-all bg-white rounded hover:scale-110"
+                      >
+                        Acessar
+                      </a>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <p className="italic text-text" style={estiloFonte}>
@@ -158,7 +219,6 @@ export default function CardServicoVisual({
           </p>
 
           {linhasDescricao.length > 0 && (
-            // NOTE: adicionei "relative" e "pr-8" para dar espaço ao ícone flutuante
             <div
               ref={descriptionRef}
               className="relative p-2 pr-8 my-2 text-sm whitespace-pre-line rounded-lg bg-neutral-900 text-text opacity-80"
@@ -168,7 +228,6 @@ export default function CardServicoVisual({
                 ? servico.comentariosTexto
                 : descricaoCurta}
 
-              {/* Ícone flutuante de cópia (top-right) */}
               <button
                 onClick={handleCopyDescription}
                 className="absolute p-1 rounded top-2 right-2 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-1"
@@ -312,17 +371,42 @@ export default function CardServicoVisual({
             {doisMaisRecentes.map((comentario) => (
               <div
                 key={comentario.id}
-                className="pt-2 text-sm border-t-2 border-border text-text"
+                className="relative pt-2 text-sm border-t-2 border-border text-text group"
                 style={estiloFonte}
               >
-                <p>{comentario.texto}</p>
+                <p className="group-hover:opacity-30">
+                  {renderCommentText(comentario.texto)}
+                </p>
                 <p
-                  className="mt-1 text-xs opacity-50 text-text"
+                  className="mt-1 text-xs opacity-50 text-text group-hover:opacity-30"
                   style={estiloFonte}
                 >
                   {capitalizar(comentario.setor)} -{" "}
                   {formatarDataHora(comentario.criadoEm)}
                 </p>
+
+                {/* Botões sobrepostos */}
+                <div className="absolute flex gap-2 px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyComment(comentario.id, comentario.texto);
+                    }}
+                    className="px-2 py-1 text-black transition-all rounded bg-links hover:scale-110"
+                  >
+                    {copiedCommentId === comentario.id ? "Copiado!" : "Copiar"}
+                  </button>
+                  {comentario.texto.startsWith("http") && (
+                    <a
+                      href={comentario.texto}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2 py-1 text-black transition-all bg-white rounded hover:scale-110"
+                    >
+                      Acessar
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
             {comentariosRestantes.length > 0 && (
@@ -344,16 +428,46 @@ export default function CardServicoVisual({
                       {comentariosRestantes.map((comentario) => (
                         <li
                           key={comentario.id}
-                          className="pt-2 border-t-2 border-border text-text"
+                          className="relative pt-2 border-t-2 border-border text-text group"
                         >
-                          <p>{comentario.texto}</p>
+                          <p className="group-hover:opacity-30">
+                            {renderCommentText(comentario.texto)}
+                          </p>
                           <p
-                            className="mt-1 text-xs text-text"
+                            className="mt-1 text-xs text-text group-hover:opacity-30"
                             style={estiloFonte}
                           >
                             {capitalizar(comentario.setor)} -{" "}
                             {formatarDataHora(comentario.criadoEm)}
                           </p>
+
+                          {/* Botões sobrepostos */}
+                          <div className="absolute flex gap-2 px-3 py-1 text-xs text-white transition -translate-x-1/2 -translate-y-1/2 rounded opacity-0 top-1/2 left-1/2 bg-opacity-70 group-hover:opacity-100">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopyComment(
+                                  comentario.id,
+                                  comentario.texto
+                                );
+                              }}
+                              className="px-2 py-1 text-black transition-all rounded bg-links hover:scale-110"
+                            >
+                              {copiedCommentId === comentario.id
+                                ? "Copiado!"
+                                : "Copiar"}
+                            </button>
+                            {comentario.texto.startsWith("http") && (
+                              <a
+                                href={comentario.texto}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2 py-1 text-black transition-all bg-white rounded hover:scale-110"
+                              >
+                                Acessar
+                              </a>
+                            )}
+                          </div>
                         </li>
                       ))}
                     </ul>
