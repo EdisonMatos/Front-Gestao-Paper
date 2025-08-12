@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ServCriacaoDeLpi from "./ServCriacaoDeLpi";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
 const CLIENTES_URL = "https://backend-gestao-paper.onrender.com/clientes";
@@ -47,6 +48,9 @@ export default function AddNovoServico({
   const [clienteBusca, setClienteBusca] = useState("");
   const [sugestoesClientes, setSugestoesClientes] = useState([]);
   const [mostrarOutroNome, setMostrarOutroNome] = useState(false);
+
+  // estado para guardar os dados do componente ServCriacaoDeLpi
+  const [servCriacaoData, setServCriacaoData] = useState({});
 
   const isEdicao = !!servicoParaEditar;
 
@@ -118,6 +122,62 @@ export default function AddNovoServico({
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // monta a descrição final a partir dos dados do ServCriacaoDeLpi + o campo comentariosTexto
+  function montarDescricaoCriacaoLP(servData, comentariosExistentes) {
+    // servData tem: tipoCliente, tipoPagina, formato, diasPrazo, pagamento, valor, telefone, nome, email, cpfCnpj
+    if (!servData || Object.keys(servData).length === 0)
+      return comentariosExistentes || "";
+
+    const parts = [];
+
+    if (servData.tipoCliente) parts.push(servData.tipoCliente); // "Adv" ou "Cli"
+    if (servData.tipoPagina) parts.push(servData.tipoPagina); // "LPi" ou "LPv"
+    if (servData.formato) parts.push(servData.formato); // "Ass" ou "Aqu"
+    if (servData.diasPrazo) parts.push(`${servData.diasPrazo}D`);
+    if (servData.pagamento) parts.push(servData.pagamento); // "Cc" ou "Pix"
+    if (servData.valor) parts.push(servData.valor);
+
+    const firstLine = parts.join(" ");
+
+    // contato (nome, cpf/cnpj, email, telefone) - só incluir linhas que existirem
+    const contatoLines = [];
+    if (servData.nome) contatoLines.push(servData.nome);
+
+    if (servData.cpfCnpj) {
+      // decidir label CPF ou CNPJ
+      const digits = servData.cpfCnpj.replace(/\D/g, "");
+      if (digits.length > 11) {
+        contatoLines.push(`CNPJ: ${servData.cpfCnpj}`);
+      } else {
+        contatoLines.push(`CPF: ${servData.cpfCnpj}`);
+      }
+    }
+
+    if (servData.email) contatoLines.push(servData.email);
+    if (servData.telefone) contatoLines.push(servData.telefone);
+
+    // montar o texto final conforme solicitado — respeitando pulo de linhas
+    let resultado = "";
+
+    if (firstLine) {
+      resultado += firstLine + "\n\n";
+    }
+
+    if (contatoLines.length > 0) {
+      resultado += contatoLines.join("\n") + "\n\n";
+    }
+
+    if (comentariosExistentes && comentariosExistentes.trim() !== "") {
+      resultado += `Obs: ${comentariosExistentes}`;
+    } else {
+      // se não houver comentários, não adicionar "Obs:"
+      // e caso não tenha nada também, resultado pode ficar vazio
+      resultado = resultado.trim(); // remove espaços finais/novas linhas
+    }
+
+    return resultado;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -134,6 +194,17 @@ export default function AddNovoServico({
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
       payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto);
 
+      // Se for Criação de LP, compor a descrição a partir dos dados do ServCriacaoDeLpi + comentariosTexto
+      const nomeDoServico = form.nome;
+      if (nomeDoServico === "Criação de LP") {
+        const composed = montarDescricaoCriacaoLP(
+          servCriacaoData,
+          form.comentariosTexto
+        );
+        payload.comentariosTexto = composed;
+      }
+
+      // manter compatibilidade com o que já existia (apaga clienteNome antes de enviar)
       delete payload.clienteNome;
 
       if (form.id) {
@@ -345,6 +416,17 @@ export default function AddNovoServico({
           placeholder="Digite aqui comentários ou uma descrição do serviço..."
         />
       </div>
+
+      {/* Mostrar o bloco ServCriacaoDeLpi quando for Criação de LP */}
+      {((!isEdicao && form.nome === "Criação de LP" && !mostrarOutroNome) ||
+        (isEdicao && form.nome === "Criação de LP")) && (
+        <ServCriacaoDeLpi
+          initialData={{}}
+          onChange={(data) => {
+            setServCriacaoData(data || {});
+          }}
+        />
+      )}
 
       {isEdicao && (
         <>
