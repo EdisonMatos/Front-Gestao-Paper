@@ -27,6 +27,9 @@ export default function ServCriacaoDeLpi({
   const [nome, setNome] = useState(initialData.nome || "");
   const [email, setEmail] = useState(initialData.email || "");
   const [cpfCnpj, setCpfCnpj] = useState(initialData.cpfCnpj || "");
+  const [criarContrato, setCriarContrato] = useState(
+    initialData.criarContrato || "Não"
+  );
 
   // Formatadores simples (aplicados ao texto exibido)
   const formatTelefone = (v) => {
@@ -83,6 +86,7 @@ export default function ServCriacaoDeLpi({
       nome,
       email,
       cpfCnpj,
+      criarContrato,
     });
   }, [
     tipoCliente,
@@ -95,6 +99,7 @@ export default function ServCriacaoDeLpi({
     nome,
     email,
     cpfCnpj,
+    criarContrato,
     onChange,
   ]);
 
@@ -226,6 +231,21 @@ export default function ServCriacaoDeLpi({
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
           />
         </div>
+
+        {/* NOVO CAMPO para criar contrato */}
+        {/* <div className="flex flex-col">
+          <label className="mb-1 text-sm">
+            Vai criar contrato e link de pagamento?
+          </label>
+          <select
+            value={criarContrato}
+            onChange={(e) => setCriarContrato(e.target.value)}
+            className="p-2 border rounded bg-inputBg text-placeholder border-border"
+          >
+            <option value="Não">Não</option>
+            <option value="Sim">Sim</option>
+          </select>
+        </div> */}
       </div>
     </div>
   );

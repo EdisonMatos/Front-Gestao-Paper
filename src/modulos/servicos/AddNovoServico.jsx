@@ -52,6 +52,10 @@ export default function AddNovoServico({
   // estado para guardar os dados do componente ServCriacaoDeLpi
   const [servCriacaoData, setServCriacaoData] = useState({});
 
+  // novo estado para o option adicional "Criar contrato e link de pagamento?"
+  const [criarContratoFaturamento, setCriarContratoFaturamento] =
+    useState("Não");
+
   const isEdicao = !!servicoParaEditar;
 
   useEffect(() => {
@@ -124,27 +128,24 @@ export default function AddNovoServico({
 
   // monta a descrição final a partir dos dados do ServCriacaoDeLpi + o campo comentariosTexto
   function montarDescricaoCriacaoLP(servData, comentariosExistentes) {
-    // servData tem: tipoCliente, tipoPagina, formato, diasPrazo, pagamento, valor, telefone, nome, email, cpfCnpj
     if (!servData || Object.keys(servData).length === 0)
       return comentariosExistentes || "";
 
     const parts = [];
 
-    if (servData.tipoCliente) parts.push(servData.tipoCliente); // "Adv" ou "Cli"
-    if (servData.tipoPagina) parts.push(servData.tipoPagina); // "LPi" ou "LPv"
-    if (servData.formato) parts.push(servData.formato); // "Ass" ou "Aqu"
+    if (servData.tipoCliente) parts.push(servData.tipoCliente);
+    if (servData.tipoPagina) parts.push(servData.tipoPagina);
+    if (servData.formato) parts.push(servData.formato);
     if (servData.diasPrazo) parts.push(`${servData.diasPrazo}D`);
-    if (servData.pagamento) parts.push(servData.pagamento); // "Cc" ou "Pix"
+    if (servData.pagamento) parts.push(servData.pagamento);
     if (servData.valor) parts.push(servData.valor);
 
     const firstLine = parts.join(" ");
 
-    // contato (nome, cpf/cnpj, email, telefone) - só incluir linhas que existirem
     const contatoLines = [];
     if (servData.nome) contatoLines.push(servData.nome);
 
     if (servData.cpfCnpj) {
-      // decidir label CPF ou CNPJ
       const digits = servData.cpfCnpj.replace(/\D/g, "");
       if (digits.length > 11) {
         contatoLines.push(`CNPJ: ${servData.cpfCnpj}`);
@@ -156,7 +157,6 @@ export default function AddNovoServico({
     if (servData.email) contatoLines.push(servData.email);
     if (servData.telefone) contatoLines.push(servData.telefone);
 
-    // montar o texto final conforme solicitado — respeitando pulo de linhas
     let resultado = "";
 
     if (firstLine) {
@@ -170,9 +170,7 @@ export default function AddNovoServico({
     if (comentariosExistentes && comentariosExistentes.trim() !== "") {
       resultado += `Obs: ${comentariosExistentes}`;
     } else {
-      // se não houver comentários, não adicionar "Obs:"
-      // e caso não tenha nada também, resultado pode ficar vazio
-      resultado = resultado.trim(); // remove espaços finais/novas linhas
+      resultado = resultado.trim();
     }
 
     return resultado;
@@ -220,7 +218,24 @@ export default function AddNovoServico({
         }, 2000);
         onSalvo();
       } else {
+        // Para criação nova
         await axios.post(API_URL, payload);
+
+        // Se a opção "Criar contrato e link de pagamento?" estiver como "Sim"
+        if (
+          nomeDoServico === "Criação de LP" &&
+          criarContratoFaturamento === "Sim"
+        ) {
+          // Criar um outro serviço idêntico, mas com nome diferente e turnoDaVez "financeiro"
+          const novoServicoContrato = {
+            ...payload,
+            nome: "Contrato e Faturamento",
+            turnoDaVez: "financeiro",
+          };
+          delete novoServicoContrato.id; // remover id para evitar conflito
+          await axios.post(API_URL, novoServicoContrato);
+        }
+
         toast.update(toastId, {
           render: "Serviço adicionado com sucesso!",
           type: "success",
@@ -420,12 +435,30 @@ export default function AddNovoServico({
       {/* Mostrar o bloco ServCriacaoDeLpi quando for Criação de LP */}
       {((!isEdicao && form.nome === "Criação de LP" && !mostrarOutroNome) ||
         (isEdicao && form.nome === "Criação de LP")) && (
-        <ServCriacaoDeLpi
-          initialData={{}}
-          onChange={(data) => {
-            setServCriacaoData(data || {});
-          }}
-        />
+        <>
+          <ServCriacaoDeLpi
+            initialData={{}}
+            onChange={(data) => {
+              setServCriacaoData(data || {});
+            }}
+          />
+          {/* Novo select "Criar contrato e link de pagamento?" */}
+          {!isEdicao && (
+            <div className="flex flex-col mt-3 md:col-span-3">
+              <label className="mb-1 text-sm font-medium">
+                Vai criar contrato e link de pagamento?
+              </label>
+              <select
+                value={criarContratoFaturamento}
+                onChange={(e) => setCriarContratoFaturamento(e.target.value)}
+                className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              >
+                <option value="Não">Não</option>
+                <option value="Sim">Sim</option>
+              </select>
+            </div>
+          )}
+        </>
       )}
 
       {isEdicao && (
