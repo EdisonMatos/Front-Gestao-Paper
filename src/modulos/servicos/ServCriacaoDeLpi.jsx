@@ -187,8 +187,10 @@ export default function ServCriacaoDeLpi({
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
           >
             <option value="">Selecione</option>
-            <option value="69">69</option>
-            <option value="89">89</option>
+            <option value="69">69,00</option>
+            <option value="89">89,88</option>
+            <option value="110,4">110,40 (x2 no Cc com 20%) </option>
+            <option value="142,4">142,40 (x2 no Pix com 20%) </option>
           </select>
         </div>
 

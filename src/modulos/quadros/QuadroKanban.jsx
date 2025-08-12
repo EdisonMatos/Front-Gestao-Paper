@@ -183,7 +183,11 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         payload.dataConclusao = new Date().toISOString();
       }
 
-      if (destino === "aguardandoCliente" || destino === "ausentes") {
+      if (
+        destino === "aguardandoCliente" ||
+        destino === "ausentes" ||
+        destino === "emAtendimento"
+      ) {
         payload.dataProximoPrazo = null;
         payload.dataPrazoProjeto = null;
         payload.complexidade = null;
