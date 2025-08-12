@@ -116,7 +116,11 @@ export default function CardServicoVisual({
       await axios.delete(
         `https://backend-gestao-paper.onrender.com/comentarios/${commentId}`
       );
-      toast.success("Comentário excluído com sucesso!");
+      toast.success("Comentário excluído com sucesso!", { autoClose: 1000 });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Erro ao excluir comentário:", error);
       toast.error("Erro ao excluir comentário.");
