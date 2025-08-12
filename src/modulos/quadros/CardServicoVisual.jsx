@@ -1,6 +1,8 @@
 // components/CardServicoVisual.jsx
 import { useState, useRef } from "react";
 import { Copy, Check } from "lucide-react";
+import { toast } from "react-toastify";
+import axios from "axios";
 import AcoesCardServico from "./AcoesCardServico";
 
 export default function CardServicoVisual({
@@ -105,6 +107,26 @@ export default function CardServicoVisual({
     }
   }
 
+  async function handleDeleteComment(commentId) {
+    if (!window.confirm("Tem certeza que deseja excluir este comentário?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `https://backend-gestao-paper.onrender.com/comentarios/${commentId}`
+      );
+      toast.success("Comentário excluído com sucesso!", { autoClose: 1000 });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error("Erro ao excluir comentário:", error);
+      toast.error("Erro ao excluir comentário.");
+    }
+  }
+
   function renderCommentText(texto) {
     if (texto.startsWith("http")) {
       return texto.length > 20 ? texto.substring(0, 22) + "..." : texto;
@@ -163,6 +185,17 @@ export default function CardServicoVisual({
                       {copiedCommentId === doisMaisRecentes[0].id
                         ? "Copiado!"
                         : "Copiar"}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteComment(
+                          comentario.id || doisMaisRecentes[0].id
+                        );
+                      }}
+                      className="px-2 py-1 text-white transition-all bg-red-600 rounded hover:scale-110 hover:bg-red-700"
+                    >
+                      Excluir
                     </button>
                     {doisMaisRecentes[0].texto.startsWith("http") && (
                       <a
@@ -396,6 +429,17 @@ export default function CardServicoVisual({
                   >
                     {copiedCommentId === comentario.id ? "Copiado!" : "Copiar"}
                   </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteComment(
+                        comentario.id || doisMaisRecentes[0].id
+                      );
+                    }}
+                    className="px-2 py-1 text-white transition-all bg-red-600 rounded hover:scale-110 hover:bg-red-700"
+                  >
+                    Excluir
+                  </button>
                   {comentario.texto.startsWith("http") && (
                     <a
                       href={comentario.texto}
@@ -434,7 +478,7 @@ export default function CardServicoVisual({
                             {renderCommentText(comentario.texto)}
                           </p>
                           <p
-                            className="mt-1 text-xs text-text group-hover:opacity-30"
+                            className="mt-1 text-xs opacity-50 text-text group-hover:opacity-30"
                             style={estiloFonte}
                           >
                             {capitalizar(comentario.setor)} -{" "}
@@ -456,6 +500,17 @@ export default function CardServicoVisual({
                               {copiedCommentId === comentario.id
                                 ? "Copiado!"
                                 : "Copiar"}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteComment(
+                                  comentario.id || doisMaisRecentes[0].id
+                                );
+                              }}
+                              className="px-2 py-1 text-white transition-all bg-red-600 rounded hover:scale-110 hover:bg-red-700"
+                            >
+                              Excluir
                             </button>
                             {comentario.texto.startsWith("http") && (
                               <a
