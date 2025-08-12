@@ -391,32 +391,35 @@ export default function AddNovoServico({
           className="p-2 border rounded bg-inputBg text-placeholder border-border"
         />
       </div>
+      {form.nome !== "Criação de LP" && form.nome !== "Criação de Artes" && (
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">
+            Data do Próximo Prazo
+          </label>
+          <input
+            type="date"
+            name="dataProximoPrazo"
+            value={form.dataProximoPrazo}
+            onChange={handleChange}
+            className="p-2 border rounded bg-inputBg text-placeholder border-border"
+          />
+        </div>
+      )}
 
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">
-          Data do Próximo Prazo
-        </label>
-        <input
-          type="date"
-          name="dataProximoPrazo"
-          value={form.dataProximoPrazo}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">
-          Data do Prazo do Projeto
-        </label>
-        <input
-          type="date"
-          name="dataPrazoProjeto"
-          value={form.dataPrazoProjeto}
-          onChange={handleChange}
-          className="p-2 border rounded bg-inputBg text-placeholder border-border"
-        />
-      </div>
+      {form.nome !== "Criação de LP" && form.nome !== "Criação de Artes" && (
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">
+            Data do Prazo do Projeto
+          </label>
+          <input
+            type="date"
+            name="dataPrazoProjeto"
+            value={form.dataPrazoProjeto}
+            onChange={handleChange}
+            className="p-2 border rounded bg-inputBg text-placeholder border-border"
+          />
+        </div>
+      )}
 
       <div className="flex flex-col md:col-span-3">
         <label className="mb-1 text-sm font-medium">
@@ -446,7 +449,7 @@ export default function AddNovoServico({
           {!isEdicao && (
             <div className="flex flex-col mt-3 md:col-span-3">
               <label className="mb-1 text-sm font-medium">
-                Vai criar contrato e link de pagamento?
+                Precisa de contrato e link de pagamento?
               </label>
               <select
                 value={criarContratoFaturamento}
