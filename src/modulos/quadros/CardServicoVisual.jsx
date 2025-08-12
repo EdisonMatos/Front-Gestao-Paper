@@ -434,7 +434,7 @@ export default function CardServicoVisual({
                             {renderCommentText(comentario.texto)}
                           </p>
                           <p
-                            className="mt-1 text-xs text-text group-hover:opacity-30"
+                            className="mt-1 text-xs opacity-50 text-text group-hover:opacity-30"
                             style={estiloFonte}
                           >
                             {capitalizar(comentario.setor)} -{" "}
