@@ -456,12 +456,12 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                             >
                               Editar
                             </button>
-                            <button
+                            {/* <button
                               onClick={() => excluirRotina(r.id)}
                               className="px-2 py-1 text-black rounded bg-buttons hover:bg-buttonsHover"
                             >
                               Excluir
-                            </button>
+                            </button> */}
                           </>
                         )}
                       </td>
