@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ServCriacaoDeLpi from "./ServCriacaoDeLpi";
 
 const API_URL = "https://backend-gestao-paper.onrender.com/servicos";
 const CLIENTES_URL = "https://backend-gestao-paper.onrender.com/clientes";
@@ -47,6 +48,13 @@ export default function AddNovoServico({
   const [clienteBusca, setClienteBusca] = useState("");
   const [sugestoesClientes, setSugestoesClientes] = useState([]);
   const [mostrarOutroNome, setMostrarOutroNome] = useState(false);
+
+  // estado para guardar os dados do componente ServCriacaoDeLpi
+  const [servCriacaoData, setServCriacaoData] = useState({});
+
+  // novo estado para o option adicional "Criar contrato e link de pagamento?"
+  const [criarContratoFaturamento, setCriarContratoFaturamento] =
+    useState("Não");
 
   const isEdicao = !!servicoParaEditar;
 
@@ -118,6 +126,56 @@ export default function AddNovoServico({
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // monta a descrição final a partir dos dados do ServCriacaoDeLpi + o campo comentariosTexto
+  function montarDescricaoCriacaoLP(servData, comentariosExistentes) {
+    if (!servData || Object.keys(servData).length === 0)
+      return comentariosExistentes || "";
+
+    const parts = [];
+
+    if (servData.tipoCliente) parts.push(servData.tipoCliente);
+    if (servData.tipoPagina) parts.push(servData.tipoPagina);
+    if (servData.formato) parts.push(servData.formato);
+    if (servData.diasPrazo) parts.push(`${servData.diasPrazo}D`);
+    if (servData.pagamento) parts.push(servData.pagamento);
+    if (servData.valor) parts.push(servData.valor);
+
+    const firstLine = parts.join(" ");
+
+    const contatoLines = [];
+    if (servData.nome) contatoLines.push(servData.nome);
+
+    if (servData.cpfCnpj) {
+      const digits = servData.cpfCnpj.replace(/\D/g, "");
+      if (digits.length > 11) {
+        contatoLines.push(`CNPJ: ${servData.cpfCnpj}`);
+      } else {
+        contatoLines.push(`CPF: ${servData.cpfCnpj}`);
+      }
+    }
+
+    if (servData.email) contatoLines.push(servData.email);
+    if (servData.telefone) contatoLines.push(servData.telefone);
+
+    let resultado = "";
+
+    if (firstLine) {
+      resultado += firstLine + "\n\n";
+    }
+
+    if (contatoLines.length > 0) {
+      resultado += contatoLines.join("\n") + "\n\n";
+    }
+
+    if (comentariosExistentes && comentariosExistentes.trim() !== "") {
+      resultado += `Obs: ${comentariosExistentes}`;
+    } else {
+      resultado = resultado.trim();
+    }
+
+    return resultado;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -134,6 +192,17 @@ export default function AddNovoServico({
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
       payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto);
 
+      // Se for Criação de LP, compor a descrição a partir dos dados do ServCriacaoDeLpi + comentariosTexto
+      const nomeDoServico = form.nome;
+      if (nomeDoServico === "Criação de LP") {
+        const composed = montarDescricaoCriacaoLP(
+          servCriacaoData,
+          form.comentariosTexto
+        );
+        payload.comentariosTexto = composed;
+      }
+
+      // manter compatibilidade com o que já existia (apaga clienteNome antes de enviar)
       delete payload.clienteNome;
 
       if (form.id) {
@@ -149,7 +218,24 @@ export default function AddNovoServico({
         }, 2000);
         onSalvo();
       } else {
+        // Para criação nova
         await axios.post(API_URL, payload);
+
+        // Se a opção "Criar contrato e link de pagamento?" estiver como "Sim"
+        if (
+          nomeDoServico === "Criação de LP" &&
+          criarContratoFaturamento === "Sim"
+        ) {
+          // Criar um outro serviço idêntico, mas com nome diferente e turnoDaVez "financeiro"
+          const novoServicoContrato = {
+            ...payload,
+            nome: "Contrato e Faturamento",
+            turnoDaVez: "financeiro",
+          };
+          delete novoServicoContrato.id; // remover id para evitar conflito
+          await axios.post(API_URL, novoServicoContrato);
+        }
+
         toast.update(toastId, {
           render: "Serviço adicionado com sucesso!",
           type: "success",
@@ -345,6 +431,35 @@ export default function AddNovoServico({
           placeholder="Digite aqui comentários ou uma descrição do serviço..."
         />
       </div>
+
+      {/* Mostrar o bloco ServCriacaoDeLpi quando for Criação de LP */}
+      {((!isEdicao && form.nome === "Criação de LP" && !mostrarOutroNome) ||
+        (isEdicao && form.nome === "Criação de LP")) && (
+        <>
+          <ServCriacaoDeLpi
+            initialData={{}}
+            onChange={(data) => {
+              setServCriacaoData(data || {});
+            }}
+          />
+          {/* Novo select "Criar contrato e link de pagamento?" */}
+          {!isEdicao && (
+            <div className="flex flex-col mt-3 md:col-span-3">
+              <label className="mb-1 text-sm font-medium">
+                Vai criar contrato e link de pagamento?
+              </label>
+              <select
+                value={criarContratoFaturamento}
+                onChange={(e) => setCriarContratoFaturamento(e.target.value)}
+                className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              >
+                <option value="Não">Não</option>
+                <option value="Sim">Sim</option>
+              </select>
+            </div>
+          )}
+        </>
+      )}
 
       {isEdicao && (
         <>
