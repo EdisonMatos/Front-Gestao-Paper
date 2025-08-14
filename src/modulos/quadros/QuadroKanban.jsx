@@ -138,7 +138,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       comentario = "Feedback recebido. Postar";
     } else if (destino === "semFbFinalizar") {
       comentario = "Sem feedback. Serviço finalizado.";
-    } else if (destino !== "emProgresso") {
+    } else if (destino !== "") {
+      // Coluna que pode ficar sem ter comentário ao mover pra ela
       comentario = prompt(
         "Comente no seguinte formato: \n O que foi feito. O que precisa ser feito agora."
       );
