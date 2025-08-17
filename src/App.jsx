@@ -33,12 +33,14 @@ import {
   Trophy,
   Wrench,
 } from "lucide-react";
+import Sidebar from "./Sidebar";
 
 function App() {
   return (
     <div className="min-h-screen bg-background font-mainFont">
+      <Sidebar />
       <ToastContainer />
-      <div className="flex items-center">
+      {/* <div className="flex items-center">
         <img className="pl-2 w-[200px]" src={paperClubLogo}></img>
         <div>
           <h1 className="ml-6 text-3xl font-bold text-white">Paper Club</h1>
@@ -143,7 +145,7 @@ function App() {
             <QuadroDiretoria />
           </AcordionDepartamentos>
         </Agrupamento>
-      </div>
+      </div> */}
     </div>
   );
 }
