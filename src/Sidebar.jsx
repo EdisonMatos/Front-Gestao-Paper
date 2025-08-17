@@ -47,33 +47,25 @@ import React, { useState } from "react";
 
 export default function Sidebar() {
   const [abaAtiva, setAbaAtiva] = useState("painel");
-  const apelidoRaw = localStorage.getItem("apelido") || "Usuário";
-  const roleRaw = localStorage.getItem("role");
+  const apelido = localStorage.getItem("nome") || "Usuário";
+  const role = localStorage.getItem("setor");
 
-  const temPermissao = ["veterano", "staff", "guildmaster"].includes(roleRaw);
-
-  const capitalize = (str) => {
-    if (!str) return "";
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  };
-
-  const apelido = capitalize(apelidoRaw);
-  const role = capitalize(roleRaw);
+  const temPermissao = ["veterano", "staff", "guildmaster"].includes(role);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("apelido");
+    localStorage.removeItem("usuario");
     localStorage.removeItem("guildId");
     window.location.reload();
   };
 
-  // const spriteUrl =
-  //   localStorage.getItem("spriteUrl") ||
-  //   "https://www.paperstreet.com.br/assets/team1-tw21WVNj.webp";
+  const spriteUrl =
+    localStorage.getItem("avatar") ||
+    "https://www.paperstreet.com.br/assets/team1-tw21WVNj.webp";
 
-  // spriteUrl;
+  spriteUrl;
 
-  const spriteUrl = "https://www.paperstreet.com.br/assets/team1-tw21WVNj.webp";
+  // const spriteUrl = "https://www.paperstreet.com.br/assets/team1-tw21WVNj.webp";
 
   spriteUrl;
 
@@ -123,10 +115,10 @@ export default function Sidebar() {
                     <div className="flex items-center">
                       <div className="flex flex-col items-end justify-end mr-4 ">
                         <p
-                          class="text-[14px] text-gray-900 dark:text-white "
+                          class="text-[14px] text-gray-900 dark:text-white capitalize"
                           role="none"
                         >
-                          {apelido} ({role})
+                          {apelido} <span className="opacity-50">({role})</span>
                         </p>
                         <p>
                           <a
