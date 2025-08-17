@@ -46,6 +46,8 @@ import {
 import React, { useState } from "react";
 
 export default function Sidebar() {
+  console.log("Renderizando Sidebar");
+
   const [abaAtiva, setAbaAtiva] = useState("painel");
   const apelido = localStorage.getItem("nome") || "Usuário";
   const role = localStorage.getItem("setor");

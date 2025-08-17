@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
 import loginImg from "../assets/imgs/loginImg.jpg";
 import logoPaperClub from "../assets/imgs/logoPaperClub.png";
-import App from "../App";
 
 const API_URL = "https://backend-gestao-paper.onrender.com";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userType = localStorage.getItem("tipo");
-
-    if (token && userType) {
-      setIsAuthenticated(true);
-    }
-  }, []);
+  // Verifica se já existe login antes de renderizar
+  const token = localStorage.getItem("token");
+  const tipo = localStorage.getItem("tipo");
+  if (token && tipo) {
+    // Se já está logado, redireciona para "/"
+    return <Navigate to="/" replace />;
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -34,30 +33,29 @@ export default function Login() {
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Erro no login");
 
-      if (!response.ok) {
-        throw new Error(data.error || "Erro no login");
-      }
-
-      // Salvar token e dados do usuário
       localStorage.setItem("token", data.token);
       localStorage.setItem("id", data.usuario.id);
       localStorage.setItem("nome", data.usuario.nome);
       localStorage.setItem("email", data.usuario.email);
       localStorage.setItem("cargo", data.usuario.cargo || "");
       localStorage.setItem("setor", data.usuario.setor || "");
-      localStorage.setItem("tipo", data.usuario.tipo || "");
+      localStorage.setItem("tipo", data.usuario.tipo ?? "comum");
       localStorage.setItem("avatar", data.usuario.avatar || "");
 
-      setIsAuthenticated(true);
+      navigate("/"); // Redireciona para o dashboard
+      console.log("Enviando login com:", { email, senha });
+      console.log("Resposta da API:", data);
+      console.log("Token salvo?", localStorage.getItem("token"));
+      console.log("Tipo salvo?", localStorage.getItem("tipo"));
+      console.log("Chamando navigate para '/'");
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  if (isAuthenticated) return <App />;
 
   return (
     <div className="flex h-screen p-4 text-white bg-background font-mainFont">
