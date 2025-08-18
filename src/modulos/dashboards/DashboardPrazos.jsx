@@ -51,7 +51,7 @@ export default function DashboardPrazos() {
 
   function corDiasRestantes(dias) {
     if (dias === null) return "text-text/50";
-    if (dias < 0) return "text-red-600";
+    if (dias < 1) return "text-red-600";
     return "text-white";
   }
 

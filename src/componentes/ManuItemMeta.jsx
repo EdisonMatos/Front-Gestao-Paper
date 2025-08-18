@@ -1,0 +1,70 @@
+import { useEffect, useState } from "react";
+
+export default function MenuItemMeta({
+  meta = 2,
+  turno = "progresso",
+  label = "Em Progresso",
+  Icon,
+  abaAtiva,
+  setAbaAtiva,
+}) {
+  const [servicos, setServicos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+
+  useEffect(() => {
+    async function carregarServicos() {
+      try {
+        const res = await fetch(
+          "https://backend-gestao-paper.onrender.com/servicos"
+        );
+        const data = await res.json();
+        setServicos(data);
+      } catch (error) {
+        console.error("Erro ao carregar serviços:", error);
+      } finally {
+        setCarregando(false);
+      }
+    }
+    carregarServicos();
+  }, []);
+
+  const tarefas = servicos.filter((s) => s.posicaoNoQuadro === "emProgresso");
+  const count = tarefas.length;
+
+  // Lógica dinâmica baseada na meta
+  let badgeValue = 0;
+  if (count < meta) {
+    badgeValue = meta - count; // falta para bater a meta
+  } else if (count === meta) {
+    badgeValue = 0; // meta atingida
+  } else {
+    badgeValue = -(count - meta); // excedente como negativo
+  }
+
+  return (
+    <button
+      onClick={() => setAbaAtiva(turno)}
+      className={`flex justify-between items-center p-2 w-full rounded-lg group ${
+        abaAtiva === turno
+          ? "text-white bg-background"
+          : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
+      }`}
+    >
+      <div className="flex">
+        {Icon && (
+          <Icon
+            className={`${abaAtiva === turno ? "text-links" : "text-white/50"}`}
+          />
+        )}
+        <span className="flex-1 ms-3 whitespace-nowrap">{label}</span>
+      </div>
+      {!carregando && badgeValue !== 0 && (
+        <div>
+          <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-inputBg dark:text-red-500">
+            {badgeValue}
+          </span>
+        </div>
+      )}
+    </button>
+  );
+}
