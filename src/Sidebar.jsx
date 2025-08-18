@@ -49,6 +49,9 @@ import {
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MenuItem from "./componentes/MenuItem";
+import MenuItemRotinas from "./componentes/MenuItemRotinas";
+import MenuItemMeta from "./componentes/ManuItemMeta";
+import MenuItemPrazos from "./componentes/MenuItemPrazos";
 
 export default function Sidebar() {
   const [servicos, setServicos] = useState([]);
@@ -132,11 +135,11 @@ export default function Sidebar() {
                       ></path>
                     </svg>
                   </button>
-                  <a href="https://flowbite.com" class="flex ms-2 md:me-24">
+                  <a href="#" class="flex ms-2 md:me-24">
                     <img
                       src={paperClubLogo}
                       class="h-16 me-3"
-                      alt="FlowBite Logo"
+                      alt="Paper Club Logo"
                     />
                     <span class="self-center text-[12px] min-[375px]:text-[16px] font-semibold sm:text-2xl whitespace-nowrap dark:text-white hidden desktop1:flex">
                       Paper Club
@@ -204,28 +207,15 @@ export default function Sidebar() {
             <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-inputBg">
               <ul class="space-y-2 font-medium">
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("prazos")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "prazos"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Calendar
-                        className={`${
-                          abaAtiva === "prazos" ? "text-links" : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">Prazos</span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <ul>
+                    <MenuItemPrazos
+                      label="Prazos"
+                      Icon={Calendar}
+                      abaAtiva={abaAtiva}
+                      setAbaAtiva={setAbaAtiva}
+                      servicos={servicos}
+                    />
+                  </ul>
                 </li>
                 <li>
                   <button
@@ -249,11 +239,27 @@ export default function Sidebar() {
                       </span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
+                      {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
-                      </span>
+                      </span> */}
                     </div>
                   </button>
+                </li>
+                <li>
+                  <MenuItemRotinas
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                  />
+                </li>
+                <li>
+                  <MenuItemMeta
+                    meta={2}
+                    turno="progresso"
+                    label="Em Progresso"
+                    Icon={Hourglass}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                  />
                 </li>
               </ul>
               <ul className="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
@@ -279,8 +285,8 @@ export default function Sidebar() {
                 </li>
                 <li>
                   <MenuItem
-                    turno="desenvolvimento"
-                    label="Dev"
+                    turno="dev"
+                    label="Desenvolvimento"
                     Icon={Code}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -317,6 +323,9 @@ export default function Sidebar() {
                     servicos={servicos}
                   />
                 </li>
+              </ul>
+
+              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
                   <MenuItem
                     turno="feedbacks"
@@ -327,9 +336,6 @@ export default function Sidebar() {
                     servicos={servicos}
                   />
                 </li>
-              </ul>
-
-              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
                   <MenuItem
                     turno="financeiro"
@@ -339,60 +345,6 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     servicos={servicos}
                   />
-                </li>
-                <li>
-                  <button
-                    onClick={() => setAbaAtiva("rotinas")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "rotinas"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <AlarmClockCheck
-                        className={`${
-                          abaAtiva === "rotinas"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">Rotinas</span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
-                </li>{" "}
-                <li>
-                  <button
-                    onClick={() => setAbaAtiva("progresso")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "progresso"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Hourglass
-                        className={`${
-                          abaAtiva === "progresso"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Em Progresso
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
                 </li>
                 <li>
                   <MenuItem
@@ -460,7 +412,7 @@ export default function Sidebar() {
                   </>
                 )}
 
-                {abaAtiva === "desenvolvimento" && (
+                {abaAtiva === "dev" && (
                   <>
                     {/* --- ABA DESENVOLVIMENTO --- */}
                     <QuadroDev />
