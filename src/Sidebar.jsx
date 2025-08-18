@@ -80,8 +80,6 @@ export default function Sidebar() {
     ).length;
   }
 
-  console.log("Renderizando Sidebar");
-
   const [abaAtiva, setAbaAtiva] = useState("prazos");
   const apelido = localStorage.getItem("nome") || "Usuário";
   const role = localStorage.getItem("setor");
