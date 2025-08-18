@@ -205,18 +205,8 @@ export default function Sidebar() {
             aria-label="Sidebar"
           >
             <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-inputBg">
-              <ul class="space-y-2 font-medium">
-                <li>
-                  <ul>
-                    <MenuItemPrazos
-                      label="Prazos"
-                      Icon={Calendar}
-                      abaAtiva={abaAtiva}
-                      setAbaAtiva={setAbaAtiva}
-                      servicos={servicos}
-                    />
-                  </ul>
-                </li>
+              <ul>
+                {" "}
                 <li>
                   <button
                     onClick={() => setAbaAtiva("cadastros")}
@@ -245,6 +235,20 @@ export default function Sidebar() {
                     </div>
                   </button>
                 </li>
+              </ul>
+              <ul className="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+                <li>
+                  <ul>
+                    <MenuItemPrazos
+                      label="Prazos"
+                      Icon={Calendar}
+                      abaAtiva={abaAtiva}
+                      setAbaAtiva={setAbaAtiva}
+                      servicos={servicos}
+                    />
+                  </ul>
+                </li>
+
                 <li>
                   <MenuItemRotinas
                     abaAtiva={abaAtiva}
