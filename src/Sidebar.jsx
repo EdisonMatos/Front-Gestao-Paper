@@ -540,14 +540,14 @@ export default function Sidebar() {
                     </div>
 
                     <div className="">
+                      <div className="p-6 m-6 overflow-x-auto border border-border rounded-xl w-fit">
+                        <QuadroPrazos />
+                      </div>
                       <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
                         <QuadroResumoRotinas />
                       </div>
                       <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
                         <DashboardTarefasEmProgresso />
-                      </div>
-                      <div className="p-6 m-6 overflow-x-auto border border-border rounded-xl w-fit">
-                        <QuadroPrazos />
                       </div>
                     </div>
                   </>
