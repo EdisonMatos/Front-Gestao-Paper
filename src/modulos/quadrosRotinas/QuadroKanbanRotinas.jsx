@@ -11,6 +11,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   const [foraDoPrazo, setForaDoPrazo] = useState({});
   const [horasConclusao, setHorasConclusao] = useState({});
   const [horasLimite, setHorasLimite] = useState({});
+  const [cardsExpandidos, setCardsExpandidos] = useState({});
 
   useEffect(() => {
     fetchRotinas();
@@ -56,12 +57,13 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
 
     if (!registroAtual) return "pendente";
 
+    const dataConclusao = new Date(registroAtual.dataConclusao);
+
     const [hora, minuto] = horario.split(":").map(Number);
-    const dataLimite = new Date();
+
+    const dataLimite = new Date(dataConclusao);
     dataLimite.setHours(hora, minuto, 0, 0);
     dataLimite.setTime(dataLimite.getTime() + rotina.janela * 60000);
-
-    const dataConclusao = new Date(registroAtual.dataConclusao);
 
     if (dataConclusao <= dataLimite) return "concluida";
     return "atrasada";
@@ -121,23 +123,11 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
     }));
   }
 
-  function calcularStatus(rotina, horario) {
-    const registroAtual = rotina.registros
-      ?.filter((reg) => isDataDessaSemana(reg.dataConclusao))
-      .sort((a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao))[0];
-
-    if (!registroAtual) return "pendente";
-
-    const dataConclusao = new Date(registroAtual.dataConclusao);
-
-    const [hora, minuto] = horario.split(":").map(Number);
-
-    const dataLimite = new Date(dataConclusao);
-    dataLimite.setHours(hora, minuto, 0, 0);
-    dataLimite.setTime(dataLimite.getTime() + rotina.janela * 60000);
-
-    if (dataConclusao <= dataLimite) return "concluida";
-    return "atrasada";
+  function toggleCardExpandido(id) {
+    setCardsExpandidos((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   }
 
   async function toggleConclusao(card) {
@@ -222,9 +212,9 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
           return (
             <div
               key={key}
-              className="min-w-[235px] w-[235px] bg-containers p-3 rounded-2xl shadow-md"
+              className="min-w-[235px] w-[235px] bg-containers p-3 rounded-2xl shadow-md flex flex-col gap-2"
             >
-              <div className="flex items-center justify-between px-2 py-4 mb-2 text-left text-text">
+              <div className="flex items-center justify-between px-2 py-2 text-left text-text">
                 <span>{config.nome}</span>
                 <span className="w-8 px-2 py-2 text-sm text-center text-text rounded-xl bg-background">
                   {cards.length}
@@ -239,7 +229,8 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                 cards.map((card) => (
                   <div
                     key={card.id}
-                    className={`p-3 mb-3 border-l-4 shadow bg-background rounded-xl relative group transition-opacity duration-300
+                    onClick={() => toggleCardExpandido(card.id)}
+                    className={`p-3 border-l-4 shadow bg-background rounded-xl relative group transition-all duration-300 cursor-pointer
                     ${
                       card.statusCalculado === "concluida"
                         ? "border-links"
@@ -248,59 +239,78 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
                         : "border-black"
                     }`}
                   >
-                    <button
-                      onClick={() => toggleConclusao(card)}
-                      disabled={rotinasConcluidas[card.id]}
-                      className={`absolute flex items-center justify-center w-4 h-4 transition-transform duration-200 bg-white border-2 border-gray-400 rounded-full top-2 left-2 group-hover:scale-125 ${
-                        rotinasConcluidas[card.id] ? "cursor-not-allowed" : ""
-                      }`}
-                    >
-                      {rotinasConcluidas[card.id] && (
-                        <div className="w-2 h-2 rounded-full bg-links"></div>
-                      )}
-                    </button>
-
-                    <p className="pl-6 font-medium text-text">{card.nome}</p>
-
-                    {!descricaoExpandida[card.id] ? (
+                    <div className="flex gap-2">
                       <button
-                        onClick={() => toggleDescricao(card.id)}
-                        className="pl-6 mt-1 text-sm text-links hover:underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleConclusao(card);
+                        }}
+                        disabled={rotinasConcluidas[card.id]}
+                        className={`flex items-center justify-center w-4 h-4 mt-1 transition-transform duration-200 bg-white border-2 border-gray-400 rounded-full top-2 left-2 group-hover:scale-125 ${
+                          rotinasConcluidas[card.id] ? "cursor-not-allowed" : ""
+                        }`}
                       >
-                        Instruções
-                      </button>
-                    ) : (
-                      <div className="pl-6 mt-2">
-                        <p className="text-sm text-text/80">{card.descricao}</p>
-                        <button
-                          onClick={() => toggleDescricao(card.id)}
-                          className="mt-1 text-sm text-links hover:underline"
-                        >
-                          Ocultar instruções
-                        </button>
-                      </div>
-                    )}
-
-                    <p className="pl-6 mt-2 text-xs text-text">
-                      ⏰ Horário: {card.horario} - ({card.complexidade})
-                    </p>
-
-                    <p className="pl-6 text-xs text-text">
-                      🕓 Prazo: {card.limite}
-                    </p>
-
-                    {horasConclusao[card.id] && (
-                      <p className="pl-6 mt-1 text-xs text-gray-500">
-                        ✅ {horasConclusao[card.id]}{" "}
-                        {foraDoPrazo[card.id] && (
-                          <span className="text-red-500">(fora do prazo)</span>
+                        {rotinasConcluidas[card.id] && (
+                          <div className="w-2 h-2 rounded-full bg-links"></div>
                         )}
-                      </p>
+                      </button>
+
+                      <p className="font-medium text-text">{card.nome}</p>
+                    </div>
+
+                    {cardsExpandidos[card.id] && (
+                      <>
+                        {!descricaoExpandida[card.id] ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleDescricao(card.id);
+                            }}
+                            className="pl-6 mt-1 text-sm text-links hover:underline"
+                          >
+                            Instruções
+                          </button>
+                        ) : (
+                          <div className="pl-6 mt-2">
+                            <p className="text-sm text-text/80">
+                              {card.descricao}
+                            </p>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleDescricao(card.id);
+                              }}
+                              className="mt-1 text-sm text-links hover:underline"
+                            >
+                              Ocultar instruções
+                            </button>
+                          </div>
+                        )}
+
+                        <p className="pl-6 mt-2 text-xs text-text">
+                          ⏰ Horário: {card.horario} - ({card.complexidade})
+                        </p>
+
+                        <p className="pl-6 text-xs text-text">
+                          🕓 Prazo: {card.limite}
+                        </p>
+
+                        {horasConclusao[card.id] && (
+                          <p className="pl-6 mt-1 text-xs text-gray-500">
+                            ✅ {horasConclusao[card.id]}{" "}
+                            {foraDoPrazo[card.id] && (
+                              <span className="text-red-500">
+                                (fora do prazo)
+                              </span>
+                            )}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-400">Sem rotinas</p>
+                <p className="ml-2 text-sm text-gray-600">Sem rotinas</p>
               )}
             </div>
           );
