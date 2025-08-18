@@ -26,13 +26,16 @@ import QuadroPrazos from "./modulos/dashboards/DashboardPrazos";
 import RotinaComercial from "./modulos/quadrosRotinas/RotinaComercial";
 import paperClubLogo from "./assets/imgs/logoPaperClub.png";
 import {
+  AlarmClockCheck,
   Award,
   BriefcaseBusiness,
+  Calendar,
   ChartColumnIncreasing,
   ChartSpline,
   Code,
   Globe,
   Headset,
+  Hourglass,
   Instagram,
   Landmark,
   LayoutPanelTop,
@@ -48,7 +51,7 @@ import React, { useState } from "react";
 export default function Sidebar() {
   console.log("Renderizando Sidebar");
 
-  const [abaAtiva, setAbaAtiva] = useState("painel");
+  const [abaAtiva, setAbaAtiva] = useState("prazos");
   const apelido = localStorage.getItem("nome") || "Usuário";
   const role = localStorage.getItem("setor");
 
@@ -174,20 +177,20 @@ export default function Sidebar() {
               <ul class="space-y-2 font-medium">
                 <li>
                   <button
-                    onClick={() => setAbaAtiva("painel")}
+                    onClick={() => setAbaAtiva("prazos")}
                     className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "painel"
+                      abaAtiva === "prazos"
                         ? "text-white bg-background"
                         : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
                     }`}
                   >
                     <div className="flex">
-                      <LayoutPanelTop
+                      <Calendar
                         className={`${
-                          abaAtiva === "painel" ? "text-links" : "text-white/50"
+                          abaAtiva === "prazos" ? "text-links" : "text-white/50"
                         }`}
                       />
-                      <span class="flex-1 ms-3 whitespace-nowrap">Painel</span>
+                      <span class="flex-1 ms-3 whitespace-nowrap">Prazos</span>
                     </div>
                     <div>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
@@ -414,8 +417,6 @@ export default function Sidebar() {
                     </div>
                   </button>
                 </li>
-              </ul>
-              <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
                   <button
                     onClick={() => setAbaAtiva("feedbacks")}
@@ -447,6 +448,8 @@ export default function Sidebar() {
                     </div>
                   </button>
                 </li>
+              </ul>
+              <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
                   <button
                     onClick={() => setAbaAtiva("financeiro")}
@@ -466,6 +469,66 @@ export default function Sidebar() {
                       />
                       <span class="flex-1 ms-3 whitespace-nowrap">
                         Financeiro
+                      </span>
+                    </div>
+                    <div>
+                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
+                        0
+                      </span>
+                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
+                        0
+                      </span>
+                    </div>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setAbaAtiva("rotinas")}
+                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
+                      abaAtiva === "rotinas"
+                        ? "text-white bg-background"
+                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
+                    }`}
+                  >
+                    <div className="flex">
+                      <AlarmClockCheck
+                        className={`${
+                          abaAtiva === "rotinas"
+                            ? "text-links"
+                            : "text-white/50"
+                        }`}
+                      />
+                      <span class="flex-1 ms-3 whitespace-nowrap">Rotinas</span>
+                    </div>
+                    <div>
+                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
+                        0
+                      </span>
+                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
+                        0
+                      </span>
+                    </div>
+                  </button>
+                </li>{" "}
+                <li>
+                  <button
+                    onClick={() => setAbaAtiva("progresso")}
+                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
+                      abaAtiva === "progresso"
+                        ? "text-white bg-background"
+                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
+                    }`}
+                  >
+                    <div className="flex">
+                      <Hourglass
+                        className={`${
+                          abaAtiva === "progresso"
+                            ? "text-links"
+                            : "text-white/50"
+                        }`}
+                      />
+                      <span class="flex-1 ms-3 whitespace-nowrap">
+                        Em Progresso
                       </span>
                     </div>
                     <div>
@@ -518,36 +581,12 @@ export default function Sidebar() {
               <ToastContainer />
               {/* Versão PC */}
               <div className="hidden desktop1:flex flex-col max-w-[1700px] overflow-x-auto pt-12 pl-4">
-                {abaAtiva === "painel" && (
+                {abaAtiva === "prazos" && (
                   <>
-                    {/* --- PAINEL PRINCIPAL --- */}
-                    <div className="flex items-center">
-                      <img className="pl-2 w-[200px]" src={paperClubLogo}></img>
-                      <div>
-                        <h1 className="ml-6 text-3xl font-bold text-white">
-                          Paper Club
-                        </h1>
-                        <h1 className="ml-6 text-sm text-text">
-                          Sistema de Controle Interno
-                        </h1>
-                        <p className="ml-6 text-xs text-text/50">
-                          Paper Street Softwares ®
-                        </p>
-                        <p className="ml-6 text-xs text-text/50">
-                          2025 - Versão 0.9 (Em desenvolvimento)
-                        </p>
-                      </div>
-                    </div>
-
+                    {/* --- prazos PRINCIPAL --- */}
                     <div className="">
                       <div className="p-6 m-6 overflow-x-auto border border-border rounded-xl w-fit">
                         <QuadroPrazos />
-                      </div>
-                      <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
-                        <QuadroResumoRotinas />
-                      </div>
-                      <div className="m-6 overflow-x-auto border border-border rounded-xl w-fit">
-                        <DashboardTarefasEmProgresso />
                       </div>
                     </div>
                   </>
@@ -633,6 +672,22 @@ export default function Sidebar() {
                     {/* --- ABA FINANCEIRO --- */}
                     <RotinaFinanceiro />
                     <QuadroFinanceiro />
+                  </>
+                )}
+
+                {abaAtiva === "rotinas" && (
+                  <>
+                    {/* --- ABA ROTINAS --- */}
+
+                    <QuadroResumoRotinas />
+                  </>
+                )}
+
+                {abaAtiva === "progresso" && (
+                  <>
+                    {/* --- EM PROGRESSO --- */}
+
+                    <DashboardTarefasEmProgresso />
                   </>
                 )}
 
