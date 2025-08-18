@@ -196,9 +196,6 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
@@ -227,14 +224,11 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
               </ul>
-              <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
                   <button
                     onClick={() => setAbaAtiva("suporte")}
@@ -255,9 +249,6 @@ export default function Sidebar() {
                       <span class="flex-1 ms-3 whitespace-nowrap">Suporte</span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
@@ -289,9 +280,6 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
@@ -315,9 +303,6 @@ export default function Sidebar() {
                       <span class="flex-1 ms-3 whitespace-nowrap">Dev</span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
@@ -349,9 +334,6 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
@@ -377,9 +359,6 @@ export default function Sidebar() {
                       </span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
@@ -411,9 +390,6 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
@@ -442,14 +418,11 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
               </ul>
-              <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
                   <button
                     onClick={() => setAbaAtiva("financeiro")}
@@ -472,9 +445,6 @@ export default function Sidebar() {
                       </span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
@@ -501,9 +471,6 @@ export default function Sidebar() {
                       <span class="flex-1 ms-3 whitespace-nowrap">Rotinas</span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
@@ -535,9 +502,6 @@ export default function Sidebar() {
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                     </div>
                   </button>
                 </li>
@@ -563,9 +527,6 @@ export default function Sidebar() {
                       </span>
                     </div>
                     <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
                       <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
                         0
                       </span>
