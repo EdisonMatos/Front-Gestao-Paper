@@ -46,9 +46,37 @@ import {
   Trophy,
   Wrench,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import MenuItem from "./componentes/MenuItem";
 
 export default function Sidebar() {
+  const [servicos, setServicos] = useState([]);
+
+  useEffect(() => {
+    async function carregarServicos() {
+      try {
+        const { data } = await axios.get(
+          "https://backend-gestao-paper.onrender.com/servicos"
+        );
+        setServicos(data);
+      } catch (error) {
+        console.error("Erro ao buscar serviços:", error);
+      }
+    }
+    carregarServicos();
+  }, []);
+
+  const suporteCount = contarServicos("suporte");
+
+  function contarServicos(turno) {
+    return servicos.filter(
+      (s) =>
+        s.turnoDaVez === turno &&
+        (s.posicaoNoQuadro === null || s.posicaoNoQuadro === "backlog")
+    ).length;
+  }
+
   console.log("Renderizando Sidebar");
 
   const [abaAtiva, setAbaAtiva] = useState("prazos");
@@ -228,228 +256,89 @@ export default function Sidebar() {
                   </button>
                 </li>
               </ul>
-              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+              <ul className="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("suporte")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "suporte"
-                        ? "text-white bg-background "
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <MessageCircle
-                        className={`${
-                          abaAtiva === "suporte"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">Suporte</span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="suporte"
+                    label="Suporte"
+                    Icon={MessageCircle}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("comercial")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "comercial"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Headset
-                        className={`${
-                          abaAtiva === "comercial"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Comercial
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="comercial"
+                    label="Comercial"
+                    Icon={Headset}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("desenvolvimento")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "desenvolvimento"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Code
-                        className={`${
-                          abaAtiva === "desenvolvimento"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">Dev</span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="desenvolvimento"
+                    label="Dev"
+                    Icon={Code}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("webmaster")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "webmaster"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Globe
-                        className={`${
-                          abaAtiva === "webmaster"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Webmaster
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="webmaster"
+                    label="Webmaster"
+                    Icon={Globe}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("trafego")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "trafego"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <ScanSearch
-                        className={`${
-                          abaAtiva === "trafego"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Tráfego Pago
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="trafego"
+                    label="Tráfego Pago"
+                    Icon={ScanSearch}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("socialmedia")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "socialmedia"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Instagram
-                        className={`${
-                          abaAtiva === "socialmedia"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Social Media
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="socialmedia"
+                    label="Social Media"
+                    Icon={Instagram}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("feedbacks")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "feedbacks"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Award
-                        className={`${
-                          abaAtiva === "feedbacks"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Feedbacks
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="feedbacks"
+                    label="Feedbacks"
+                    Icon={Award}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
               </ul>
+
               <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("financeiro")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "financeiro"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <Landmark
-                        className={`${
-                          abaAtiva === "financeiro"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Financeiro
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="financeiro"
+                    label="Financeiro"
+                    Icon={Landmark}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
                 <li>
                   <button
@@ -506,32 +395,14 @@ export default function Sidebar() {
                   </button>
                 </li>
                 <li>
-                  <button
-                    onClick={() => setAbaAtiva("diretoria")}
-                    className={`flex justify-between items-center p-2 w-full rounded-lg group ${
-                      abaAtiva === "diretoria"
-                        ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
-                    }`}
-                  >
-                    <div className="flex">
-                      <ChartSpline
-                        className={`${
-                          abaAtiva === "diretoria"
-                            ? "text-links"
-                            : "text-white/50"
-                        }`}
-                      />
-                      <span class="flex-1 ms-3 whitespace-nowrap">
-                        Diretoria
-                      </span>
-                    </div>
-                    <div>
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-inputBg dark:text-white">
-                        0
-                      </span>
-                    </div>
-                  </button>
+                  <MenuItem
+                    turno="diretoria"
+                    label="Diretoria"
+                    Icon={ChartSpline}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    servicos={servicos}
+                  />
                 </li>
               </ul>
             </div>
