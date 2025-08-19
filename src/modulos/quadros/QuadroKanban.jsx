@@ -93,10 +93,10 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     }
   }
 
-  useEffect(() => {
-    carregarServicos();
-    // ⚠️ Não coloque "colunas" nas dependências (objeto muda de identidade a cada render)
-  }, [turno]);
+  // useEffect(() => {
+  //   carregarServicos();
+  //   // ⚠️ Não coloque "colunas" nas dependências (objeto muda de identidade a cada render)
+  // }, [turno]);
 
   useEffect(() => {
     carregarServicos();
