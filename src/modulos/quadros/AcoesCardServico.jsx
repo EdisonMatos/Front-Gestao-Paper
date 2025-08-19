@@ -155,7 +155,7 @@ export default function AcoesCardServico({
         {
           ...servico,
           turnoDaVez: setorSelecionado,
-          posicaoNoQuadro: null,
+          posicaoNoQuadro: "backlog",
           ordemVerticalNoQuadro: null,
           complexidade: parseFloat(novaComplexidadeDirecionar),
           dataProximoPrazo: novaDataISO,

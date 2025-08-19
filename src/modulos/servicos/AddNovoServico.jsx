@@ -192,6 +192,9 @@ export default function AddNovoServico({
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
       payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto);
 
+      // Adiciona posicaoNoQuadro como "backlog" para todos os serviços criados
+      payload.posicaoNoQuadro = "backlog";
+
       // Se for Criação de LP, compor a descrição a partir dos dados do ServCriacaoDeLpi + comentariosTexto
       const nomeDoServico = form.nome;
       if (nomeDoServico === "Criação de LP") {
