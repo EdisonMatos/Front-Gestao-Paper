@@ -29,44 +29,74 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
   const [isLoading, setIsLoading] = useState(true);
 
   async function carregarServicos() {
+    setIsLoading(true);
+
     try {
       const { data } = await axios.get(
-        "https://backend-gestao-paper.onrender.com/servicos"
+        `https://backend-gestao-paper.onrender.com/servicos/kanban`,
+        { params: { turno } } // evita problemas de encoding e fica mais claro
       );
 
-      const apenasDoTurno = data.filter(
-        (servico) => servico.turnoDaVez === turno
-      );
+      const keys = Object.keys(colunas);
 
-      const servicosOrganizados = Object.keys(colunas).reduce((acc, coluna) => {
-        acc[coluna] = [];
+      // Sempre começamos com todas as colunas vazias
+      const baseVazia = keys.reduce((acc, k) => {
+        acc[k] = [];
         return acc;
       }, {});
 
-      apenasDoTurno.forEach((servico) => {
-        const pos = servico.posicaoNoQuadro;
-        const colunaValida =
-          pos && servicosOrganizados[pos] ? pos : Object.keys(colunas)[0];
-        servicosOrganizados[colunaValida].push(servico);
-      });
+      let servicosOrganizados = { ...baseVazia };
 
-      Object.keys(servicosOrganizados).forEach((coluna) => {
-        servicosOrganizados[coluna].sort((a, b) => {
-          const ordemA = a.ordemVerticalNoQuadro;
-          const ordemB = b.ordemVerticalNoQuadro;
-          if (ordemA === null && ordemB !== null) return -1;
-          if (ordemB === null && ordemA !== null) return 1;
-          return (ordemA ?? 0) - (ordemB ?? 0);
+      if (Array.isArray(data)) {
+        // ===== Caso 1: backend retorna LISTA plana de serviços =====
+        for (const servico of data) {
+          const pos = servico.posicaoNoQuadro;
+          const keyValida =
+            pos && servicosOrganizados.hasOwnProperty(pos) ? pos : keys[0]; // fallback na primeira coluna
+          servicosOrganizados[keyValida].push(servico);
+        }
+      } else if (data && typeof data === "object") {
+        // ===== Caso 2: backend retorna OBJETO agrupado por coluna =====
+        // Copiamos apenas as colunas esperadas; o que não vier vira []
+        for (const k of keys) {
+          const lista = Array.isArray(data[k]) ? data[k] : [];
+          servicosOrganizados[k] = lista.slice(); // cópia defensiva
+        }
+      } else {
+        // Resposta inesperada => mantém tudo vazio
+        console.warn("Formato inesperado da resposta /kanban:", data);
+      }
+
+      // Ordena cada coluna por ordemVerticalNoQuadro (nulls sobem)
+      for (const k of keys) {
+        servicosOrganizados[k].sort((a, b) => {
+          const A = a.ordemVerticalNoQuadro;
+          const B = b.ordemVerticalNoQuadro;
+          if (A === null && B !== null) return -1;
+          if (B === null && A !== null) return 1;
+          return (A ?? 0) - (B ?? 0);
         });
-      });
+      }
 
       setServicos(servicosOrganizados);
     } catch (err) {
       console.error("Erro ao carregar serviços:", err);
+      // Garante estado consistente mesmo em erro
+      const vazio = Object.keys(colunas).reduce(
+        (acc, k) => ((acc[k] = []), acc),
+        {}
+      );
+      setServicos(vazio);
+      toast.error("Erro ao carregar serviços");
     } finally {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    carregarServicos();
+    // ⚠️ Não coloque "colunas" nas dependências (objeto muda de identidade a cada render)
+  }, [turno]);
 
   useEffect(() => {
     carregarServicos();

@@ -4,7 +4,7 @@ import SkeletonCard from "../quadros/SkeletonCard";
 import AddNovaRotina from "./AddNovaRotina";
 
 export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
-  const [rotinas, setRotinas] = useState([]);
+  const [rotinas, setRotinas] = useState({});
   const [carregando, setCarregando] = useState(true);
   const [descricaoExpandida, setDescricaoExpandida] = useState({});
   const [rotinasConcluidas, setRotinasConcluidas] = useState({});
@@ -18,102 +18,18 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
   }, [setor]);
 
   async function fetchRotinas() {
+    setCarregando(true);
     try {
       const res = await fetch(
-        "https://backend-gestao-paper.onrender.com/rotinas"
+        `https://backend-gestao-paper.onrender.com/rotinas/kanban?setor=${setor}`
       );
       const data = await res.json();
-      const filtradas = data.filter((r) => r.setor === setor);
-      setRotinas(filtradas);
+      setRotinas(data);
     } catch (error) {
       console.error("Erro ao buscar rotinas:", error);
     } finally {
       setCarregando(false);
     }
-  }
-
-  function isDataDessaSemana(dateStr) {
-    const date = new Date(dateStr);
-    const hoje = new Date();
-
-    // Ajusta para o início da semana (segunda-feira)
-    const diaDaSemana = hoje.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
-    const diffSegunda = diaDaSemana === 0 ? -6 : 1 - diaDaSemana;
-    const primeiroDiaDaSemana = new Date(hoje);
-    primeiroDiaDaSemana.setDate(hoje.getDate() + diffSegunda);
-    primeiroDiaDaSemana.setHours(0, 0, 0, 0);
-
-    const ultimoDiaDaSemana = new Date(primeiroDiaDaSemana);
-    ultimoDiaDaSemana.setDate(primeiroDiaDaSemana.getDate() + 6);
-    ultimoDiaDaSemana.setHours(23, 59, 59, 999);
-
-    return date >= primeiroDiaDaSemana && date <= ultimoDiaDaSemana;
-  }
-
-  function calcularStatus(rotina, horario) {
-    const registroAtual = rotina.registros
-      ?.filter((reg) => isDataDessaSemana(reg.dataConclusao))
-      .sort((a, b) => new Date(b.dataConclusao) - new Date(a.dataConclusao))[0];
-
-    if (!registroAtual) return "pendente";
-
-    const dataConclusao = new Date(registroAtual.dataConclusao);
-
-    const [hora, minuto] = horario.split(":").map(Number);
-
-    const dataLimite = new Date(dataConclusao);
-    dataLimite.setHours(hora, minuto, 0, 0);
-    dataLimite.setTime(dataLimite.getTime() + rotina.janela * 60000);
-
-    if (dataConclusao <= dataLimite) return "concluida";
-    return "atrasada";
-  }
-
-  function filtrarPorDia(dia) {
-    const doDia = rotinas.filter((r) => {
-      const dias = r.diaDaSemana
-        .toLowerCase()
-        .split(",")
-        .map((d) => d.trim());
-      return dias.includes(dia) || dias.includes("todos");
-    });
-
-    const expandida = [];
-    doDia.forEach((r) => {
-      const horarios = r.horario
-        .split(",")
-        .map((h) => h.trim())
-        .filter(Boolean);
-      horarios.forEach((h) => {
-        const [hora, minuto] = h.split(":").map(Number);
-        const horarioRotina = new Date();
-        horarioRotina.setHours(hora, minuto, 0, 0);
-        const fimDaJanela = new Date(
-          horarioRotina.getTime() + r.janela * 60000
-        );
-        const limite = fimDaJanela
-          .toTimeString()
-          .split(":")
-          .slice(0, 2)
-          .join(":");
-
-        expandida.push({
-          ...r,
-          horario: h,
-          id: `${r.id}-${h}`,
-          limite,
-          statusCalculado: calcularStatus(r, h),
-        });
-      });
-    });
-
-    expandida.sort((a, b) => {
-      const [hA, mA] = a.horario.split(":").map(Number);
-      const [hB, mB] = b.horario.split(":").map(Number);
-      return hA !== hB ? hA - hB : mA - mB;
-    });
-
-    return expandida;
   }
 
   function toggleDescricao(id) {
@@ -207,7 +123,7 @@ export default function QuadroKanbanRotinas({ titulo, setor, colunas }) {
       {/* Quadro Kanban */}
       <div className="relative flex gap-4 py-4 overflow-x-auto">
         {Object.entries(colunas).map(([key, config]) => {
-          const cards = filtrarPorDia(key);
+          const cards = rotinas[key] || [];
 
           return (
             <div
