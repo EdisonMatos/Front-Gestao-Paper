@@ -98,9 +98,13 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
   //   // ⚠️ Não coloque "colunas" nas dependências (objeto muda de identidade a cada render)
   // }, [turno]);
 
+  // useEffect(() => {
+  //   carregarServicos();
+  // }, [turno, colunas]);
+
   useEffect(() => {
     carregarServicos();
-  }, [turno, colunas]);
+  }, [turno]);
 
   async function onDragEnd(result) {
     const { source, destination } = result;
