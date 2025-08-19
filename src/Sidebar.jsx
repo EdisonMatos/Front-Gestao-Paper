@@ -54,6 +54,23 @@ import MenuItemMeta from "./componentes/ManuItemMeta";
 import MenuItemPrazos from "./componentes/MenuItemPrazos";
 
 export default function Sidebar() {
+  const [servicosCounts, setServicosCounts] = useState({});
+
+  useEffect(() => {
+    async function carregarServicosCounts() {
+      try {
+        const { data } = await axios.get(
+          "https://backend-gestao-paper.onrender.com/servicos/counts"
+        );
+        setServicosCounts(data);
+      } catch (error) {
+        console.error("Erro ao buscar counts dos serviços:", error);
+      }
+    }
+
+    carregarServicosCounts();
+  }, []);
+
   const [servicos, setServicos] = useState([]);
 
   useEffect(() => {
@@ -272,7 +289,7 @@ export default function Sidebar() {
                     Icon={MessageCircle}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["suporte"] || 0}
                   />
                 </li>
                 <li>
@@ -282,7 +299,7 @@ export default function Sidebar() {
                     Icon={Headset}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["comercial"] || 0}
                   />
                 </li>
                 <li>
@@ -292,7 +309,7 @@ export default function Sidebar() {
                     Icon={Code}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["dev"] || 0}
                   />
                 </li>
                 <li>
@@ -302,7 +319,7 @@ export default function Sidebar() {
                     Icon={Globe}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["webmaster"] || 0}
                   />
                 </li>
                 <li>
@@ -312,7 +329,7 @@ export default function Sidebar() {
                     Icon={ScanSearch}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["trafego"] || 0}
                   />
                 </li>
                 <li>
@@ -322,7 +339,7 @@ export default function Sidebar() {
                     Icon={Instagram}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["socialmedia"] || 0}
                   />
                 </li>
               </ul>
@@ -335,7 +352,7 @@ export default function Sidebar() {
                     Icon={Award}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["feedbacks"] || 0}
                   />
                 </li>
                 <li>
@@ -345,7 +362,7 @@ export default function Sidebar() {
                     Icon={Landmark}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["financeiro"] || 0}
                   />
                 </li>
                 <li>
@@ -355,7 +372,7 @@ export default function Sidebar() {
                     Icon={ChartSpline}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    servicos={servicos}
+                    count={servicosCounts["diretoria"] || 0}
                   />
                 </li>
               </ul>
