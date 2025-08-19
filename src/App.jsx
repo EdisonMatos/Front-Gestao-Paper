@@ -5,8 +5,6 @@ import Login from "./auth/Login";
 import PrivateRoute from "./auth/PrivateRoute";
 
 function App() {
-  console.log("Renderizando App");
-
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

@@ -4,14 +4,8 @@ export default function MenuItem({
   Icon,
   abaAtiva,
   setAbaAtiva,
-  servicos,
+  count = 0, // default 0 caso não venha
 }) {
-  const count = servicos.filter(
-    (s) =>
-      s.turnoDaVez === turno &&
-      (s.posicaoNoQuadro === null || s.posicaoNoQuadro === "backlog")
-  ).length;
-
   return (
     <li>
       <button

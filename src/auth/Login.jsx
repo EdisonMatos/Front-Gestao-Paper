@@ -45,11 +45,6 @@ export default function Login() {
       localStorage.setItem("avatar", data.usuario.avatar || "");
 
       navigate("/"); // Redireciona para o dashboard
-      console.log("Enviando login com:", { email, senha });
-      console.log("Resposta da API:", data);
-      console.log("Token salvo?", localStorage.getItem("token"));
-      console.log("Tipo salvo?", localStorage.getItem("tipo"));
-      console.log("Chamando navigate para '/'");
     } catch (err) {
       setError(err.message);
     } finally {
