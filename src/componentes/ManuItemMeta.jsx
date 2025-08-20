@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loader2, Check } from "lucide-react";
 
 export default function MenuItemMeta({
   meta = 2,
@@ -14,6 +15,7 @@ export default function MenuItemMeta({
   useEffect(() => {
     async function carregarServicos() {
       try {
+        setCarregando(true);
         const res = await fetch(
           "https://backend-gestao-paper.onrender.com/servicos"
         );
@@ -26,6 +28,8 @@ export default function MenuItemMeta({
       }
     }
     carregarServicos();
+    const intervalo = setInterval(carregarServicos, 300000);
+    return () => clearInterval(intervalo);
   }, []);
 
   const tarefas = servicos.filter((s) => s.posicaoNoQuadro === "emProgresso");
@@ -58,13 +62,19 @@ export default function MenuItemMeta({
         )}
         <span className="flex-1 ms-3 whitespace-nowrap">{label}</span>
       </div>
-      {!carregando && badgeValue !== 0 && (
-        <div>
-          <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-inputBg dark:text-red-500">
-            {badgeValue}
-          </span>
-        </div>
-      )}
+      <div>
+        {carregando ? (
+          <Loader2 className="w-5 h-5 animate-spin text-white/10 ms-3" />
+        ) : count === meta ? (
+          <Check className="w-5 h-5 text-links ms-3" />
+        ) : (
+          badgeValue !== 0 && (
+            <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-inputBg dark:text-red-500">
+              {badgeValue}
+            </span>
+          )
+        )}
+      </div>
     </button>
   );
 }
