@@ -74,7 +74,7 @@ export default function Sidebar() {
     }
 
     carregarServicosCounts();
-    const interval = setInterval(carregarServicosCounts, 300000); // 1 segundo é 1.000, 10 segundos é 10.000,  logo 1 minuto é 60.000
+    const interval = setInterval(carregarServicosCounts, 300000); //  1s = 1.000, 10s = 10.000, 1m = 60.000, 5m = 300.000
 
     return () => clearInterval(interval);
   }, []);
