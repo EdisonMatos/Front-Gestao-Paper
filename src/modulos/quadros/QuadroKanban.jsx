@@ -27,6 +27,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     }, {})
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [timer, setTimer] = useState(300); // 15 minutos em segundos
 
   async function carregarServicos() {
     setIsLoading(true);
@@ -93,18 +94,23 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     }
   }
 
-  // useEffect(() => {
-  //   carregarServicos();
-  //   // ⚠️ Não coloque "colunas" nas dependências (objeto muda de identidade a cada render)
-  // }, [turno]);
-
-  // useEffect(() => {
-  //   carregarServicos();
-  // }, [turno, colunas]);
-
   useEffect(() => {
     carregarServicos();
   }, [turno]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          carregarServicos();
+          return 60; // reinicia a contagem sem limpar o intervalo
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval); // só limpa quando o componente desmontar
+  }, []);
 
   async function onDragEnd(result) {
     const { source, destination } = result;
@@ -260,9 +266,23 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     return servico.comentariosTexto || null;
   }
 
+  const minutos = Math.floor(timer / 60)
+    .toString()
+    .padStart(2, "0");
+  const segundos = (timer % 60).toString().padStart(2, "0");
+  const timerClass = timer <= 15 ? "text-links" : "text-white/50";
+  const textoExtra = timer <= 15 ? " - Atualizando em breve!" : "";
+
   return (
     <div className="p-6">
-      <h2 className="mb-4 text-2xl font-bold text-text">{titulo}</h2>
+      <div className="flex items-center gap-4 mb-4">
+        <h2 className="text-2xl font-bold text-text">{titulo}</h2>
+        <span className="text-text">|</span>
+        <p className={timerClass}>
+          Atualiza em: {minutos}:{segundos}
+          {textoExtra}
+        </p>
+      </div>
       <div className="relative flex gap-4 py-4 overflow-x-auto gap">
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(colunas).map(([key, config]) => (
