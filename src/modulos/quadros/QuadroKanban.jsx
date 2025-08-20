@@ -27,7 +27,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     }, {})
   );
   const [isLoading, setIsLoading] = useState(true);
-  const [timer, setTimer] = useState(60); // 15 minutos em segundos
+  const [timer, setTimer] = useState(300); // 15 minutos em segundos
 
   async function carregarServicos() {
     setIsLoading(true);
@@ -102,14 +102,14 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
-          clearInterval(interval);
-          window.location.reload();
-          return 0;
+          carregarServicos();
+          return 60; // reinicia a contagem sem limpar o intervalo
         }
         return prev - 1;
       });
     }, 1000);
-    return () => clearInterval(interval);
+
+    return () => clearInterval(interval); // só limpa quando o componente desmontar
   }, []);
 
   async function onDragEnd(result) {
@@ -270,15 +270,17 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     .toString()
     .padStart(2, "0");
   const segundos = (timer % 60).toString().padStart(2, "0");
-  const timerClass = timer <= 30 ? "text-links" : "text-white/50";
-  const textoExtra = timer <= 30 ? " - Atualizando em breve" : "";
+  const timerClass = timer <= 15 ? "text-links" : "text-white/50";
+  const textoExtra = timer <= 15 ? " - Atualizando em breve!" : "";
 
   return (
     <div className="p-6">
       <div className="flex items-center gap-4 mb-4">
         <h2 className="text-2xl font-bold text-text">{titulo}</h2>
+        <span className="text-text">|</span>
         <p className={timerClass}>
-          Atualiza em: {minutos}:{segundos}s{textoExtra}
+          Atualiza em: {minutos}:{segundos}
+          {textoExtra}
         </p>
       </div>
       <div className="relative flex gap-4 py-4 overflow-x-auto gap">
