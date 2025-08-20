@@ -1,10 +1,13 @@
+import { Loader2 } from "lucide-react";
+
 export default function MenuItem({
   turno,
   label,
   Icon,
   abaAtiva,
   setAbaAtiva,
-  count = 0, // default 0 caso não venha
+  count = 0,
+  loading = false, // nova prop
 }) {
   return (
     <li>
@@ -22,13 +25,18 @@ export default function MenuItem({
           />
           <span className="flex-1 ms-3 whitespace-nowrap">{label}</span>
         </div>
-        {count > 0 && (
-          <div>
-            <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-100 rounded-full text-links ms-3 dark:bg-inputBg dark:text-links">
-              {count}
-            </span>
-          </div>
-        )}
+
+        <div>
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin text-white/10 ms-3" />
+          ) : (
+            count > 0 && (
+              <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-100 rounded-full text-links ms-3 dark:bg-inputBg dark:text-links">
+                {count}
+              </span>
+            )
+          )}
+        </div>
       </button>
     </li>
   );
