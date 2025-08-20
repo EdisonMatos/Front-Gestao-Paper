@@ -27,7 +27,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     }, {})
   );
   const [isLoading, setIsLoading] = useState(true);
-  const [timer, setTimer] = useState(300); // 15 minutos em segundos
+  const [timer, setTimer] = useState(300); // 5 minutos em segundos
 
   async function carregarServicos() {
     setIsLoading(true);
@@ -103,7 +103,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       setTimer((prev) => {
         if (prev <= 1) {
           carregarServicos();
-          return 60; // reinicia a contagem sem limpar o intervalo
+          return 300; // reinicia a contagem sem limpar o intervalo
         }
         return prev - 1;
       });
