@@ -1,16 +1,28 @@
 import { useEffect, useState } from "react";
-import { AlarmClockCheck } from "lucide-react";
+import { AlarmClockCheck, Loader2, Check } from "lucide-react";
 
 export default function MenuItemRotinas({ abaAtiva, setAbaAtiva }) {
   const [rotinas, setRotinas] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
-    fetch("https://backend-gestao-paper.onrender.com/rotinas")
-      .then((res) => res.json())
-      .then(setRotinas)
-      .catch((err) => console.error("Erro ao buscar rotinas:", err))
-      .finally(() => setCarregando(false));
+    async function carregarRotinas() {
+      try {
+        setCarregando(true);
+        const res = await fetch(
+          "https://backend-gestao-paper.onrender.com/rotinas"
+        );
+        const data = await res.json();
+        setRotinas(data);
+      } catch (err) {
+        console.error("Erro ao buscar rotinas:", err);
+      } finally {
+        setCarregando(false);
+      }
+    }
+    carregarRotinas();
+    const intervalo = setInterval(carregarRotinas, 300000);
+    return () => clearInterval(intervalo);
   }, []);
 
   function isHoje(dateStr) {
@@ -96,9 +108,15 @@ export default function MenuItemRotinas({ abaAtiva, setAbaAtiva }) {
         <span className="flex-1 ms-3 whitespace-nowrap">Rotinas</span>
       </div>
       <div>
-        <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-inputBg dark:text-links">
-          {carregando ? "-" : rotinasNaoConcluidasHoje}
-        </span>
+        {carregando ? (
+          <Loader2 className="w-5 h-5 animate-spin text-white/10 ms-3" />
+        ) : rotinasNaoConcluidasHoje === 0 ? (
+          <Check className="w-5 h-5 text-links ms-3" />
+        ) : (
+          <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-inputBg dark:text-links">
+            {rotinasNaoConcluidasHoje}
+          </span>
+        )}
       </div>
     </button>
   );
