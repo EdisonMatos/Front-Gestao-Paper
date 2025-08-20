@@ -164,7 +164,7 @@ export default function Sidebar() {
                       class="h-16 me-3"
                       alt="Paper Club Logo"
                     />
-                    <span class="self-center text-[12px] min-[375px]:text-[16px] font-semibold sm:text-2xl whitespace-nowrap dark:text-white hidden desktop1:flex">
+                    <span class="self-center italic text-[12px] min-[375px]:text-[16px] font-semibold sm:text-2xl whitespace-nowrap dark:text-white hidden desktop1:flex">
                       Paper Club
                     </span>
                   </a>
