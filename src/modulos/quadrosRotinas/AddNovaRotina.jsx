@@ -15,6 +15,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
     janela: 60,
     diaDaSemana: "segunda",
     setor,
+    tipoHorario: "horarioEspecifico", // novo campo
   });
   const [editando, setEditando] = useState({});
 
@@ -62,20 +63,33 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
       toast.error("Nome é obrigatório");
       return;
     }
-    const toastId = toast.loading("Adicionando rotina...");
+
+    const diasDaSemana =
+      novaRotina.diaDaSemana === "todos"
+        ? ["segunda", "terca", "quarta", "quinta", "sexta"]
+        : [novaRotina.diaDaSemana];
+
+    const toastId = toast.loading("Adicionando rotina(s)...");
+
     try {
-      const res = await fetch(
-        "https://backend-gestao-paper.onrender.com/rotinas",
-        {
+      for (const dia of diasDaSemana) {
+        const payload = {
+          ...novaRotina,
+          diaDaSemana: dia,
+          conclusao: new Date(0).toISOString(),
+          horario:
+            novaRotina.tipoHorario === "diaTodo" ? "08:00" : novaRotina.horario,
+          janela:
+            novaRotina.tipoHorario === "diaTodo" ? 600 : novaRotina.janela,
+        };
+
+        await fetch("https://backend-gestao-paper.onrender.com/rotinas", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...novaRotina,
-            conclusao: new Date(0).toISOString(), // <- adicionado aqui
-          }),
-        }
-      );
-      if (!res.ok) throw new Error("Erro ao criar rotina");
+          body: JSON.stringify(payload),
+        });
+      }
+
       setNovaRotina({
         nome: "",
         descricao: "",
@@ -85,11 +99,12 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         janela: 60,
         diaDaSemana: "segunda",
         setor,
+        tipoHorario: "horarioEspecifico",
       });
       await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
       toast.update(toastId, {
-        render: "Rotina adicionada com sucesso!",
+        render: "Rotina(s) adicionada(s) com sucesso!",
         type: "success",
         isLoading: false,
         autoClose: 1000,
@@ -170,7 +185,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
 
   async function excluirRotina(id) {
     try {
-      // Buscar registros da rotina
       const registrosRes = await fetch(
         "https://backend-gestao-paper.onrender.com/registros"
       );
@@ -178,7 +192,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
       const registrosDaRotina = registros.filter((reg) => reg.rotinaId === id);
       const qtdRegistros = registrosDaRotina.length;
 
-      // Confirmar exclusão
       const confirmar = window.confirm(
         `Essa rotina tem ${qtdRegistros} registro(s). Deseja apagar a rotina (todos os registros serão apagados juntos)?`
       );
@@ -186,7 +199,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
 
       const toastId = toast.loading("Excluindo rotina...");
 
-      // Apagar primeiro todos os registros
       for (const reg of registrosDaRotina) {
         await fetch(
           `https://backend-gestao-paper.onrender.com/registros/${reg.id}`,
@@ -194,7 +206,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         );
       }
 
-      // Depois apagar a rotina
       const res = await fetch(
         `https://backend-gestao-paper.onrender.com/rotinas/${id}`,
         { method: "DELETE" }
@@ -225,7 +236,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         </button>
       )}
       {visivel && (
-        <div className="max-w-full p-4 mb-8 overflow-x-auto border rounded-lg shadow-md bg-background text-text">
+        <div className="max-w-full p-4 mb-8 overflow-x-auto border rounded-lg shadow-md border-border bg-background text-text">
           <div className="flex justify-between mb-4">
             <h3 className="text-lg font-bold text-text">
               Gerenciar Rotinas - Setor: {setor}
@@ -258,27 +269,40 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               onChange={handleChange}
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
             />
-            <input
-              type="text"
-              name="horario"
-              placeholder="Horário (ex: 9:30)"
-              value={novaRotina.horario}
+            <select
+              name="tipoHorario"
+              value={novaRotina.tipoHorario}
               onChange={handleChange}
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
-              pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
-              title="Formato HH:MM"
-              required
-            />
-            <input
-              type="number"
-              name="janela"
-              placeholder="Janela (minutos)"
-              value={novaRotina.janela}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-              min={1}
-              required
-            />
+            >
+              <option value="diaTodo">Dia todo</option>
+              <option value="horarioEspecifico">Horário específico</option>
+            </select>
+            {novaRotina.tipoHorario === "horarioEspecifico" && (
+              <>
+                <input
+                  type="text"
+                  name="horario"
+                  placeholder="Horário (ex: 9:30)"
+                  value={novaRotina.horario}
+                  onChange={handleChange}
+                  className="p-2 border rounded bg-inputBg text-placeholder border-border"
+                  pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+                  title="Formato HH:MM"
+                  required
+                />
+                <input
+                  type="number"
+                  name="janela"
+                  placeholder="Janela (minutos)"
+                  value={novaRotina.janela}
+                  onChange={handleChange}
+                  className="p-2 border rounded bg-inputBg text-placeholder border-border"
+                  min={1}
+                  required
+                />
+              </>
+            )}
             <input
               type="number"
               name="complexidade"
@@ -304,7 +328,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               <option value="sexta">Sexta</option>
               <option value="sábado">Sábado</option>
               <option value="domingo">Domingo</option>
-              <option value="todos">Todos</option>
+              <option value="todos">Todos os dias</option>
             </select>
             <button
               type="submit"
@@ -313,6 +337,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               Adicionar
             </button>
           </form>
+
           {carregando ? (
             <p>Carregando rotinas...</p>
           ) : erro ? (
@@ -455,12 +480,12 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                             >
                               Editar
                             </button>
-                            <button
+                            {/* <button
                               onClick={() => excluirRotina(r.id)}
                               className="px-2 py-1 text-black rounded bg-buttons hover:bg-buttonsHover"
                             >
                               Excluir
-                            </button>
+                            </button> */}
                           </>
                         )}
                       </td>
