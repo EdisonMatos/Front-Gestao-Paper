@@ -6,7 +6,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [visivel, setVisivel] = useState(false);
-
   const [novaRotina, setNovaRotina] = useState({
     nome: "",
     descricao: "",
@@ -17,7 +16,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
     diaDaSemana: "segunda",
     setor,
   });
-
   const [editando, setEditando] = useState({});
 
   useEffect(() => {
@@ -64,7 +62,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
       toast.error("Nome é obrigatório");
       return;
     }
-
     const toastId = toast.loading("Adicionando rotina...");
     try {
       const res = await fetch(
@@ -79,7 +76,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         }
       );
       if (!res.ok) throw new Error("Erro ao criar rotina");
-
       setNovaRotina({
         nome: "",
         descricao: "",
@@ -90,10 +86,8 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         diaDaSemana: "segunda",
         setor,
       });
-
       await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
-
       toast.update(toastId, {
         render: "Rotina adicionada com sucesso!",
         type: "success",
@@ -144,7 +138,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
       toast.error("Nome é obrigatório");
       return;
     }
-
     const toastId = toast.loading("Salvando edição...");
     try {
       const res = await fetch(
@@ -156,11 +149,9 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         }
       );
       if (!res.ok) throw new Error("Erro ao atualizar rotina");
-
       cancelarEdicao(id);
       await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
-
       toast.update(toastId, {
         render: "Rotina atualizada com sucesso!",
         type: "success",
@@ -178,21 +169,40 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
   }
 
   async function excluirRotina(id) {
-    if (!window.confirm("Deseja realmente excluir essa rotina?")) return;
-
-    const toastId = toast.loading("Excluindo rotina...");
     try {
+      // Buscar registros da rotina
+      const registrosRes = await fetch(
+        "https://backend-gestao-paper.onrender.com/registros"
+      );
+      const registros = await registrosRes.json();
+      const registrosDaRotina = registros.filter((reg) => reg.rotinaId === id);
+      const qtdRegistros = registrosDaRotina.length;
+
+      // Confirmar exclusão
+      const confirmar = window.confirm(
+        `Essa rotina tem ${qtdRegistros} registro(s). Deseja apagar a rotina (todos os registros serão apagados juntos)?`
+      );
+      if (!confirmar) return;
+
+      const toastId = toast.loading("Excluindo rotina...");
+
+      // Apagar primeiro todos os registros
+      for (const reg of registrosDaRotina) {
+        await fetch(
+          `https://backend-gestao-paper.onrender.com/registros/${reg.id}`,
+          { method: "DELETE" }
+        );
+      }
+
+      // Depois apagar a rotina
       const res = await fetch(
         `https://backend-gestao-paper.onrender.com/rotinas/${id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
       if (!res.ok) throw new Error("Erro ao excluir rotina");
 
       await buscarRotinas();
       if (onAtualizarRotinas) onAtualizarRotinas();
-
       toast.update(toastId, {
         render: "Rotina excluída com sucesso!",
         type: "success",
@@ -200,12 +210,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
         autoClose: 1000,
       });
     } catch (error) {
-      toast.update(toastId, {
-        render: error.message || "Erro ao excluir rotina",
-        type: "error",
-        isLoading: false,
-        autoClose: 1000,
-      });
+      toast.error(error.message || "Erro ao excluir rotina");
     }
   }
 
@@ -219,7 +224,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
           Adicionar nova rotina
         </button>
       )}
-
       {visivel && (
         <div className="max-w-full p-4 mb-8 overflow-x-auto border rounded-lg shadow-md bg-background text-text">
           <div className="flex justify-between mb-4">
@@ -233,7 +237,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               Ocultar
             </button>
           </div>
-
           <form
             onSubmit={handleAdicionar}
             className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-4"
@@ -262,7 +265,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               value={novaRotina.horario}
               onChange={handleChange}
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
-              pattern="^\d{1,2}:\d{2}$"
+              pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
               title="Formato HH:MM"
               required
             />
@@ -276,7 +279,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               min={1}
               required
             />
-
             <input
               type="number"
               name="complexidade"
@@ -288,7 +290,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               max={10}
               required
             />
-
             <select
               name="diaDaSemana"
               value={novaRotina.diaDaSemana}
@@ -305,7 +306,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               <option value="domingo">Domingo</option>
               <option value="todos">Todos</option>
             </select>
-
             <button
               type="submit"
               className="px-4 py-2 text-black rounded bg-buttonsHover col-span-full md:col-auto hover:bg-buttons"
@@ -313,7 +313,6 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
               Adicionar
             </button>
           </form>
-
           {carregando ? (
             <p>Carregando rotinas...</p>
           ) : erro ? (
@@ -375,7 +374,7 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                             value={edit.horario}
                             onChange={(e) => handleEditarChange(r.id, e)}
                             className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-                            pattern="^\d{1,2}:\d{2}$"
+                            pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
                             title="Formato HH:MM"
                           />
                         ) : (
@@ -456,12 +455,12 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                             >
                               Editar
                             </button>
-                            {/* <button
+                            <button
                               onClick={() => excluirRotina(r.id)}
                               className="px-2 py-1 text-black rounded bg-buttons hover:bg-buttonsHover"
                             >
                               Excluir
-                            </button> */}
+                            </button>
                           </>
                         )}
                       </td>
