@@ -37,6 +37,8 @@ export default function AcaoMudarPrazosEDatas({
     dataPrazoProjeto: toInputDateString(servico.dataPrazoProjeto),
   });
 
+  const [acaoPrazo, setAcaoPrazo] = useState("");
+
   const handleDatasChange = (e) => {
     const { name, value } = e.target;
     setDatas((prev) => ({ ...prev, [name]: value }));
@@ -115,11 +117,47 @@ export default function AcaoMudarPrazosEDatas({
     }
   };
 
+  const removerPrazos = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        ...servico,
+        dataProximoPrazo: null,
+        dataPrazoProjeto: null,
+      };
+
+      await axios.put(
+        `https://backend-gestao-paper.onrender.com/servicos/${servico.id}`,
+        payload
+      );
+
+      toast.success("Prazos removidos com sucesso!", { autoClose: 1000 });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
+      if (onAtualizarPrazo) {
+        onAtualizarPrazo(null);
+      }
+
+      onFechar();
+    } catch (err) {
+      console.error("Erro ao remover prazos:", err);
+      alert("Erro ao remover prazos.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <select
         value={subAcaoDatasPrazos}
-        onChange={(e) => setSubAcaoDatasPrazos(e.target.value)}
+        onChange={(e) => {
+          setSubAcaoDatasPrazos(e.target.value);
+          setAcaoPrazo("");
+        }}
         className="w-full p-1 border rounded bg-inputBg text-text border-border"
       >
         <option value="">Escolha o que deseja alterar:</option>
@@ -199,41 +237,73 @@ export default function AcaoMudarPrazosEDatas({
 
       {subAcaoDatasPrazos === "prazos" && (
         <>
-          <div className="">
-            <div className="text-text">Data do prazo do projeto:</div>
-            <input
-              type="date"
-              name="dataPrazoProjeto"
-              value={datas.dataPrazoProjeto}
-              onChange={handleDatasChange}
-              className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-          <div className="">
-            <div className=" text-text">Data do próximo prazo:</div>
-            <input
-              type="date"
-              name="dataProximoPrazo"
-              value={datas.dataProximoPrazo}
-              onChange={handleDatasChange}
-              className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={salvarPrazos}
-              disabled={loading}
-              className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
-            >
-              {loading ? "Salvando..." : "Salvar"}
-            </button>
-            <button
-              onClick={onFechar}
-              className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
-            >
-              Cancelar
-            </button>
-          </div>
+          <select
+            value={acaoPrazo}
+            onChange={(e) => setAcaoPrazo(e.target.value)}
+            className="w-full p-1 mt-2 border rounded bg-inputBg text-text border-border"
+          >
+            <option value="">Escolha uma ação para prazos:</option>
+            <option value="mudar">Mudar prazos</option>
+            <option value="remover">Remover prazos</option>
+          </select>
+
+          {acaoPrazo === "mudar" && (
+            <>
+              <div className="">
+                <div className="text-text">Data do prazo do projeto:</div>
+                <input
+                  type="date"
+                  name="dataPrazoProjeto"
+                  value={datas.dataPrazoProjeto}
+                  onChange={handleDatasChange}
+                  className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                />
+              </div>
+              <div className="">
+                <div className=" text-text">Data do próximo prazo:</div>
+                <input
+                  type="date"
+                  name="dataProximoPrazo"
+                  value={datas.dataProximoPrazo}
+                  onChange={handleDatasChange}
+                  className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={salvarPrazos}
+                  disabled={loading}
+                  className="px-2 py-1 text-sm text-black rounded bg-buttonsHover hover:bg-buttons"
+                >
+                  {loading ? "Salvando..." : "Salvar"}
+                </button>
+                <button
+                  onClick={onFechar}
+                  className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </>
+          )}
+
+          {acaoPrazo === "remover" && (
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={removerPrazos}
+                disabled={loading}
+                className="px-2 py-1 text-sm text-black bg-red-400 rounded hover:bg-red-500"
+              >
+                {loading ? "Removendo..." : "Confirmar"}
+              </button>
+              <button
+                onClick={onFechar}
+                className="px-2 py-1 text-sm text-black bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
         </>
       )}
     </>
