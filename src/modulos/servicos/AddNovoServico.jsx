@@ -192,9 +192,6 @@ export default function AddNovoServico({
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
       payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto);
 
-      // Adiciona posicaoNoQuadro como "backlog" para todos os serviços criados
-      payload.posicaoNoQuadro = "backlog";
-
       // Se for Criação de LP, compor a descrição a partir dos dados do ServCriacaoDeLpi + comentariosTexto
       const nomeDoServico = form.nome;
       if (nomeDoServico === "Criação de LP") {
@@ -209,6 +206,7 @@ export default function AddNovoServico({
       delete payload.clienteNome;
 
       if (form.id) {
+        // ***EDIÇÃO: não mexe na posicaoNoQuadro***
         await axios.put(`${API_URL}/${form.id}`, payload);
         toast.update(toastId, {
           render: "Serviço atualizado com sucesso!",
@@ -221,7 +219,9 @@ export default function AddNovoServico({
         }, 2000);
         onSalvo();
       } else {
-        // Para criação nova
+        // ***CRIAÇÃO: define como backlog***
+        payload.posicaoNoQuadro = "backlog";
+
         await axios.post(API_URL, payload);
 
         // Se a opção "Criar contrato e link de pagamento?" estiver como "Sim"
@@ -229,13 +229,12 @@ export default function AddNovoServico({
           nomeDoServico === "Criação de LP" &&
           criarContratoFaturamento === "Sim"
         ) {
-          // Criar um outro serviço idêntico, mas com nome diferente e turnoDaVez "financeiro"
           const novoServicoContrato = {
             ...payload,
             nome: "Contrato e Faturamento",
             turnoDaVez: "financeiro",
           };
-          delete novoServicoContrato.id; // remover id para evitar conflito
+          delete novoServicoContrato.id;
           await axios.post(API_URL, novoServicoContrato);
         }
 
