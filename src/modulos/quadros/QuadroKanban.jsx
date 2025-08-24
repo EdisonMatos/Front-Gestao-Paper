@@ -125,6 +125,23 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     const destino = destination.droppableId;
     const itemMovido = servicos[origem][source.index];
 
+    // ===== NOVA REGRA =====
+    if (destino === "emProgresso") {
+      if (
+        itemMovido.dataProximoPrazo === null ||
+        itemMovido.dataPrazoProjeto === null
+      ) {
+        toast.info(
+          "Defina os prazos antes de colocar o serviço 'Em Progresso'.",
+          {
+            autoClose: 2500,
+          }
+        );
+        return;
+      }
+    }
+    // ======================
+
     if (origem === destino) {
       const novaLista = Array.from(servicos[origem]);
       const [movido] = novaLista.splice(source.index, 1);
