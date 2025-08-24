@@ -8,11 +8,6 @@ export default function QuadroFinanceiro() {
     aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
     pagarComissao: { nome: "Pagar comissão", tipoCard: "compacto" },
     comissaoPago: { nome: "Comissão paga", tipoCard: "compacto" },
-    finalizar: { nome: "Adicionar data conclusão", tipoCard: "compacto" },
-    semFbFinalizar: {
-      nome: "Sem feedback, finalizar",
-      tipoCard: "superCompacto",
-    },
   };
 
   return (

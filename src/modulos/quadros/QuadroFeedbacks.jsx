@@ -6,10 +6,6 @@ export default function QuadroFeedbacks() {
     finalizar: { nome: "Adicionar data conclusão", tipoCard: "superCompacto" },
     solicitado: { nome: "Solicitado", tipoCard: "superCompacto" },
     emMaos: { nome: "Recebidos, direcionar social", tipoCard: "superCompacto" },
-    semFbFinalizar: {
-      nome: "Sem feedback, finalizar",
-      tipoCard: "superCompacto",
-    },
   };
 
   return (
