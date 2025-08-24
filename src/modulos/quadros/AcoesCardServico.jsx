@@ -2,6 +2,7 @@ import { useState } from "react";
 import AcaoMudarComplexidade from "./AcaoMudarComplexidade";
 import AcaoDirecionarServico from "./AcaoDirecionarServico";
 import AcaoMudarPrazosEDatas from "./AcaoMudarPrazosEDatas";
+import AcaoFinalizarServico from "./AcaoFinalizarServico";
 
 // Função para converter ISO datetime para string yyyy-mm-dd para input type=date
 function toInputDateString(isoDate) {
@@ -37,6 +38,7 @@ export default function AcoesCardServico({
         <option value="direcionar">Direcionar serviço</option>
         <option value="mudarComplexidade">Mudar complexidade tarefa</option>
         <option value="mudarDatasPrazos">Mudar datas e prazos</option>
+        <option value="finalizarServico">Finalizar serviço</option>
       </select>
 
       {acaoSelecionada === "mudarDatasPrazos" && (
@@ -62,6 +64,15 @@ export default function AcoesCardServico({
         <AcaoMudarComplexidade
           servico={servico}
           onAtualizarComplexidade={onAtualizarComplexidade}
+          onFechar={onFechar}
+        />
+      )}
+
+      {acaoSelecionada === "finalizarServico" && (
+        <AcaoFinalizarServico
+          servico={servico}
+          turno={turno}
+          capitalizar={capitalizar}
           onFechar={onFechar}
         />
       )}
