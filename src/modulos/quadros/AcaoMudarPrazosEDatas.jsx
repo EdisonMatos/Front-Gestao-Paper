@@ -243,8 +243,8 @@ export default function AcaoMudarPrazosEDatas({
             className="w-full p-1 mt-2 border rounded bg-inputBg text-text border-border"
           >
             <option value="">Escolha uma ação para prazos:</option>
-            <option value="mudar">Mudar prazos</option>
-            <option value="remover">Remover prazos</option>
+            <option value="mudar">Mudar</option>
+            <option value="remover">Remover</option>
           </select>
 
           {acaoPrazo === "mudar" && (
@@ -260,7 +260,7 @@ export default function AcaoMudarPrazosEDatas({
                 />
               </div>
               <div className="">
-                <div className=" text-text">Data do próximo prazo:</div>
+                <div className=" text-text">Data do prazo da tarefa:</div>
                 <input
                   type="date"
                   name="dataProximoPrazo"
