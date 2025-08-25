@@ -240,7 +240,7 @@ export default function CardServicoVisual({
                 href={`https://wa.me/+55${formatarTelefoneParaWhatsApp(
                   servico.cliente.telefone
                 )}`}
-                // target="_blank"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-links hover:underline"
               >
