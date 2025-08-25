@@ -189,14 +189,13 @@ export default function CardServicoVisual({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteComment(
-                          comentario.id || doisMaisRecentes[0].id
-                        );
+                        handleDeleteComment(doisMaisRecentes[0].id);
                       }}
                       className="px-2 py-1 text-white transition-all bg-red-600 rounded hover:scale-110 hover:bg-red-700"
                     >
                       Excluir
                     </button>
+
                     {doisMaisRecentes[0].texto.startsWith("http") && (
                       <a
                         href={doisMaisRecentes[0].texto}
