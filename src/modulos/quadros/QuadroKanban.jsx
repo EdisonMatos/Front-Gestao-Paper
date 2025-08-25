@@ -196,13 +196,20 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     } else if (destino === "semFbFinalizar") {
       comentario = "Sem feedback. Serviço finalizado.";
     } else if (destino !== "") {
-      // Coluna que pode ficar sem ter comentário ao mover pra ela
-      comentario = prompt(
-        "Comente no seguinte formato: \n O que foi feito. O que precisa ser feito agora."
-      );
-      if (!comentario || !comentario.trim()) {
-        toast.info("Movimentação cancelada.", { autoClose: 1000 });
-        return;
+      const dispensaComentario =
+        turno === "financeiro" &&
+        ["enviadoComercial", "pagarComissao", "aguardandoCliente"].includes(
+          destino
+        );
+
+      if (!dispensaComentario) {
+        comentario = prompt(
+          "Comente no seguinte formato: \n O que foi feito. O que precisa ser feito agora."
+        );
+        if (!comentario || !comentario.trim()) {
+          toast.info("Movimentação cancelada.", { autoClose: 1000 });
+          return;
+        }
       }
     }
 
