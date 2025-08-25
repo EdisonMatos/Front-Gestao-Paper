@@ -24,6 +24,7 @@ export default function AcaoDirecionarServico({
       ? new Date(servico.dataProximoPrazo).toISOString().split("T")[0]
       : ""
   );
+  const [novoPrazoProjeto, setNovoPrazoProjeto] = useState(""); // campo novo para prazo do projeto
   const [loading, setLoading] = useState(false);
 
   const direcionarServico = async () => {
@@ -32,10 +33,16 @@ export default function AcaoDirecionarServico({
     if (!novaComplexidadeDirecionar)
       return alert("Complexidade é obrigatória.");
     if (!novaDataPrazo) return alert("Atualizar prazo é obrigatório.");
+    if (servico.dataPrazoProjeto === null && !novoPrazoProjeto)
+      return alert("Preencha o prazo do projeto.");
 
     setLoading(true);
     try {
       const novaDataISO = fromInputDateString(novaDataPrazo).toISOString();
+      const novaDataProjetoISO =
+        servico.dataPrazoProjeto === null && novoPrazoProjeto
+          ? fromInputDateString(novoPrazoProjeto).toISOString()
+          : servico.dataPrazoProjeto;
 
       await axios.post(
         "https://backend-gestao-paper.onrender.com/comentarios",
@@ -56,6 +63,7 @@ export default function AcaoDirecionarServico({
           ordemVerticalNoQuadro: null,
           complexidade: parseFloat(novaComplexidadeDirecionar),
           dataProximoPrazo: novaDataISO,
+          dataPrazoProjeto: novaDataProjetoISO,
         }
       );
 
@@ -103,18 +111,30 @@ export default function AcaoDirecionarServico({
         <option value="4">4 - Demorada (Acima 1h)</option>
         <option value="5">5 - Muito longa (Conversar)</option>
       </select>
-      <p className="text-text/80">Selecione o novo prazo da tarefa:</p>
+      {servico.dataPrazoProjeto === null && (
+        <>
+          <p className="text-text/80">Novo prazo do projeto:</p>
+          <input
+            type="date"
+            value={novoPrazoProjeto}
+            onChange={(e) => setNovoPrazoProjeto(e.target.value)}
+            className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
+          />
+        </>
+      )}
+      <p className="text-text/80">Novo prazo da tarefa:</p>
       <input
         type="date"
         value={novaDataPrazo}
         onChange={(e) => setNovaDataPrazo(e.target.value)}
         className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
       />
+
       <input
         type="text"
         value={comentarioDirecionar}
         onChange={(e) => setComentarioDirecionar(e.target.value)}
-        placeholder="Comente no padrão estabelecido."
+        placeholder="Comentário"
         className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
       />
       <div className="flex gap-2">
