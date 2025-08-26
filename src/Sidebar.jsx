@@ -164,7 +164,7 @@ export default function Sidebar() {
                       class="h-16 me-3"
                       alt="Paper Club Logo"
                     />
-                    <span class="self-center italic text-[12px] min-[375px]:text-[16px] font-semibold sm:text-2xl whitespace-nowrap dark:text-white hidden desktop1:flex">
+                    <span class="self-center italic text-[12px] min-[375px]:text-[16px] font-semibold sm:text-2xl whitespace-nowrap dark:text-white hidden tablet2:flex">
                       Paper Club
                     </span>
                   </a>
@@ -396,7 +396,7 @@ export default function Sidebar() {
             <div class="rounded-lg  mt-14 text-white">
               <ToastContainer />
               {/* Versão PC */}
-              <div className="hidden desktop1:flex flex-col max-w-[1700px] overflow-x-auto pt-12 pl-4">
+              <div className="hidden tablet2:flex flex-col max-w-[1700px] overflow-x-auto pt-12 pl-4">
                 {abaAtiva === "prazos" && (
                   <>
                     {/* --- prazos PRINCIPAL --- */}
@@ -518,7 +518,7 @@ export default function Sidebar() {
               {/* Versão PC */}
 
               {/* Versão Mobile */}
-              <div className=" flex flex-col max-w-[1700px] overflow-x-auto desktop1:hidden pt-10">
+              <div className=" flex flex-col max-w-[1700px] overflow-x-auto tablet2:hidden pt-10">
                 <Agrupamento>
                   <Titulos>
                     <div className="flex items-center gap-2">

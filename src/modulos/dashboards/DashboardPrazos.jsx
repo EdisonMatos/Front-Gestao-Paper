@@ -162,7 +162,7 @@ export default function DashboardPrazos() {
         </h3>
         <div className="overflow-x-auto">
           <div className="max-h-[400px] overflow-y-auto border border-border rounded-lg">
-            <table className="min-w-full text-sm border-collapse table-auto">
+            <table className="min-w-full text-[10px] desktop1:text-sm border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
                   <th className="px-4 py-2 w-[200px]">Cliente</th>
