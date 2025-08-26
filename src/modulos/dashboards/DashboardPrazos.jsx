@@ -4,13 +4,39 @@ export default function DashboardPrazos() {
   const [servicos, setServicos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [filtro, setFiltro] = useState("");
+  const [timer, setTimer] = useState(300); // 5 minutos em segundos
 
-  useEffect(() => {
+  function carregarServicos() {
     fetch("https://backend-gestao-paper.onrender.com/servicos")
       .then((res) => res.json())
       .then(setServicos)
       .catch((err) => console.error("Erro ao buscar serviços:", err))
       .finally(() => setCarregando(false));
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          window.location.reload(); // <-- ALTERADO PARA DAR F5
+          return 300;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const minutos = Math.floor(timer / 60)
+    .toString()
+    .padStart(2, "0");
+  const segundos = (timer % 60).toString().padStart(2, "0");
+  const timerClass = timer <= 15 ? "text-links mb-4" : "text-white/50 mb-4";
+  const textoExtra = timer <= 15 ? " - Atualizando em breve!" : "";
+
+  useEffect(() => {
+    carregarServicos();
   }, []);
 
   function formatarDuracao(contratado, concluido) {
@@ -136,7 +162,7 @@ export default function DashboardPrazos() {
         </h3>
         <div className="overflow-x-auto">
           <div className="max-h-[400px] overflow-y-auto border border-border rounded-lg">
-            <table className="min-w-full text-sm border-collapse table-auto">
+            <table className="min-w-full text-[10px] desktop1:text-sm border-collapse table-auto">
               <thead className="sticky top-0 bg-containers text-text">
                 <tr className="text-left">
                   <th className="px-4 py-2 w-[200px]">Cliente</th>
@@ -285,7 +311,10 @@ export default function DashboardPrazos() {
   return (
     <div>
       <h2 className="mb-4 text-2xl font-bold text-text">Prazos</h2>
-
+      <p className={timerClass}>
+        Atualiza em: {minutos}:{segundos}
+        {textoExtra}
+      </p>
       <input
         type="text"
         placeholder="Buscar serviço ou cliente..."
