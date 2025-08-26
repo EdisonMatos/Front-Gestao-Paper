@@ -7,6 +7,7 @@ export default function QuadroFinanceiro() {
     enviadoComercial: { nome: "Enviado pro Comercial", tipoCard: "compacto" },
     aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
     pagarComissao: { nome: "Fila de Pgto Comissão", tipoCard: "compacto" },
+    suspenso: { nome: "Suspensos", tipoCard: "compacto" },
   };
 
   return (
