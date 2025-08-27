@@ -252,12 +252,12 @@ export default function Servicos() {
                     >
                       Editar
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleDelete(servico.id)}
                       className="text-red-600 hover:underline"
                     >
                       Excluir
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}
