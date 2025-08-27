@@ -313,7 +313,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="min-w-[260px] w-[260px] bg-containers p-3 rounded-2xl shadow-md"
+                  className="min-w-[275px] w-[275px] bg-containers p-3 rounded-2xl shadow-md"
                 >
                   <div className="flex items-center justify-between px-2 py-4 mb-2 text-left text-text">
                     <span>{config.nome}</span>
