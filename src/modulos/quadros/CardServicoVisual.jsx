@@ -234,11 +234,11 @@ export default function CardServicoVisual({
           <h3 className="font-semibold text-text" style={estiloFonte}>
             {servico.nome}
           </h3>
-          <p className="text-sm text-text opacity-90" style={estiloFonte}>
+          <p className="text-sm text-text opacity-80" style={estiloFonte}>
             {servico.cliente?.empresa || "Sem empresa"}
           </p>
 
-          <p className="text-xs text-text" style={estiloFonte}>
+          <p className="mb-4 text-xs text-text" style={estiloFonte}>
             {servico.cliente?.telefone ? (
               <a
                 href={`https://wa.me/+55${formatarTelefoneParaWhatsApp(
