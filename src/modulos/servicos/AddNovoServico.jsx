@@ -187,6 +187,7 @@ export default function AddNovoServico({
   }
 
   const handleSubmit = async (e) => {
+    console.log("ID do formulário:", form.id, "É edição?", !!form.id);
     e.preventDefault();
 
     const toastId = toast.loading("Salvando serviço...");
@@ -231,7 +232,9 @@ export default function AddNovoServico({
       } else {
         // ***CRIAÇÃO: define como backlog***
         payload.posicaoNoQuadro = "backlog";
+        payload.ordemVerticalNoQuadro = parseFloat(-10);
 
+        console.log("Payload enviado:", payload);
         await axios.post(API_URL, payload);
 
         // Se a opção "Criar contrato e link de pagamento?" estiver como "Sim"
@@ -254,9 +257,9 @@ export default function AddNovoServico({
           isLoading: false,
           autoClose: 1000,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 2000);
       }
     } catch (err) {
       toast.update(toastId, {
