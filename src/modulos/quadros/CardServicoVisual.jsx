@@ -144,8 +144,8 @@ export default function CardServicoVisual({
     ${servico.ordemVerticalNoQuadro === -10 ? "border border-links" : ""}`}
     >
       {servico.ordemVerticalNoQuadro === -10 && (
-        <div className="absolute top-0 right-[-0px] bg-links text-black font-bold text-xs px-4 py-4 rounded-xl shadow-lg">
-          NOVO
+        <div className="absolute top-0 right-[-0px] bg-links text-black text-xs px-4 py-4 rounded-tr-xl rounded-bl-xl shadow-lg">
+          Novo 🕖
         </div>
       )}
       {modoCompacto || modoSuperCompacto ? (
