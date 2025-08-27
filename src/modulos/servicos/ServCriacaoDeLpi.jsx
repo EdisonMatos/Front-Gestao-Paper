@@ -1,18 +1,6 @@
 // ServCriacaoDeLpi.jsx
 import React, { useEffect, useState } from "react";
 
-/**
- * Componente que mostra os inputs/selects específicos quando o serviço é "Criação de LP".
- *
- * Props:
- * - initialData: (opcional) objeto com valores iniciais (não obrigatório)
- * - onChange: função chamada sempre que os dados mudarem. Recebe o objeto de estado atual.
- *
- * Observações:
- * - Nenhum campo é obrigatório.
- * - Formatação automática para telefone e CPF/CNPJ é feita aqui (apenas UI/format).
- */
-
 export default function ServCriacaoDeLpi({
   initialData = {},
   onChange = () => {},
@@ -155,7 +143,7 @@ export default function ServCriacaoDeLpi({
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
           >
             <option value="">Selecione</option>
-            {Array.from({ length: 30 }).map((_, idx) => {
+            {Array.from({ length: 20 }).map((_, idx) => {
               const val = idx + 1;
               return (
                 <option key={val} value={String(val)}>
@@ -195,59 +183,48 @@ export default function ServCriacaoDeLpi({
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-1 text-sm">Telefone</label>
+          <label className="mb-1 text-sm">Telefone *</label>
           <input
             value={telefone}
             onChange={(e) => setTelefone(formatTelefone(e.target.value))}
             placeholder="00 00000-0000"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-1 text-sm">Nome</label>
+          <label className="mb-1 text-sm">Nome *</label>
           <input
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             placeholder="Nome completo"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-1 text-sm">Email</label>
+          <label className="mb-1 text-sm">Email *</label>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@exemplo.com"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-1 text-sm">CPF/CNPJ</label>
+          <label className="mb-1 text-sm">CPF/CNPJ *</label>
           <input
             value={cpfCnpj}
             onChange={(e) => setCpfCnpj(formatCpfCnpj(e.target.value))}
             placeholder="000.000.000-00 ou 00.000.000/0000-00"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
-
-        {/* NOVO CAMPO para criar contrato */}
-        {/* <div className="flex flex-col">
-          <label className="mb-1 text-sm">
-            Vai criar contrato e link de pagamento?
-          </label>
-          <select
-            value={criarContrato}
-            onChange={(e) => setCriarContrato(e.target.value)}
-            className="p-2 border rounded bg-inputBg text-placeholder border-border"
-          >
-            <option value="Não">Não</option>
-            <option value="Sim">Sim</option>
-          </select>
-        </div> */}
       </div>
     </div>
   );

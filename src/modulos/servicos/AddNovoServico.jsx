@@ -54,7 +54,7 @@ export default function AddNovoServico({
 
   // novo estado para o option adicional "Criar contrato e link de pagamento?"
   const [criarContratoFaturamento, setCriarContratoFaturamento] =
-    useState("Não");
+    useState("Selecione");
 
   const isEdicao = !!servicoParaEditar;
 
@@ -468,9 +468,11 @@ export default function AddNovoServico({
                 value={criarContratoFaturamento}
                 onChange={(e) => setCriarContratoFaturamento(e.target.value)}
                 className="p-2 border rounded bg-inputBg text-placeholder border-border"
+                required
               >
-                <option value="Não">Não</option>
+                <option value="">Selecione</option>
                 <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
               </select>
             </div>
           )}
