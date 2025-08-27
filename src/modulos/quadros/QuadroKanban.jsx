@@ -71,11 +71,9 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       // Ordena cada coluna por ordemVerticalNoQuadro (nulls sobem)
       for (const k of keys) {
         servicosOrganizados[k].sort((a, b) => {
-          const A = a.ordemVerticalNoQuadro;
-          const B = b.ordemVerticalNoQuadro;
-          if (A === null && B !== null) return -1;
-          if (B === null && A !== null) return 1;
-          return (A ?? 0) - (B ?? 0);
+          const A = a.ordemVerticalNoQuadro ?? Infinity;
+          const B = b.ordemVerticalNoQuadro ?? Infinity;
+          return A - B;
         });
       }
 

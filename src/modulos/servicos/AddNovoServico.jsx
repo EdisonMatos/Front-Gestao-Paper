@@ -97,13 +97,17 @@ export default function AddNovoServico({
   }, [servicoParaEditar]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const buscarClientes = async (termo) => {
       if (!termo) {
         setSugestoesClientes([]);
         return;
       }
       try {
-        const res = await axios.get(CLIENTES_URL);
+        const res = await axios.get(CLIENTES_URL, {
+          signal: controller.signal,
+        });
         const filtrados = res.data.filter(
           (cliente) =>
             cliente.empresa.toLowerCase().includes(termo.toLowerCase()) ||
@@ -111,7 +115,11 @@ export default function AddNovoServico({
         );
         setSugestoesClientes(filtrados.slice(0, 3));
       } catch (err) {
-        console.error("Erro ao buscar clientes", err);
+        if (axios.isCancel(err)) {
+          // requisição cancelada — não faz nada
+        } else {
+          console.error("Erro ao buscar clientes", err);
+        }
       }
     };
 
@@ -120,6 +128,8 @@ export default function AddNovoServico({
     } else {
       setSugestoesClientes([]);
     }
+
+    return () => controller.abort(); // cancela requisição anterior ao mudar clienteBusca
   }, [clienteBusca]);
 
   const handleChange = (e) => {
@@ -325,13 +335,13 @@ export default function AddNovoServico({
         <label className="mb-1 text-sm font-medium">Selecione o Cliente*</label>
         <input
           type="text"
-          value={form.clienteNome || clienteBusca}
+          value={clienteBusca || form.clienteNome} // <-- usa busca se estiver digitando, senão usa o nome salvo
           onChange={(e) => {
             setClienteBusca(e.target.value);
             setForm((prev) => ({
               ...prev,
-              clienteId: "",
-              clienteNome: e.target.value,
+              clienteId: "", // limpa ID ao digitar manualmente
+              clienteNome: e.target.value, // enquanto digita, mostra texto no campo
             }));
           }}
           required
@@ -349,7 +359,8 @@ export default function AddNovoServico({
                     clienteId: cliente.id,
                     clienteNome: `${cliente.empresa} | ${cliente.representante}`,
                   }));
-                  setSugestoesClientes([]);
+                  setClienteBusca(""); // <-- zera busca ao selecionar
+                  setSugestoesClientes([]); // esconde lista imediatamente
                 }}
                 className="px-2 py-1 cursor-pointer hover:bg-inputBg"
               >

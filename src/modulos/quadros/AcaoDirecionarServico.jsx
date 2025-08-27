@@ -60,7 +60,7 @@ export default function AcaoDirecionarServico({
           ...servico,
           turnoDaVez: setorSelecionado,
           posicaoNoQuadro: "backlog",
-          ordemVerticalNoQuadro: null,
+          ordemVerticalNoQuadro: -10,
           complexidade: parseFloat(novaComplexidadeDirecionar),
           dataProximoPrazo: novaDataISO,
           dataPrazoProjeto: novaDataProjetoISO,

@@ -139,10 +139,15 @@ export default function CardServicoVisual({
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      className={`bg-cards rounded-2xl p-5 mb-2 shadow ${
-        snapshot.isDragging ? "scale-110 transition-all" : ""
-      }`}
+      className={`relative bg-cards rounded-2xl p-5 mb-2 shadow 
+    ${snapshot.isDragging ? "scale-110 transition-all" : ""} 
+    ${servico.ordemVerticalNoQuadro === -10 ? "border border-links" : ""}`}
     >
+      {servico.ordemVerticalNoQuadro === -10 && (
+        <div className="absolute top-0 right-[-0px] bg-links text-black font-bold text-xs px-4 py-4 rounded-xl shadow-lg">
+          NOVO
+        </div>
+      )}
       {modoCompacto || modoSuperCompacto ? (
         <>
           <div className="text-text" style={estiloFonte}>
