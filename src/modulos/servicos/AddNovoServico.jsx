@@ -396,6 +396,17 @@ export default function AddNovoServico({
         </select>
       </div>
 
+      <div className="flex flex-col">
+        <label className="mb-1 text-sm font-medium">Data de Contratação*</label>
+        <input
+          type="date"
+          name="dataContratacao"
+          value={form.dataContratacao}
+          onChange={handleChange}
+          required
+          className="p-2 border rounded bg-inputBg text-placeholder border-border"
+        />
+      </div>
       {form.nome !== "Criação de LP" && form.nome !== "Criação de Artes" && (
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium">
@@ -440,6 +451,37 @@ export default function AddNovoServico({
         />
       </div>
 
+      {/* Mostrar o bloco ServCriacaoDeLpi quando for Criação de LP */}
+      {((!isEdicao && form.nome === "Criação de LP" && !mostrarOutroNome) ||
+        (isEdicao && form.nome === "Criação de LP")) && (
+        <>
+          <ServCriacaoDeLpi
+            initialData={{}}
+            onChange={(data) => {
+              setServCriacaoData(data || {});
+            }}
+          />
+          {/* Novo select "Criar contrato e link de pagamento?" */}
+          {!isEdicao && (
+            <div className="flex flex-col mt-3 md:col-span-3">
+              <label className="mb-1 text-sm font-medium">
+                Precisa de contrato e link de pagamento?
+              </label>
+              <select
+                value={criarContratoFaturamento}
+                onChange={(e) => setCriarContratoFaturamento(e.target.value)}
+                className="p-2 border rounded bg-inputBg text-placeholder border-border"
+                required
+              >
+                <option value="">Selecione</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+              </select>
+            </div>
+          )}
+        </>
+      )}
+
       {isEdicao && (
         <>
           <div className="flex flex-col">
@@ -473,6 +515,58 @@ export default function AddNovoServico({
             <input
               name="linkRepoGithub"
               value={form.linkRepoGithub}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Coleta de Informações
+            </label>
+            <input
+              type="date"
+              name="dataInfosColetadas"
+              value={form.dataInfosColetadas}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data do Documento Pronto
+            </label>
+            <input
+              type="date"
+              name="dataDocPronto"
+              value={form.dataDocPronto}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Envio da Prévia
+            </label>
+            <input
+              type="date"
+              name="dataEnvioPrevia"
+              value={form.dataEnvioPrevia}
+              onChange={handleChange}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">
+              Data de Conclusão
+            </label>
+            <input
+              type="date"
+              name="dataConclusao"
+              value={form.dataConclusao}
               onChange={handleChange}
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
             />
