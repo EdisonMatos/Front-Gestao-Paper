@@ -8,9 +8,15 @@ export default function MenuItemMeta({
   Icon,
   abaAtiva,
   setAbaAtiva,
+  allowedRoles = [],
 }) {
   const [servicos, setServicos] = useState([]);
   const [carregando, setCarregando] = useState(true);
+
+  const role = localStorage.getItem("setor");
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return null;
+  }
 
   useEffect(() => {
     async function carregarServicos() {
