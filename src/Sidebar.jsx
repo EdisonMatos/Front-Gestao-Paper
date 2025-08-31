@@ -105,9 +105,24 @@ export default function Sidebar() {
     ).length;
   }
 
-  const [abaAtiva, setAbaAtiva] = useState("prazos");
-  const apelido = localStorage.getItem("nome") || "Usuário";
   const role = localStorage.getItem("setor");
+
+  let initialTab = "prazos";
+
+  if (role === "diretoria") {
+    initialTab = "prazos"; // diretoria SEMPRE começa em prazos
+  } else if (role === "suporte") {
+    initialTab = "suporte";
+  } else if (role === "comercial") {
+    initialTab = "comercial";
+  } else if (role === "dev") {
+    initialTab = "dev";
+  } else if (role === "financeiro") {
+    initialTab = "financeiro";
+  }
+
+  const [abaAtiva, setAbaAtiva] = useState(initialTab);
+  const apelido = localStorage.getItem("nome") || "Usuário";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
