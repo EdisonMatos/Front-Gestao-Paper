@@ -20,7 +20,16 @@ export default function AcaoFinalizarServico({
   const [dataConclusao, setDataConclusao] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const role = localStorage.getItem("setor");
+
   const finalizarServico = async () => {
+    if (role !== "diretoria") {
+      toast.error("Você não tem permissão para finalizar serviços.", {
+        autoClose: 1000,
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       let dataFinal;
