@@ -132,7 +132,7 @@ export default function Sidebar() {
     <>
       <div>
         <div>
-          <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-inputBg dark:border-border">
+          <nav class="fixed top-0 z-50 w-full bg-inputBg border-b border-gray-200 dark:bg-inputBg dark:border-border">
             <div class="px-3 py-3 lg:px-5 lg:pl-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start rtl:justify-end">
@@ -205,7 +205,7 @@ export default function Sidebar() {
                       </button>
                     </div>
                     <div
-                      class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600"
+                      class="z-50 hidden my-4 text-base list-none bg-inputBg divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600"
                       id="dropdown-user"
                     >
                       <div class="px-4 py-3" role="none">
@@ -224,10 +224,10 @@ export default function Sidebar() {
           </nav>
           <aside
             id="logo-sidebar"
-            class="fixed top-0 left-0 z-40 w-64 h-screen pt-28 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-inputBg dark:border-border"
+            class="fixed top-0 left-0 z-40 w-64 h-screen pt-28 transition-transform -translate-x-full bg-inputBg border-r border-gray-200 sm:translate-x-0 dark:bg-inputBg dark:border-border"
             aria-label="Sidebar"
           >
-            <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-inputBg">
+            <div class="h-full px-3 pb-4 overflow-y-auto bg-inputBg dark:bg-inputBg">
               <ul>
                 {" "}
                 <li>
@@ -389,6 +389,21 @@ export default function Sidebar() {
                   />
                 </li>
               </ul>
+              <div
+                id="dropdown-cta"
+                class="p-4 mt-6 rounded-lg bg-black dark:bg-black"
+                role="alert"
+              >
+                <div class="flex items-center mb-3">
+                  <span class="bg-links text-black text-sm font-semibold me-2 px-2.5 py-0.5 rounded-sm dark:bg-links dark:text-black">
+                    Atenção
+                  </span>
+                </div>
+                <p class="mb-3 text-sm text-text dark:text-text">
+                  Lembrar de sempre calcular os prazos até o fim do dia. Em
+                  dúvida, chamar diretoria.
+                </p>
+              </div>
             </div>
           </aside>
 
