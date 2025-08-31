@@ -109,8 +109,6 @@ export default function Sidebar() {
   const apelido = localStorage.getItem("nome") || "Usuário";
   const role = localStorage.getItem("setor");
 
-  const temPermissao = ["veterano", "staff", "guildmaster"].includes(role);
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");

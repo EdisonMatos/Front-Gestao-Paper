@@ -14,6 +14,8 @@ export default function Servicos() {
   const [showForm, setShowForm] = useState(false);
   const [servicoParaEditar, setServicoParaEditar] = useState(null);
 
+  const role = localStorage.getItem("setor");
+
   const fetchServicos = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -40,6 +42,13 @@ export default function Servicos() {
   };
 
   const handleDelete = async (id) => {
+    if (role !== "diretoria") {
+      toast.error("Você não tem permissão para excluir serviços.", {
+        autoClose: 1000,
+      });
+      return;
+    }
+
     try {
       const resComentarios = await axios.get(API_COMENTARIOS_URL);
       const comentarios = resComentarios.data.filter((c) => c.servicoId === id);
@@ -191,7 +200,9 @@ export default function Servicos() {
                 <th className="w-[300px] p-2 border border-containers">
                   Comentários
                 </th>
-                <th className="w-[75px] p-2 border border-containers">Ações</th>
+                <th className="w-[120px] p-2 border border-containers">
+                  Ações
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -252,12 +263,12 @@ export default function Servicos() {
                     >
                       Editar
                     </button>
-                    {/* <button
+                    <button
                       onClick={() => handleDelete(servico.id)}
                       className="text-red-600 hover:underline"
                     >
                       Excluir
-                    </button> */}
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -12,6 +12,8 @@ export default function Clientes() {
   const [showForm, setShowForm] = useState(false);
   const [clienteParaEditar, setClienteParaEditar] = useState(null);
 
+  const role = localStorage.getItem("setor");
+
   const fetchClientes = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -39,6 +41,13 @@ export default function Clientes() {
   };
 
   const handleDelete = async (id) => {
+    if (role !== "diretoria") {
+      toast.error("Você não tem permissão para excluir clientes.", {
+        autoClose: 1000,
+      });
+      return;
+    }
+
     const cliente = clientes.find((c) => c.id === id);
 
     if (cliente.servicos && cliente.servicos.length > 0) {
@@ -130,7 +139,7 @@ export default function Clientes() {
                 <th className="w-[200px] p-2 border border-containers">
                   Serviços
                 </th>
-                <th className="w-[100px] p-2 border border-containers">
+                <th className="w-[130px] p-2 border border-containers">
                   Ações
                 </th>
               </tr>
@@ -169,12 +178,12 @@ export default function Clientes() {
                     >
                       Editar
                     </button>
-                    {/* <button
+                    <button
                       onClick={() => handleDelete(cliente.id)}
                       className="text-red-600 hover:underline"
                     >
                       Excluir
-                    </button> */}
+                    </button>
                   </td>
                 </tr>
               ))}
