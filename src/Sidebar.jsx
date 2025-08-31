@@ -52,6 +52,15 @@ import MenuItem from "./componentes/MenuItem";
 import MenuItemRotinas from "./componentes/MenuItemRotinas";
 import MenuItemMeta from "./componentes/ManuItemMeta";
 import MenuItemPrazos from "./componentes/MenuItemPrazos";
+import PrazosSuporte from "./modulos/quadrosPrazos/PrazosSuporte";
+import PrazosDiretoria from "./modulos/quadrosPrazos/PrazosDiretoria";
+import PrazosDev from "./modulos/quadrosPrazos/PrazosDev";
+import PrazosComercial from "./modulos/quadrosPrazos/PrazosComercial";
+import PrazosWebmaster from "./modulos/quadrosPrazos/PrazosWebmaster";
+import PrazosTrafego from "./modulos/quadrosPrazos/PrazosTrafego";
+import PrazosSocialMedia from "./modulos/quadrosPrazos/PrazosSocialMedia";
+import PrazosFeedback from "./modulos/quadrosPrazos/PrazosFeedback";
+import PrazosFinanceiro from "./modulos/quadrosPrazos/PrazosFinanceiro";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -472,6 +481,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA SUPORTE --- */}
                     <RotinaSuporte />
+                    <PrazosSuporte />
                     <QuadroSuporte />
                   </>
                 )}
@@ -480,6 +490,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA COMERCIAL --- */}
                     <RotinaComercial />
+                    <PrazosComercial />
                     <QuadroComercial />
                   </>
                 )}
@@ -487,6 +498,7 @@ export default function Sidebar() {
                 {abaAtiva === "dev" && (
                   <>
                     {/* --- ABA DESENVOLVIMENTO --- */}
+                    <PrazosDev />
                     <QuadroDev />
                   </>
                 )}
@@ -494,7 +506,9 @@ export default function Sidebar() {
                 {abaAtiva === "webmaster" && (
                   <>
                     {/* --- ABA WEBMASTER --- */}
+
                     <RotinaWebmaster />
+                    <PrazosWebmaster />
                     <QuadroWebmaster />
                   </>
                 )}
@@ -503,6 +517,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA TRÁFEGO PAGO --- */}
                     <RotinaTrafego />
+                    <PrazosTrafego />
                     <QuadroTrafego />
                   </>
                 )}
@@ -511,6 +526,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA SOCIAL MEDIA --- */}
                     <RotinaSocialMedia />
+                    <PrazosSocialMedia />
                     <QuadroSocialMedia />
                   </>
                 )}
@@ -519,6 +535,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA FEEDBACKS --- */}
                     <RotinaFeedbacks />
+                    <PrazosFeedback />
                     <QuadroFeedbacks />
                   </>
                 )}
@@ -527,6 +544,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA FINANCEIRO --- */}
                     <RotinaFinanceiro />
+                    <PrazosFinanceiro />
                     <QuadroFinanceiro />
                   </>
                 )}
@@ -551,6 +569,7 @@ export default function Sidebar() {
                   <>
                     {/* --- ABA DIRETORIA --- */}
                     <RotinaDiretoria />
+                    <PrazosDiretoria />
                     <QuadroDiretoria />
                   </>
                 )}
