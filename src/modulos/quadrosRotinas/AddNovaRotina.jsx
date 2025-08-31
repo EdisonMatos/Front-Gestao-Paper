@@ -184,6 +184,12 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
   }
 
   async function excluirRotina(id) {
+    const role = localStorage.getItem("setor");
+    if (role !== "diretoria") {
+      toast.error("Você não tem permissão para excluir rotinas.");
+      return;
+    }
+
     try {
       const registrosRes = await fetch(
         "https://backend-gestao-paper.onrender.com/registros"
@@ -480,12 +486,12 @@ export default function AddNovaRotina({ setor, onAtualizarRotinas }) {
                             >
                               Editar
                             </button>
-                            {/* <button
+                            <button
                               onClick={() => excluirRotina(r.id)}
                               className="px-2 py-1 text-black rounded bg-buttons hover:bg-buttonsHover"
                             >
                               Excluir
-                            </button> */}
+                            </button>
                           </>
                         )}
                       </td>
