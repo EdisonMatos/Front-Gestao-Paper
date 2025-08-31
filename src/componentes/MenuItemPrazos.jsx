@@ -2,9 +2,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader2, Check } from "lucide-react";
 
-export default function MenuItemPrazos({ label, Icon, abaAtiva, setAbaAtiva }) {
+export default function MenuItemPrazos({
+  label,
+  Icon,
+  abaAtiva,
+  setAbaAtiva,
+  allowedRoles = [],
+}) {
   const [servicos, setServicos] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const role = localStorage.getItem("setor");
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return null;
+  }
 
   useEffect(() => {
     async function carregarServicos() {

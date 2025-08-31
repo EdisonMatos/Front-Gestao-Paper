@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { AlarmClockCheck, Loader2, Check } from "lucide-react";
 
-export default function MenuItemRotinas({ abaAtiva, setAbaAtiva }) {
+export default function MenuItemRotinas({
+  abaAtiva,
+  setAbaAtiva,
+  allowedRoles = [],
+}) {
   const [rotinas, setRotinas] = useState([]);
   const [carregando, setCarregando] = useState(true);
+
+  const role = localStorage.getItem("setor");
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return null;
+  }
 
   useEffect(() => {
     async function carregarRotinas() {

@@ -105,9 +105,24 @@ export default function Sidebar() {
     ).length;
   }
 
-  const [abaAtiva, setAbaAtiva] = useState("prazos");
-  const apelido = localStorage.getItem("nome") || "Usuário";
   const role = localStorage.getItem("setor");
+
+  let initialTab = "prazos";
+
+  if (role === "diretoria") {
+    initialTab = "prazos"; // diretoria SEMPRE começa em prazos
+  } else if (role === "suporte") {
+    initialTab = "suporte";
+  } else if (role === "comercial") {
+    initialTab = "comercial";
+  } else if (role === "dev") {
+    initialTab = "dev";
+  } else if (role === "financeiro") {
+    initialTab = "financeiro";
+  }
+
+  const [abaAtiva, setAbaAtiva] = useState(initialTab);
+  const apelido = localStorage.getItem("nome") || "Usuário";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -253,7 +268,7 @@ export default function Sidebar() {
                   </button>
                 </li>
               </ul>
-              <ul className="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+              <ul className="mt-3 space-y-2 font-medium">
                 <li>
                   <ul>
                     <MenuItemPrazos
@@ -262,6 +277,7 @@ export default function Sidebar() {
                       abaAtiva={abaAtiva}
                       setAbaAtiva={setAbaAtiva}
                       servicos={servicos}
+                      allowedRoles={["diretoria", ""]}
                     />
                   </ul>
                 </li>
@@ -270,6 +286,7 @@ export default function Sidebar() {
                   <MenuItemRotinas
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
+                    allowedRoles={["diretoria", ""]}
                   />
                 </li>
                 <li>
@@ -280,6 +297,7 @@ export default function Sidebar() {
                     Icon={Hourglass}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
+                    allowedRoles={["diretoria", ""]}
                   />
                 </li>
               </ul>
@@ -293,6 +311,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["suporte"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "suporte"]}
                   />
                 </li>
                 <li>
@@ -304,6 +323,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["comercial"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "comercial"]}
                   />
                 </li>
                 <li>
@@ -315,6 +335,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["dev"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "dev", "suporte"]}
                   />
                 </li>
                 <li>
@@ -326,6 +347,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["webmaster"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "webmaster"]}
                   />
                 </li>
                 <li>
@@ -337,6 +359,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["trafego"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "trafego"]}
                   />
                 </li>
                 <li>
@@ -348,6 +371,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["socialmedia"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "socialmedia", "suporte"]}
                   />
                 </li>
               </ul>
@@ -362,6 +386,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["feedbacks"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "feedbacks"]}
                   />
                 </li>
                 <li>
@@ -373,6 +398,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["financeiro"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", "financeiro"]}
                   />
                 </li>
                 <li>
@@ -384,6 +410,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["diretoria"] || 0}
                     loading={loadingCounts}
+                    allowedRoles={["diretoria", ""]}
                   />
                 </li>
               </ul>

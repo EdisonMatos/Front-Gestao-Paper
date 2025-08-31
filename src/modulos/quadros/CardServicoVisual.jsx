@@ -108,6 +108,14 @@ export default function CardServicoVisual({
   }
 
   async function handleDeleteComment(commentId) {
+    const role = localStorage.getItem("setor");
+    if (role !== "diretoria") {
+      toast.error("Você não tem permissão para apagar comentários", {
+        autoClose: 1000,
+      });
+      return;
+    }
+
     if (!window.confirm("Tem certeza que deseja excluir este comentário?")) {
       return;
     }

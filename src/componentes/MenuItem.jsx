@@ -8,7 +8,13 @@ export default function MenuItem({
   setAbaAtiva,
   count = 0,
   loading = false, // nova prop
+  allowedRoles = [],
 }) {
+  const role = localStorage.getItem("setor");
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return null;
+  }
+
   return (
     <li>
       <button
