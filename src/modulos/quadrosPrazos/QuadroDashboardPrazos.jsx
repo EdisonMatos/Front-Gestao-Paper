@@ -72,7 +72,7 @@ export default function QuadroDashboardPrazos({ titulo, setor }) {
     { titulo: "Pra amanhã", cor: "bg-black text-text", lista: amanha },
     {
       titulo: "Demais prazos",
-      cor: "bg-black text-gray-800",
+      cor: "bg-black text-text",
       lista: demais,
     },
   ];
@@ -96,7 +96,9 @@ export default function QuadroDashboardPrazos({ titulo, setor }) {
               </div>
               <div className="flex items-center justify-center mb-2">
                 <span
-                  className={`text-[60px] font-bold ${c.cor} w-full text-center px-2 py-1 rounded-xl`}
+                  className={`text-[60px] bg-black font-bold ${
+                    c.lista.length === 0 ? "text-text/20" : c.cor
+                  } w-full text-center px-2 py-1 rounded-xl`}
                 >
                   {c.lista.length}
                 </span>
