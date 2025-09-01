@@ -63,7 +63,7 @@ export default function MenuItemPrazos({
         className={`flex justify-between items-center p-2 w-full rounded-lg group ${
           abaAtiva === "prazos"
             ? "text-white bg-background"
-            : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
+            : "  text-white/50 hover:bg-background"
         }`}
       >
         <div className="flex">
@@ -79,7 +79,7 @@ export default function MenuItemPrazos({
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin text-white/10 ms-3" />
           ) : count > 0 ? (
-            <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-100 rounded-full text-links ms-3 dark:bg-inputBg dark:text-links">
+            <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium rounded-full ms-3 bg-inputBg text-links">
               {count}
             </span>
           ) : (

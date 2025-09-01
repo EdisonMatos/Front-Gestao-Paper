@@ -154,7 +154,7 @@ export default function Sidebar() {
     <>
       <div>
         <div>
-          <nav class="fixed top-0 z-50 w-full bg-inputBg border-b border-gray-200 dark:bg-inputBg dark:border-border">
+          <nav class="fixed top-0 z-50 w-full bg-inputBg border-b dark:bg-inputBg border-border">
             <div class="px-3 py-3 lg:px-5 lg:pl-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start rtl:justify-end">
@@ -186,7 +186,7 @@ export default function Sidebar() {
                       class="h-16 me-3"
                       alt="Paper Club Logo"
                     />
-                    <span class="self-center italic text-[12px] min-[375px]:text-[16px] font-semibold sm:text-2xl whitespace-nowrap dark:text-white hidden tablet2:flex">
+                    <span class="self-center italic text-[12px] min-[375px]:text-[16px] text-white font-semibold sm:text-2xl whitespace-nowrap  hidden tablet2:flex">
                       Paper Club
                     </span>
                   </a>
@@ -196,7 +196,7 @@ export default function Sidebar() {
                     <div className="flex items-center">
                       <div className="flex flex-col items-end justify-end mr-4 ">
                         <p
-                          class="text-[14px] text-gray-900 dark:text-white capitalize"
+                          class="text-[14px] text-white capitalize"
                           role="none"
                         >
                           {apelido} <span className="opacity-50">({role})</span>
@@ -204,7 +204,7 @@ export default function Sidebar() {
                         <p>
                           <a
                             href="#"
-                            class="blocktext-sm text-[10px] desktop1:text-[14px] text-gray-900 dark:text-links hover:opacity-100 w-fit"
+                            class="blocktext-sm text-[10px] desktop1:text-[14px]  text-links hover:opacity-100 w-fit"
                             role="none"
                             onClick={handleLogout}
                           >
@@ -246,7 +246,7 @@ export default function Sidebar() {
           </nav>
           <aside
             id="logo-sidebar"
-            class="fixed top-0 left-0 z-40 w-64 h-screen pt-28 transition-transform -translate-x-full bg-inputBg border-r border-gray-200 sm:translate-x-0 dark:bg-inputBg dark:border-border"
+            class="fixed top-0 left-0 z-40 w-64 h-screen pt-28 transition-transform -translate-x-full bg-inputBg border-r  sm:translate-x-0 dark:bg-inputBg border-border"
             aria-label="Sidebar"
           >
             <div class="h-full px-3 pb-4 overflow-y-auto bg-inputBg dark:bg-inputBg">
@@ -258,7 +258,7 @@ export default function Sidebar() {
                     className={`flex justify-between items-center p-2 w-full rounded-lg group ${
                       abaAtiva === "cadastros"
                         ? "text-white bg-background"
-                        : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
+                        : "  text-white/50 hover:bg-background"
                     }`}
                   >
                     <div className="flex">
@@ -310,7 +310,7 @@ export default function Sidebar() {
                   />
                 </li>
               </ul>
-              <ul className="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+              <ul className="pt-3 mt-3 space-y-2 font-medium border-t border-border">
                 <li>
                   <MenuItem
                     turno="suporte"
@@ -385,7 +385,7 @@ export default function Sidebar() {
                 </li>
               </ul>
 
-              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+              <ul class="pt-3 mt-3 space-y-2 font-medium border-t border-border">
                 <li>
                   <MenuItem
                     turno="feedbacks"
