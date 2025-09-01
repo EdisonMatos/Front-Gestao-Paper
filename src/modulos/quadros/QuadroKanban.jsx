@@ -138,6 +138,18 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         return;
       }
     }
+
+    if (destino === "emProgresso") {
+      if (itemMovido.dataInfosColetadas === null) {
+        toast.info(
+          "Serviço não pode entrar em andamento sem a data das infos coletadas.",
+          {
+            autoClose: 2500,
+          }
+        );
+        return;
+      }
+    }
     // ======================
 
     if (origem === destino) {
