@@ -105,7 +105,7 @@ export default function MenuItemRotinas({
       className={`flex justify-between items-center p-2 w-full rounded-lg group ${
         abaAtiva === "rotinas"
           ? "text-white bg-background"
-          : "text-gray-900 hover:bg-gray-100 dark:text-white/50 dark:hover:bg-background"
+          : " text-white/50 hover:bg-background"
       }`}
     >
       <div className="flex">
@@ -122,7 +122,7 @@ export default function MenuItemRotinas({
         ) : rotinasNaoConcluidasHoje === 0 ? (
           <Check className="w-5 h-5 text-links ms-3" />
         ) : (
-          <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-inputBg dark:text-links">
+          <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium rounded-full ms-3 bg-inputBg text-links">
             {rotinasNaoConcluidasHoje}
           </span>
         )}
