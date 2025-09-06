@@ -302,8 +302,7 @@ export default function AddNovoServico({
               <option value="Contrato e Faturamento">
                 Contrato e Faturamento
               </option>
-              <option value="Criação de Artes">Criação de Artes</option>
-              <option value="Template Paper">Template Paper</option>
+
               <option value="Outro">Outro... (digitar)</option>
             </select>
           </div>
@@ -518,58 +517,6 @@ export default function AddNovoServico({
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
             />
           </div>
-
-          {/* <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Coleta de Informações
-            </label>
-            <input
-              type="date"
-              name="dataInfosColetadas"
-              value={form.dataInfosColetadas}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data do Documento Pronto
-            </label>
-            <input
-              type="date"
-              name="dataDocPronto"
-              value={form.dataDocPronto}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Envio da Prévia
-            </label>
-            <input
-              type="date"
-              name="dataEnvioPrevia"
-              value={form.dataEnvioPrevia}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Conclusão
-            </label>
-            <input
-              type="date"
-              name="dataConclusao"
-              value={form.dataConclusao}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div> */}
         </>
       )}
 
