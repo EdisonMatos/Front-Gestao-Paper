@@ -178,7 +178,7 @@ export default function AddNovoServico({
     }
 
     if (comentariosExistentes && comentariosExistentes.trim() !== "") {
-      resultado += `Obs: ${comentariosExistentes}`;
+      resultado += `${comentariosExistentes}`;
     } else {
       resultado = resultado.trim();
     }
