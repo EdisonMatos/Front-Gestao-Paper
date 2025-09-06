@@ -452,8 +452,7 @@ export default function AddNovoServico({
       </div>
 
       {/* Mostrar o bloco ServCriacaoDeLpi quando for Criação de LP */}
-      {((!isEdicao && form.nome === "Criação de LP" && !mostrarOutroNome) ||
-        (isEdicao && form.nome === "Criação de LP")) && (
+      {!isEdicao && form.nome === "Criação de LP" && (
         <>
           <ServCriacaoDeLpi
             initialData={{}}
