@@ -519,7 +519,7 @@ export default function AddNovoServico({
             />
           </div>
 
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <label className="mb-1 text-sm font-medium">
               Data de Coleta de Informações
             </label>
@@ -569,7 +569,7 @@ export default function AddNovoServico({
               onChange={handleChange}
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
             />
-          </div>
+          </div> */}
         </>
       )}
 

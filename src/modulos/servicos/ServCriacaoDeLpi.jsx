@@ -119,6 +119,7 @@ export default function ServCriacaoDeLpi({
             <option value="">Selecione</option>
             <option value="LPi">LPi</option>
             <option value="LPv">LPv</option>
+            <option value="Site">Site</option>
           </select>
         </div>
 
@@ -177,8 +178,7 @@ export default function ServCriacaoDeLpi({
             <option value="">Selecione</option>
             <option value="69">69,00</option>
             <option value="89">89,88</option>
-            <option value="110,4">110,40 (x2 no Cc com 20%) </option>
-            <option value="142,4">142,40 (x2 no Pix com 20%) </option>
+            <option value="">Outro (descrever em Obs) </option>
           </select>
         </div>
 
@@ -189,6 +189,7 @@ export default function ServCriacaoDeLpi({
             onChange={(e) => setTelefone(formatTelefone(e.target.value))}
             placeholder="00 00000-0000"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
 
@@ -199,6 +200,7 @@ export default function ServCriacaoDeLpi({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Nome completo"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
 
@@ -209,6 +211,7 @@ export default function ServCriacaoDeLpi({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@exemplo.com"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
 
@@ -219,6 +222,7 @@ export default function ServCriacaoDeLpi({
             onChange={(e) => setCpfCnpj(formatCpfCnpj(e.target.value))}
             placeholder="000.000.000-00 ou 00.000.000/0000-00"
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            required
           />
         </div>
       </div>
