@@ -37,6 +37,17 @@ export default function Servicos() {
   );
 
   const handleEdit = (servico) => {
+    // Verifica se o turno é 'financeiro' e se o usuário não é da 'diretoria'
+    if (servico.turnoDaVez === "financeiro" && role !== "diretoria") {
+      toast.error(
+        "Você não tem permissão para editar serviços do financeiro.",
+        {
+          autoClose: 2000,
+        }
+      );
+      return; // Impede a execução do restante da função
+    }
+
     setServicoParaEditar(servico);
     setShowForm(true);
   };
