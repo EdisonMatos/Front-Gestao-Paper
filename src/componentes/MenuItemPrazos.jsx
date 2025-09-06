@@ -33,7 +33,7 @@ export default function MenuItemPrazos({
     }
 
     carregarServicos();
-    const interval = setInterval(carregarServicos, 300000); // atualiza a cada 10s
+    const interval = setInterval(carregarServicos, 300000); // atualiza a cada 5min
 
     return () => clearInterval(interval);
   }, []);
@@ -50,10 +50,21 @@ export default function MenuItemPrazos({
     (s) => !s.dataConclusao && s.posicaoNoQuadro !== "ausentes"
   );
 
+  // Conta prazos vencendo hoje
   const count = servicosAtivos.filter((s) => {
     const diasProjeto = calcularDiasRestantes(s.dataPrazoProjeto);
     const diasTarefa = calcularDiasRestantes(s.dataProximoPrazo);
     return diasProjeto === 0 || diasTarefa === 0;
+  }).length;
+
+  // Conta prazos atrasados
+  const atrasados = servicosAtivos.filter((s) => {
+    const diasProjeto = calcularDiasRestantes(s.dataPrazoProjeto);
+    const diasTarefa = calcularDiasRestantes(s.dataProximoPrazo);
+    return (
+      (diasProjeto !== null && diasProjeto < 0) ||
+      (diasTarefa !== null && diasTarefa < 0)
+    );
   }).length;
 
   return (
@@ -78,6 +89,10 @@ export default function MenuItemPrazos({
         <div>
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin text-white/10 ms-3" />
+          ) : atrasados > 0 ? (
+            <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-red-400 rounded-full ms-3">
+              -{atrasados}
+            </span>
           ) : count > 0 ? (
             <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium rounded-full ms-3 bg-inputBg text-links">
               {count}

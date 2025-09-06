@@ -76,6 +76,15 @@ export default function CardServico({
           <span className="font-semibold text-links">Amanhã</span>
         </>
       );
+    } else if (diffDias < 1) {
+      return (
+        <>
+          {dataFormatada} - <br></br>
+          <span className="font-semibold text-red-500">
+            Atrasado {Math.abs(diffDias)} dia(s)
+          </span>
+        </>
+      );
     } else {
       return (
         <>
@@ -177,6 +186,15 @@ export default function CardServico({
           {dataFormatada} -{" "}
           <span className="font-semibold text-links">Amanhã</span>{" "}
           {renderComplexidade}
+        </>
+      );
+    } else if (diffDias < 1) {
+      return (
+        <>
+          {dataFormatada} - <br></br>
+          <span className="font-semibold text-red-500">
+            Atrasado {Math.abs(diffDias)} dia(s)
+          </span>
         </>
       );
     } else {

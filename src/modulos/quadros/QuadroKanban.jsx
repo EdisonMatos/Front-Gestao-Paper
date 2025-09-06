@@ -208,9 +208,13 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     } else if (destino !== "") {
       const dispensaComentario =
         turno === "financeiro" &&
-        ["enviadoComercial", "pagarComissao", "aguardandoCliente"].includes(
-          destino
-        );
+        [
+          "enviadoComercial",
+          "pagarComissao",
+          "aguardandoCliente",
+          "aguardandoClienteAss",
+          "aguardandoClienteAqui",
+        ].includes(destino);
 
       if (!dispensaComentario) {
         comentario = prompt(
