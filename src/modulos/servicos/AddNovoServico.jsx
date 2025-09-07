@@ -137,7 +137,12 @@ export default function AddNovoServico({
   };
 
   // monta a descrição final a partir dos dados do ServCriacaoDeLpi + o campo comentariosTexto
-  function montarDescricaoCriacaoLP(servData, comentariosExistentes) {
+  // A função agora aceita um terceiro parâmetro para controlar a inclusão dos dados de contato
+  function montarDescricaoCriacaoLP(
+    servData,
+    comentariosExistentes,
+    incluirContato = true
+  ) {
     if (!servData || Object.keys(servData).length === 0)
       return comentariosExistentes || "";
 
@@ -173,7 +178,8 @@ export default function AddNovoServico({
       resultado += firstLine + "\n\n";
     }
 
-    if (contatoLines.length > 0) {
+    // Apenas adiciona as informações de contato se `incluirContato` for true
+    if (incluirContato && contatoLines.length > 0) {
       resultado += contatoLines.join("\n") + "\n\n";
     }
 
@@ -203,21 +209,10 @@ export default function AddNovoServico({
       payload.dataProximoPrazo = fromInputDateString(form.dataProximoPrazo);
       payload.dataPrazoProjeto = fromInputDateString(form.dataPrazoProjeto);
 
-      // Se for Criação de LP, compor a descrição a partir dos dados do ServCriacaoDeLpi + comentariosTexto
-      const nomeDoServico = form.nome;
-      if (nomeDoServico === "Criação de LP") {
-        const composed = montarDescricaoCriacaoLP(
-          servCriacaoData,
-          form.comentariosTexto
-        );
-        payload.comentariosTexto = composed;
-      }
-
-      // manter compatibilidade com o que já existia (apaga clienteNome antes de enviar)
       delete payload.clienteNome;
 
       if (form.id) {
-        // ***EDIÇÃO: não mexe na posicaoNoQuadro***
+        // ***EDIÇÃO***
         await axios.put(`${API_URL}/${form.id}`, payload);
         toast.update(toastId, {
           render: "Serviço atualizado com sucesso!",
@@ -230,24 +225,49 @@ export default function AddNovoServico({
         }, 2000);
         onSalvo();
       } else {
-        // ***CRIAÇÃO: define como backlog***
+        // ***CRIAÇÃO***
+        const nomeDoServico = form.nome;
         payload.posicaoNoQuadro = "backlog";
         payload.ordemVerticalNoQuadro = parseFloat(-10);
 
-        console.log("Payload enviado:", payload);
-        await axios.post(API_URL, payload);
-
-        // Se a opção "Criar contrato e link de pagamento?" estiver como "Sim"
+        // Se for "Criação de LP" com contrato, o payload principal terá a descrição parcial.
         if (
           nomeDoServico === "Criação de LP" &&
           criarContratoFaturamento === "Sim"
         ) {
+          // Gera a descrição SEM os dados de contato para o serviço principal (operacional).
+          payload.comentariosTexto = montarDescricaoCriacaoLP(
+            servCriacaoData,
+            form.comentariosTexto,
+            false // <-- false para suprimir dados de contato
+          );
+        }
+
+        // 1. Cria o serviço principal (operacional).
+        console.log("Payload principal enviado:", payload);
+        await axios.post(API_URL, payload);
+
+        // 2. Se precisar de contrato, cria o serviço secundário para o financeiro com a descrição COMPLETA.
+        if (
+          nomeDoServico === "Criação de LP" &&
+          criarContratoFaturamento === "Sim"
+        ) {
+          // Gera a descrição COMPLETA para o financeiro.
+          const descricaoCompletaFinanceiro = montarDescricaoCriacaoLP(
+            servCriacaoData,
+            form.comentariosTexto,
+            true // <-- true para incluir tudo
+          );
+
           const novoServicoContrato = {
             ...payload,
             nome: "Contrato e Faturamento",
             turnoDaVez: "financeiro",
+            comentariosTexto: descricaoCompletaFinanceiro, // Usa a descrição completa
           };
           delete novoServicoContrato.id;
+
+          console.log("Payload do financeiro enviado:", novoServicoContrato);
           await axios.post(API_URL, novoServicoContrato);
         }
 
@@ -302,8 +322,7 @@ export default function AddNovoServico({
               <option value="Contrato e Faturamento">
                 Contrato e Faturamento
               </option>
-              <option value="Criação de Artes">Criação de Artes</option>
-              <option value="Template Paper">Template Paper</option>
+
               <option value="Outro">Outro... (digitar)</option>
             </select>
           </div>
@@ -338,13 +357,13 @@ export default function AddNovoServico({
         <label className="mb-1 text-sm font-medium">Selecione o Cliente*</label>
         <input
           type="text"
-          value={clienteBusca || form.clienteNome} // <-- usa busca se estiver digitando, senão usa o nome salvo
+          value={clienteBusca || form.clienteNome}
           onChange={(e) => {
             setClienteBusca(e.target.value);
             setForm((prev) => ({
               ...prev,
-              clienteId: "", // limpa ID ao digitar manualmente
-              clienteNome: e.target.value, // enquanto digita, mostra texto no campo
+              clienteId: "",
+              clienteNome: e.target.value,
             }));
           }}
           required
@@ -362,8 +381,8 @@ export default function AddNovoServico({
                     clienteId: cliente.id,
                     clienteNome: `${cliente.empresa} | ${cliente.representante}`,
                   }));
-                  setClienteBusca(""); // <-- zera busca ao selecionar
-                  setSugestoesClientes([]); // esconde lista imediatamente
+                  setClienteBusca("");
+                  setSugestoesClientes([]);
                 }}
                 className="px-2 py-1 cursor-pointer hover:bg-inputBg"
               >
@@ -451,32 +470,31 @@ export default function AddNovoServico({
         />
       </div>
 
-      {/* Mostrar o bloco ServCriacaoDeLpi quando for Criação de LP */}
       {!isEdicao && form.nome === "Criação de LP" && (
         <>
-          <ServCriacaoDeLpi
-            initialData={{}}
-            onChange={(data) => {
-              setServCriacaoData(data || {});
-            }}
-          />
-          {/* Novo select "Criar contrato e link de pagamento?" */}
-          {!isEdicao && (
-            <div className="flex flex-col mt-3 md:col-span-3">
-              <label className="mb-1 text-sm font-medium">
-                Precisa de contrato e link de pagamento?
-              </label>
-              <select
-                value={criarContratoFaturamento}
-                onChange={(e) => setCriarContratoFaturamento(e.target.value)}
-                className="p-2 border rounded bg-inputBg text-placeholder border-border"
-                required
-              >
-                <option value="">Selecione</option>
-                <option value="Sim">Sim</option>
-                <option value="Não">Não</option>
-              </select>
-            </div>
+          <div className="flex flex-col mt-3 md:col-span-3">
+            <label className="mb-1 text-sm font-medium">
+              Precisa de contrato e link de pagamento?
+            </label>
+            <select
+              value={criarContratoFaturamento}
+              onChange={(e) => setCriarContratoFaturamento(e.target.value)}
+              className="p-2 border rounded bg-inputBg text-placeholder border-border"
+              required
+            >
+              <option value="">Selecione</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
+
+          {criarContratoFaturamento === "Sim" && (
+            <ServCriacaoDeLpi
+              initialData={{}}
+              onChange={(data) => {
+                setServCriacaoData(data || {});
+              }}
+            />
           )}
         </>
       )}
@@ -518,58 +536,6 @@ export default function AddNovoServico({
               className="p-2 border rounded bg-inputBg text-placeholder border-border"
             />
           </div>
-
-          {/* <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Coleta de Informações
-            </label>
-            <input
-              type="date"
-              name="dataInfosColetadas"
-              value={form.dataInfosColetadas}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data do Documento Pronto
-            </label>
-            <input
-              type="date"
-              name="dataDocPronto"
-              value={form.dataDocPronto}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Envio da Prévia
-            </label>
-            <input
-              type="date"
-              name="dataEnvioPrevia"
-              value={form.dataEnvioPrevia}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">
-              Data de Conclusão
-            </label>
-            <input
-              type="date"
-              name="dataConclusao"
-              value={form.dataConclusao}
-              onChange={handleChange}
-              className="p-2 border rounded bg-inputBg text-placeholder border-border"
-            />
-          </div> */}
         </>
       )}
 
