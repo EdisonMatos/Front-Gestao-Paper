@@ -1,11 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const SERVICOS_API_URL = "https://backend-gestao-paper.onrender.com/servicos";
 const FOLLOWUPS_API_URL = "https://backend-gestao-paper.onrender.com/followups";
 const COMENTARIOS_API_URL =
   "https://backend-gestao-paper.onrender.com/comentarios";
+
+// Componente para exibir texto truncado com opção de "ver mais"
+const TruncatedText = ({ text }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!text || text.length <= 50) {
+    return <>{text || "-"}</>;
+  }
+
+  return (
+    <span>
+      {isExpanded ? text : `${text.substring(0, 50)}... `}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="ml-1 text-xs text-blue-400 hover:underline"
+      >
+        (ver {isExpanded ? "menos" : "mais"})
+      </button>
+    </span>
+  );
+};
 
 export default function Followups() {
   const [groupedFollowups, setGroupedFollowups] = useState({});
@@ -19,31 +39,19 @@ export default function Followups() {
   const fetchFollowups = async () => {
     try {
       setLoading(true);
-      // Busca os follow-ups e os serviços em paralelo para maior eficiência
-      const [followupsRes, servicosRes] = await Promise.all([
-        fetch(FOLLOWUPS_API_URL),
-        fetch(SERVICOS_API_URL),
-      ]);
+      // Otimização: Busca apenas os follow-ups. A API já inclui os dados do serviço.
+      const followupsRes = await fetch(FOLLOWUPS_API_URL);
 
-      if (!followupsRes.ok || !servicosRes.ok) {
+      if (!followupsRes.ok) {
         throw new Error("Falha ao carregar dados do servidor.");
       }
 
       const followupsData = await followupsRes.json();
-      const servicosData = await servicosRes.json();
 
-      // Cria um mapa para acesso rápido aos dados completos do serviço pelo ID
-      const servicosMap = new Map(servicosData.map((s) => [s.id, s]));
+      setAllFollowups(followupsData); // Guarda a lista completa
 
-      // Combina os dados, garantindo que cada follow-up tenha os detalhes completos do serviço
-      const enrichedFollowups = followupsData.map((f) => ({
-        ...f,
-        servico: servicosMap.get(f.servicoId) || f.servico, // Usa o serviço completo do mapa
-      }));
-
-      setAllFollowups(enrichedFollowups); // Guarda a lista completa
-
-      const sortedData = enrichedFollowups.sort((a, b) => {
+      // A API já inclui os dados do serviço, então não é mais preciso buscar a lista de serviços aqui.
+      const sortedData = [...followupsData].sort((a, b) => {
         if (a.status === "pendente" && b.status !== "pendente") return -1;
         if (a.status !== "pendente" && b.status === "pendente") return 1;
         return new Date(b.criadoEm) - new Date(a.criadoEm);
@@ -80,6 +88,7 @@ export default function Followups() {
     );
 
     try {
+      // A busca por todos os serviços agora é feita apenas aqui.
       const [servicosRes, followupsRes] = await Promise.all([
         fetch(SERVICOS_API_URL),
         fetch(FOLLOWUPS_API_URL),
@@ -108,6 +117,7 @@ export default function Followups() {
         (s) =>
           !s.dataConclusao &&
           s.cliente &&
+          s.posicaoNoQuadro !== "ausentes" &&
           !setoresExcluidos.includes(s.turnoDaVez) &&
           !pendingFollowupServiceIds.has(s.id)
       );
@@ -143,6 +153,7 @@ export default function Followups() {
             "Não definido",
           status: "pendente",
           comentario: "",
+          msg: servico.msg || "",
         };
 
         const res = await fetch(FOLLOWUPS_API_URL, {
@@ -198,6 +209,15 @@ export default function Followups() {
       return;
     }
 
+    const mensagemEnviada = prompt(
+      "Adicione a mensagem que foi enviada para o cliente:"
+    );
+
+    if (mensagemEnviada === null) {
+      toast.info("Ação cancelada.", { autoClose: 1500 });
+      return;
+    }
+
     const toastId = toast.loading(
       "Registrando comentário e atualizando status..."
     );
@@ -226,12 +246,13 @@ export default function Followups() {
 
       if (!commentRes.ok) throw new Error("Falha ao registrar o comentário.");
 
-      // 2. Atualizar o follow-up com o comentário
+      // 2. Atualizar o follow-up com o comentário e a msg
       const followupPayload = {
         ...followup,
         status: "feito",
         conclusao: dataConclusao.toISOString(),
-        comentario: comentario, // Adiciona o comentário ao followup
+        comentario: comentario,
+        msg: mensagemEnviada,
       };
 
       const followupRes = await fetch(`${FOLLOWUPS_API_URL}/${followup.id}`, {
@@ -321,7 +342,6 @@ export default function Followups() {
 
       const results = await Promise.all(deletionPromises);
 
-      // Checa se alguma requisição falhou
       if (results.some((res) => !res.ok)) {
         throw new Error("Falha ao excluir um ou mais follow-ups.");
       }
@@ -333,7 +353,7 @@ export default function Followups() {
         autoClose: 2000,
       });
 
-      fetchFollowups(); // Atualiza a lista
+      fetchFollowups();
     } catch (error) {
       toast.update(toastId, {
         render: error.message || "Erro ao finalizar os follow-ups.",
@@ -347,7 +367,6 @@ export default function Followups() {
     }
   };
 
-  // Formata data e link do WhatsApp
   const formatDate = (dateString) => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -397,122 +416,122 @@ export default function Followups() {
         <p className="text-gray-500">Carregando follow-ups...</p>
       ) : Object.keys(groupedFollowups).length > 0 ? (
         <div className="space-y-6">
-          {Object.keys(groupedFollowups).map((setor) => (
-            <div
-              key={setor}
-              className="border-border border-[1px] p-4 rounded-xl"
-            >
-              <h3 className="mb-2 text-xl font-semibold capitalize text-text">
-                {setor}
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm text-left border-collapse">
-                  <thead className="bg-containers text-text">
-                    <tr>
-                      <th className="px-4 py-3 w-[150px]">Serviço</th>
-                      <th className="px-4 py-3 w-[250px]">Empresa</th>
-                      <th className="px-4 py-3 w-[250px]">Representante</th>
-                      <th className="px-4 py-3 w-[100px]">Status</th>
-                      <th className="px-4 py-3 w-[150px]">Data de Conclusão</th>
-                      <th className="px-4 py-3 w-[350px]">Comentário</th>
-                      <th className="px-4 py-3 text-center w-[150px]">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-background ">
-                    {groupedFollowups[setor]
-                      .sort((a, b) =>
-                        a.nomeServico.localeCompare(b.nomeServico)
-                      )
-                      .map((f) => {
-                        const whatsappLink = generateWhatsAppLink(
-                          f.servico?.cliente?.telefone
-                        );
-                        return (
-                          <tr
-                            key={f.id}
-                            className="border-t border-border hover:bg-containers/20"
-                          >
-                            <td className="px-4 py-3">{f.nomeServico}</td>
-                            <td className="px-4 py-3">{f.empresa}</td>
-                            <td className="px-4 py-3">
-                              {whatsappLink ? (
-                                <a
-                                  href={whatsappLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-blue-400 hover:underline"
+          {Object.keys(groupedFollowups).map((setor) => {
+            const followupsDoSetor = groupedFollowups[setor];
+            const feitos = followupsDoSetor.filter(
+              (f) => f.status === "feito"
+            ).length;
+            const aFazer = followupsDoSetor.filter(
+              (f) => f.status === "pendente"
+            ).length;
+
+            return (
+              <div
+                key={setor}
+                className="border-border border-[1px] p-4 rounded-xl"
+              >
+                <h3 className="mb-2 text-xl font-semibold capitalize text-text">
+                  {setor} | Feitos: {feitos}, Falta fazer: {aFazer}
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm text-left border-collapse">
+                    <thead className="bg-containers text-text">
+                      <tr>
+                        <th className="px-4 py-3 w-[150px]">Serviço</th>
+                        <th className="px-4 py-3 w-[250px]">Empresa</th>
+                        <th className="px-4 py-3 w-[250px]">Representante</th>
+                        <th className="px-4 py-3 w-[100px]">Status</th>
+                        <th className="px-4 py-3 w-[350px]">Comentário</th>
+                        <th className="px-4 py-3 w-[200px]">Msg Enviada</th>
+                        <th className="px-4 py-3 w-[150px]">
+                          Data de Conclusão
+                        </th>
+                        <th className="px-4 py-3 text-center w-[150px]">
+                          Feito
+                        </th>
+                        <th className="px-4 py-3 text-center w-[100px]">
+                          Diretoria
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-background ">
+                      {groupedFollowups[setor]
+                        .sort((a, b) =>
+                          a.nomeServico.localeCompare(b.nomeServico)
+                        )
+                        .map((f) => {
+                          const whatsappLink = generateWhatsAppLink(
+                            f.servico?.cliente?.telefone
+                          );
+                          return (
+                            <tr
+                              key={f.id}
+                              className="border-t border-border hover:bg-containers/20"
+                            >
+                              <td className="px-4 py-3">{f.nomeServico}</td>
+                              <td className="px-4 py-3">{f.empresa}</td>
+                              <td className="px-4 py-3">
+                                {whatsappLink ? (
+                                  <a
+                                    href={whatsappLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-links hover:underline"
+                                  >
+                                    {f.representante}
+                                  </a>
+                                ) : (
+                                  f.representante
+                                )}
+                              </td>
+                              <td className="px-4 py-3">
+                                <span
+                                  className={`px-2 py-1 text-xs font-semibold capitalize rounded-full ${
+                                    f.status === "pendente"
+                                      ? "bg-yellow-500/20 text-yellow-300"
+                                      : "bg-green-500/20 text-green-300"
+                                  }`}
                                 >
-                                  {f.representante}
-                                </a>
-                              ) : (
-                                f.representante
-                              )}
-                            </td>
-                            <td className="px-4 py-3">
-                              <span
-                                className={`px-2 py-1 text-xs font-semibold capitalize rounded-full ${
-                                  f.status === "pendente"
-                                    ? "bg-yellow-500/20 text-yellow-300"
-                                    : "bg-green-500/20 text-green-300"
-                                }`}
-                              >
-                                {f.status}
-                              </span>
-                            </td>
-                            <td className="px-4 py-3">
-                              {formatDate(f.conclusao)}
-                            </td>
-                            <td className="px-4 py-3">
-                              {f.comentario && f.comentario.trim()
-                                ? f.comentario.length > 50
-                                  ? `${f.comentario.substring(0, 50)}...`
-                                  : f.comentario
-                                : "-"}
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <div className="flex items-center justify-center space-x-4">
+                                  {f.status}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3">
+                                <TruncatedText text={f.comentario} />
+                              </td>
+                              <td className="px-4 py-3">
+                                <TruncatedText text={f.msg} />
+                              </td>
+                              <td className="px-4 py-3">
+                                {formatDate(f.conclusao)}
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <div className="flex items-center justify-center space-x-4">
+                                  <input
+                                    type="checkbox"
+                                    title="Finalizar follow-up"
+                                    className="w-5 h-5 cursor-pointer accent-buttons"
+                                    checked={f.status === "feito"}
+                                    disabled={f.status === "feito"}
+                                    onChange={() => handleMarkAsDone(f)}
+                                  />
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
                                 <input
                                   type="checkbox"
-                                  title="Finalizar follow-up"
                                   className="w-5 h-5 cursor-pointer accent-buttons"
-                                  checked={f.status === "feito"}
-                                  disabled={f.status === "feito"}
-                                  onChange={() => handleMarkAsDone(f)}
+                                  title="Check da Diretoria"
                                 />
-                                {role === "diretoria" && (
-                                  <button
-                                    onClick={() => handleDeleteFollowup(f.id)}
-                                    title="Excluir follow-up"
-                                    className="text-red-500 hover:text-red-400"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    >
-                                      <path d="M3 6h18" />
-                                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                      <path d="M10 11v6" />
-                                      <path d="M14 11v6" />
-                                    </svg>
-                                  </button>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="p-4 text-center text-gray-500 border border-dashed rounded-md border-border">
