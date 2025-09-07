@@ -61,6 +61,7 @@ import PrazosTrafego from "./modulos/quadrosPrazos/PrazosTrafego";
 import PrazosSocialMedia from "./modulos/quadrosPrazos/PrazosSocialMedia";
 import PrazosFeedback from "./modulos/quadrosPrazos/PrazosFeedback";
 import PrazosFinanceiro from "./modulos/quadrosPrazos/PrazosFinanceiro";
+import Followups from "./modulos/followups/Followups";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -480,6 +481,7 @@ export default function Sidebar() {
                 {abaAtiva === "suporte" && (
                   <>
                     {/* --- ABA SUPORTE --- */}
+                    <Followups />
                     <RotinaSuporte />
                     <PrazosSuporte />
                     <QuadroSuporte />
