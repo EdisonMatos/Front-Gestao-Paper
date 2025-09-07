@@ -44,6 +44,7 @@ import {
   ScanSearch,
   Tag,
   Trophy,
+  Users,
   Wrench,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
@@ -62,6 +63,7 @@ import PrazosSocialMedia from "./modulos/quadrosPrazos/PrazosSocialMedia";
 import PrazosFeedback from "./modulos/quadrosPrazos/PrazosFeedback";
 import PrazosFinanceiro from "./modulos/quadrosPrazos/PrazosFinanceiro";
 import Followups from "./modulos/followups/Followups";
+import AnaliseDesempenho from "./modulos/analiseDesempenho/AnaliseDesempenho";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -413,6 +415,18 @@ export default function Sidebar() {
                 </li>
                 <li>
                   <MenuItem
+                    turno="equipe"
+                    label="Equipe"
+                    Icon={Users}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    count={servicosCounts["diretoria"] || 0}
+                    loading={loadingCounts}
+                    allowedRoles={["diretoria", ""]}
+                  />
+                </li>
+                <li>
+                  <MenuItem
                     turno="diretoria"
                     label="Diretoria"
                     Icon={ChartSpline}
@@ -564,6 +578,14 @@ export default function Sidebar() {
                     {/* --- EM PROGRESSO --- */}
 
                     <DashboardTarefasEmProgresso />
+                  </>
+                )}
+
+                {abaAtiva === "equipe" && (
+                  <>
+                    {/* --- ABA DIRETORIA --- */}
+
+                    <AnaliseDesempenho />
                   </>
                 )}
 
