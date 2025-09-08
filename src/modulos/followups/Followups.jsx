@@ -39,19 +39,32 @@ export default function Followups() {
   const fetchFollowups = async () => {
     try {
       setLoading(true);
-      // Otimização: Busca apenas os follow-ups. A API já inclui os dados do serviço.
-      const followupsRes = await fetch(FOLLOWUPS_API_URL);
+      // Busca os follow-ups e os serviços em paralelo para associar os dados do cliente
+      const [followupsRes, servicosRes] = await Promise.all([
+        fetch(FOLLOWUPS_API_URL),
+        fetch(SERVICOS_API_URL),
+      ]);
 
-      if (!followupsRes.ok) {
+      if (!followupsRes.ok || !servicosRes.ok) {
         throw new Error("Falha ao carregar dados do servidor.");
       }
 
       const followupsData = await followupsRes.json();
+      const servicosData = await servicosRes.json();
 
-      setAllFollowups(followupsData); // Guarda a lista completa
+      // Cria um mapa de serviços pelo ID para uma associação eficiente
+      const servicosMap = new Map(servicosData.map((s) => [s.id, s]));
 
-      // A API já inclui os dados do serviço, então não é mais preciso buscar a lista de serviços aqui.
-      const sortedData = [...followupsData].sort((a, b) => {
+      // Combina os dados do serviço em cada follow-up
+      const followupsComServico = followupsData.map((followup) => ({
+        ...followup,
+        // Associa o objeto de serviço completo. Se não encontrar, deixa como undefined.
+        servico: servicosMap.get(followup.servicoId),
+      }));
+
+      setAllFollowups(followupsComServico); // Guarda a lista completa
+
+      const sortedData = [...followupsComServico].sort((a, b) => {
         if (a.status === "pendente" && b.status !== "pendente") return -1;
         if (a.status !== "pendente" && b.status === "pendente") return 1;
         return new Date(b.criadoEm) - new Date(a.criadoEm);
