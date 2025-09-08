@@ -16,7 +16,7 @@ const TruncatedText = ({ text }) => {
 
   return (
     <span>
-      {isExpanded ? text : `${text.substring(0, 50)}... `}
+      {isExpanded ? text : `${text.substring(0, 70)}... `}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="ml-1 text-xs text-blue-400 hover:underline"
@@ -455,14 +455,12 @@ export default function Followups() {
                         <th className="px-4 py-3 w-[250px]">Representante</th>
                         <th className="px-4 py-3 w-[100px]">Status</th>
                         <th className="px-4 py-3 w-[350px]">Comentário</th>
-                        <th className="px-4 py-3 w-[200px]">Msg Enviada</th>
-                        <th className="px-4 py-3 w-[150px]">
-                          Data de Conclusão
-                        </th>
-                        <th className="px-4 py-3 text-center w-[150px]">
+                        <th className="px-4 py-3 w-[350px]">Msg Enviada</th>
+                        <th className="px-4 py-3 w-[100px]">Conclusão</th>
+                        <th className="px-4 py-3 text-center w-[60px]">
                           Feito
                         </th>
-                        <th className="px-4 py-3 text-center w-[100px]">
+                        <th className="px-4 py-3 text-center w-[60px]">
                           Diretoria
                         </th>
                       </tr>
