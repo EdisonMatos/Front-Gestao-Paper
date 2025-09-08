@@ -64,6 +64,7 @@ import PrazosFeedback from "./modulos/quadrosPrazos/PrazosFeedback";
 import PrazosFinanceiro from "./modulos/quadrosPrazos/PrazosFinanceiro";
 import Followups from "./modulos/followups/Followups";
 import AnaliseDesempenho from "./modulos/analiseDesempenho/AnaliseDesempenho";
+import MenuSimples from "./componentes/MenuSimples";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -414,14 +415,12 @@ export default function Sidebar() {
                   />
                 </li>
                 <li>
-                  <MenuItem
+                  <MenuSimples
                     turno="equipe"
                     label="Equipe"
                     Icon={Users}
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
-                    count={servicosCounts["diretoria"] || 0}
-                    loading={loadingCounts}
                     allowedRoles={["diretoria", ""]}
                   />
                 </li>
