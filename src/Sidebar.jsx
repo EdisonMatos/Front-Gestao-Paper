@@ -29,6 +29,7 @@ import {
   AlarmClockCheck,
   Award,
   BriefcaseBusiness,
+  Calculator,
   Calendar,
   ChartColumnIncreasing,
   ChartSpline,
@@ -385,6 +386,18 @@ export default function Sidebar() {
                     count={servicosCounts["socialmedia"] || 0}
                     loading={loadingCounts}
                     allowedRoles={["diretoria", "socialmedia", "suporte"]}
+                  />
+                </li>
+                <li>
+                  <MenuItem
+                    turno="contabilidade"
+                    label="Contabilidade"
+                    Icon={Calculator}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    count={servicosCounts["contabilidade"] || 0}
+                    loading={loadingCounts}
+                    allowedRoles={["diretoria", "contabilidade"]}
                   />
                 </li>
               </ul>
