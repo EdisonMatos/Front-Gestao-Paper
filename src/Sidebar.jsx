@@ -372,7 +372,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["trafego"] || 0}
                     loading={loadingCounts}
-                    allowedRoles={["diretoria", "trafego"]}
+                    allowedRoles={["diretoria", "trafego", "suporte"]}
                   />
                 </li>
                 <li>
