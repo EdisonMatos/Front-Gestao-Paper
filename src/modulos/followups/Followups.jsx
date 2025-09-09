@@ -124,7 +124,7 @@ export default function Followups() {
         "diretoria",
         "feedbacks",
         "financeiro",
-        "trafego",
+        "contabilidade",
       ];
       const servicosParaFollowup = servicos.filter(
         (s) =>
