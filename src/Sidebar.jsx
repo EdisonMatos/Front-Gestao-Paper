@@ -131,6 +131,10 @@ export default function Sidebar() {
     initialTab = "comercial";
   } else if (role === "dev") {
     initialTab = "dev";
+  } else if (role === "contabilidade") {
+    initialTab = "contabilidade";
+  } else if (role === "trafego") {
+    initialTab = "trafego";
   } else if (role === "financeiro") {
     initialTab = "financeiro";
   }
