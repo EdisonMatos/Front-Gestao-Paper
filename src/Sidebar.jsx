@@ -66,6 +66,9 @@ import PrazosFinanceiro from "./modulos/quadrosPrazos/PrazosFinanceiro";
 import Followups from "./modulos/followups/Followups";
 import AnaliseDesempenho from "./modulos/analiseDesempenho/AnaliseDesempenho";
 import MenuSimples from "./componentes/MenuSimples";
+import RotinaContabilidade from "./modulos/quadrosRotinas/RotinaContabilidade";
+import PrazosContabilidade from "./modulos/quadrosPrazos/PrazosContabilidade";
+import QuadroContabilidade from "./modulos/quadros/QuadroContabilidade";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -560,6 +563,15 @@ export default function Sidebar() {
                     <RotinaSocialMedia />
                     <PrazosSocialMedia />
                     <QuadroSocialMedia />
+                  </>
+                )}
+
+                {abaAtiva === "contabilidade" && (
+                  <>
+                    {/* --- ABA SOCIAL MEDIA --- */}
+                    <RotinaContabilidade />
+                    <PrazosContabilidade />
+                    <QuadroContabilidade />
                   </>
                 )}
 
