@@ -66,6 +66,9 @@ import PrazosFinanceiro from "./modulos/quadrosPrazos/PrazosFinanceiro";
 import Followups from "./modulos/followups/Followups";
 import AnaliseDesempenho from "./modulos/analiseDesempenho/AnaliseDesempenho";
 import MenuSimples from "./componentes/MenuSimples";
+import RotinaContabilidade from "./modulos/quadrosRotinas/RotinaContabilidade";
+import PrazosContabilidade from "./modulos/quadrosPrazos/PrazosContabilidade";
+import QuadroContabilidade from "./modulos/quadros/QuadroContabilidade";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -167,7 +170,7 @@ export default function Sidebar() {
             <div class="px-3 py-3 lg:px-5 lg:pl-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start rtl:justify-end">
-                  <button
+                  {/* <button
                     data-drawer-target="logo-sidebar"
                     data-drawer-toggle="logo-sidebar"
                     aria-controls="logo-sidebar"
@@ -188,7 +191,7 @@ export default function Sidebar() {
                         d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
                       ></path>
                     </svg>
-                  </button>
+                  </button> */}
                   <a href="#" class="flex ms-2 md:me-24">
                     <img
                       src={paperClubLogo}
@@ -563,6 +566,15 @@ export default function Sidebar() {
                   </>
                 )}
 
+                {abaAtiva === "contabilidade" && (
+                  <>
+                    {/* --- ABA SOCIAL MEDIA --- */}
+                    <RotinaContabilidade />
+                    <PrazosContabilidade />
+                    <QuadroContabilidade />
+                  </>
+                )}
+
                 {abaAtiva === "feedbacks" && (
                   <>
                     {/* --- ABA FEEDBACKS --- */}
@@ -619,7 +631,8 @@ export default function Sidebar() {
 
               {/* Versão Mobile */}
               <div className=" flex flex-col max-w-[1700px] overflow-x-auto tablet2:hidden pt-10">
-                <Agrupamento>
+                <span className="p-8">Disponível apenas para computador</span>
+                {/* <Agrupamento>
                   <Titulos>
                     <div className="flex items-center gap-2">
                       <BriefcaseBusiness className="text-links" /> Clientes e
@@ -711,7 +724,7 @@ export default function Sidebar() {
                     <RotinaDiretoria />
                     <QuadroDiretoria />
                   </AcordionDepartamentos>
-                </Agrupamento>
+                </Agrupamento> */}
               </div>
               {/* Versão Mobile */}
             </div>
