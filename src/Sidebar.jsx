@@ -494,7 +494,7 @@ export default function Sidebar() {
                 {abaAtiva === "suporte" && (
                   <>
                     {/* --- ABA SUPORTE --- */}
-                    <Followups />
+                    {/* <Followups /> */}
                     <RotinaSuporte />
                     <PrazosSuporte />
                     <QuadroSuporte />
@@ -594,6 +594,7 @@ export default function Sidebar() {
                     <RotinaDiretoria />
                     <PrazosDiretoria />
                     <QuadroDiretoria />
+                    <Followups />
                   </>
                 )}
               </div>
