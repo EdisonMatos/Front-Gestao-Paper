@@ -409,6 +409,7 @@ export default function AddNovoServico({
           <option value="comercial">Comercial</option>
           <option value="trafego">Tráfego Pago</option>
           <option value="socialmedia">Social Media</option>
+          <option value="contabilidade">Contabilidade</option>
           <option value="feedbacks">Feedbacks</option>
           <option value="financeiro">Financeiro</option>
           <option value="diretoria">Diretoria</option>

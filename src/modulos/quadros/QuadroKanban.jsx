@@ -15,6 +15,7 @@ const opcoesSetores = [
   "comercial",
   "financeiro",
   "trafego",
+  "contabilidade",
   "socialmedia",
   "diretoria",
 ];

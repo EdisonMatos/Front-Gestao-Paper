@@ -95,6 +95,7 @@ export default function AcaoDirecionarServico({
         <option value="trafego">Tráfego Pago</option>
         <option value="socialmedia">Social Media</option>
         <option value="feedbacks">Feedbacks</option>
+        <option value="contabilidade">Contabilidade</option>
         <option value="financeiro">Financeiro</option>
         <option value="diretoria">Diretoria</option>
       </select>
