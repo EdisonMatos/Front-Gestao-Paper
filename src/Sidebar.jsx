@@ -514,7 +514,7 @@ export default function Sidebar() {
                 {abaAtiva === "suporte" && (
                   <>
                     {/* --- ABA SUPORTE --- */}
-                    {/* <Followups /> */}
+                    <Followups />
                     <RotinaSuporte />
                     <PrazosSuporte />
                     <QuadroSuporte />
