@@ -52,11 +52,16 @@ export default function Followups() {
       const followupsData = await followupsRes.json();
       const servicosData = await servicosRes.json();
 
+      // Filtra os follow-ups para não incluir os finalizados
+      const activeFollowups = followupsData.filter(
+        (f) => f.status !== "finalizado"
+      );
+
       // Cria um mapa de serviços pelo ID para uma associação eficiente
       const servicosMap = new Map(servicosData.map((s) => [s.id, s]));
 
       // Combina os dados do serviço em cada follow-up
-      const followupsComServico = followupsData.map((followup) => ({
+      const followupsComServico = activeFollowups.map((followup) => ({
         ...followup,
         // Associa o objeto de serviço completo. Se não encontrar, deixa como undefined.
         servico: servicosMap.get(followup.servicoId),
@@ -335,11 +340,11 @@ export default function Followups() {
     }
   };
 
-  // Função para finalizar (excluir) todos os follow-ups
+  // Função para finalizar (mudar status) todos os follow-ups
   const handleFinalizeAllFollowups = async () => {
     if (
       !window.confirm(
-        "Tem certeza que deseja finalizar e excluir TODOS os follow-ups? Esta ação limpará toda a lista."
+        "Tem certeza que deseja finalizar TODOS os follow-ups? Esta ação limpará a lista atual para um novo ciclo."
       )
     ) {
       return;
@@ -349,14 +354,19 @@ export default function Followups() {
     const toastId = toast.loading("Finalizando todos os follow-ups...");
 
     try {
-      const deletionPromises = allFollowups.map((f) =>
-        fetch(`${FOLLOWUPS_API_URL}/${f.id}`, { method: "DELETE" })
-      );
+      const updatePromises = allFollowups.map((f) => {
+        const followupPayload = { ...f, status: "finalizado" };
+        return fetch(`${FOLLOWUPS_API_URL}/${f.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(followupPayload),
+        });
+      });
 
-      const results = await Promise.all(deletionPromises);
+      const results = await Promise.all(updatePromises);
 
       if (results.some((res) => !res.ok)) {
-        throw new Error("Falha ao excluir um ou mais follow-ups.");
+        throw new Error("Falha ao finalizar um ou mais follow-ups.");
       }
 
       toast.update(toastId, {
@@ -403,7 +413,7 @@ export default function Followups() {
         <div className="flex items-center space-x-2">
           <button
             onClick={handleGenerateFollowups}
-            disabled={isGenerating || allFollowups.length > 0}
+            disabled={loading || isGenerating || allFollowups.length > 0}
             className="px-4 py-2 text-black transition rounded bg-buttonsHover hover:bg-buttons disabled:bg-gray-500 disabled:cursor-not-allowed"
             title={
               allFollowups.length > 0
@@ -426,7 +436,7 @@ export default function Followups() {
       </div>
 
       {loading ? (
-        <p className="text-gray-500">Carregando follow-ups...</p>
+        <p className="text-gray-500">Carregando follow-ups... Aguarde.</p>
       ) : Object.keys(groupedFollowups).length > 0 ? (
         <div className="space-y-6">
           {Object.keys(groupedFollowups).map((setor) => {
