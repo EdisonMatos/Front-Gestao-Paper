@@ -4,23 +4,26 @@ export default function QuadroFinanceiro() {
   const colunas = {
     backlog: { nome: "Backlog", tipoCard: "normal" },
     suspenso: { nome: "Suspensos", tipoCard: "compacto" },
-    // emProgresso: { nome: "Em progresso", tipoCard: "normal" },
     enviadoComercial: { nome: "Enviado pro Comercial", tipoCard: "compacto" },
 
     aguardandoClienteAss: {
       nome: "Aguardando Assinatura",
-      tipoCard: "compacto",
+      tipoCard: "normal",
     },
-    emAtrasoAss: { nome: "Em Atraso Assinatura", tipoCard: "compacto" },
+    emAtrasoAss: { nome: "Em Atraso Assinatura", tipoCard: "normal" },
     aguardandoClienteAqui: {
       nome: "Aguardando Aquisição",
-      tipoCard: "compacto",
+      tipoCard: "normal",
     },
-    emAtrasoAqui: { nome: "Em Atraso Aquisição", tipoCard: "compacto" },
-    pagarComissao: { nome: "Fila de Pgto Comissão", tipoCard: "compacto" },
+    emAtrasoAqui: { nome: "Em Atraso Aquisição", tipoCard: "normal" },
+    pagarComissao: { nome: "Fila de Pgto Comissão", tipoCard: "normal" },
     pgtoPendente: {
-      nome: "Pagamento Pendente",
-      tipoCard: "compacto",
+      nome: "Tem saldo a pagar",
+      tipoCard: "normal",
+    },
+    pgtoNaConclusaoAtrasado: {
+      nome: "Concluiu e não pagou ainda",
+      tipoCard: "normal",
     },
   };
 

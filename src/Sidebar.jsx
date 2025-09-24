@@ -368,7 +368,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["webmaster"] || 0}
                     loading={loadingCounts}
-                    allowedRoles={["diretoria", "webmaster"]}
+                    allowedRoles={["diretoria", "webmaster", "suporte"]}
                   />
                 </li>
                 <li>
@@ -479,7 +479,7 @@ export default function Sidebar() {
             <div class="rounded-lg  mt-14 text-white">
               <ToastContainer />
               {/* Versão PC */}
-              <div className="hidden tablet2:flex flex-col max-w-[1700px] overflow-x-auto pt-12 pl-4">
+              <div className="hidden tablet2:flex flex-col max-w-[1700px] overflow-x-auto desktop3:overflow-visible pt-12 pl-4">
                 {abaAtiva === "prazos" && (
                   <>
                     {/* --- prazos PRINCIPAL --- */}
