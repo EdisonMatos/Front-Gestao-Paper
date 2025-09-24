@@ -210,11 +210,17 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
       const dispensaComentario =
         turno === "financeiro" &&
         [
+          "suspenso",
           "enviadoComercial",
-          "pagarComissao",
-          "aguardandoCliente",
           "aguardandoClienteAss",
+          "pagarComissao",
+          "emAtrasoAss",
           "aguardandoClienteAqui",
+          "aguardandoCliente",
+          "emAtrasoAqui",
+          "pagarComissao",
+          "pgtoPendente",
+          "pgtoNaConclusaoAtrasado",
         ].includes(destino);
 
       if (!dispensaComentario) {
@@ -322,7 +328,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
           {textoExtra}
         </p>
       </div>
-      <div className="relative flex gap-4 py-4 overflow-x-auto gap">
+      <div className="relative flex gap-4 py-4 gap">
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(colunas).map(([key, config]) => (
             <Droppable key={key} droppableId={key}>
