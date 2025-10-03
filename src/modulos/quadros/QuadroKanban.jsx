@@ -255,10 +255,6 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         ordemVerticalNoQuadro: 0,
       };
 
-      if (destino === "finalizar") {
-        payload.dataConclusao = new Date().toISOString();
-      }
-
       if (destino === "emMaos") {
         payload.turnoDaVez = "socialmedia";
         payload.posicaoNoQuadro = "postarFeedbacks";

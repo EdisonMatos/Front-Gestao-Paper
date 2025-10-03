@@ -5,7 +5,6 @@ export default function QuadroSocialMedia() {
     backlog: { nome: "Backlog", tipoCard: "normal" },
     postarFeedbacks: { nome: "Postar feedback", tipoCard: "compacto" },
     emProgresso: { nome: "Em progresso", tipoCard: "normal" },
-    postado: { nome: "Postado", tipoCard: "compacto" },
   };
 
   return (
