@@ -40,6 +40,7 @@ import {
   Instagram,
   Landmark,
   LayoutPanelTop,
+  Lightbulb,
   List,
   MessageCircle,
   ScanSearch,
@@ -69,6 +70,8 @@ import MenuSimples from "./componentes/MenuSimples";
 import RotinaContabilidade from "./modulos/quadrosRotinas/RotinaContabilidade";
 import PrazosContabilidade from "./modulos/quadrosPrazos/PrazosContabilidade";
 import QuadroContabilidade from "./modulos/quadros/QuadroContabilidade";
+import PrazosMarketing from "./modulos/quadrosPrazos/PrazosMarketing";
+import QuadroMarketing from "./modulos/quadros/QuadroMarketing";
 
 export default function Sidebar() {
   const [servicosCounts, setServicosCounts] = useState({});
@@ -137,7 +140,7 @@ export default function Sidebar() {
   } else if (role === "contabilidade") {
     initialTab = "contabilidade";
   } else if (role === "trafego") {
-    initialTab = "trafego";
+    initialTab = "marketing";
   } else if (role === "financeiro") {
     initialTab = "financeiro";
   }
@@ -373,6 +376,18 @@ export default function Sidebar() {
                 </li>
                 <li>
                   <MenuItem
+                    turno="marketing"
+                    label="Marketing"
+                    Icon={Lightbulb}
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    count={servicosCounts["marketing"] || 0}
+                    loading={loadingCounts}
+                    allowedRoles={["diretoria", "trafego", "suporte"]}
+                  />
+                </li>
+                <li>
+                  <MenuItem
                     turno="trafego"
                     label="Tráfego Pago"
                     Icon={ScanSearch}
@@ -554,6 +569,14 @@ export default function Sidebar() {
                     <RotinaTrafego />
                     <PrazosTrafego />
                     <QuadroTrafego />
+                  </>
+                )}
+
+                {abaAtiva === "marketing" && (
+                  <>
+                    {/* --- ABA MARKETING --- */}
+                    <PrazosMarketing />
+                    <QuadroMarketing />
                   </>
                 )}
 

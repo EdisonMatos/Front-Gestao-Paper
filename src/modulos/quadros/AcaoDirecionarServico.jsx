@@ -93,6 +93,7 @@ export default function AcaoDirecionarServico({
         <option value="webmaster">Webmaster</option>
         <option value="comercial">Comercial</option>
         <option value="trafego">Tráfego Pago</option>
+        <option value="marketing">Marketing</option>
         <option value="socialmedia">Social Media</option>
         <option value="feedbacks">Feedbacks</option>
         <option value="contabilidade">Contabilidade</option>

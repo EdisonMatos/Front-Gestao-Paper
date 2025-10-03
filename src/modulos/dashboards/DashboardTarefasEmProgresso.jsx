@@ -6,6 +6,7 @@ const setores = [
   "dev",
   "webmaster",
   "trafego",
+  "marketing",
   "socialmedia",
   "feedbacks",
   "contabilidade",
