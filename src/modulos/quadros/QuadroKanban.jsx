@@ -201,10 +201,13 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     let comentario = null;
     if (destino === "solicitado") {
       comentario = "Feedback solicitado. Aguardar";
+    } else if (destino === "postadoFinalizar") {
+      comentario = "Postado hoje. Finalizado";
+    } else if (destino === "naoRecebidoFinalizar") {
+      comentario =
+        "Feedback não recebido (cliente não respondeu ou não deu um bom feedback). Finalizado";
     } else if (destino === "emMaos") {
       comentario = "Feedback recebido. Postar";
-    } else if (destino === "semFbFinalizar") {
-      comentario = "Sem feedback. Serviço finalizado.";
     } else if (destino !== "") {
       const dispensaComentario =
         turno === "financeiro" &&
@@ -257,15 +260,25 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         payload.dataConclusao = new Date().toISOString();
       }
 
+      if (destino === "semNecessidadeFeedbackFinalizar") {
+        payload.turnoDaVez = "finalizado";
+        payload.posicaoNoQuadro = "finalizado";
+        payload.dataConclusao = new Date().toISOString();
+      }
+
       if (destino === "emMaos") {
         payload.turnoDaVez = "socialmedia";
         payload.posicaoNoQuadro = "postarFeedbacks";
       }
 
-      if (destino === "semFbFinalizar") {
+      if (destino === "naoRecebidoFinalizar") {
         payload.turnoDaVez = "finalizado";
         payload.posicaoNoQuadro = "finalizado";
-        payload.dataConclusao = new Date().toISOString();
+      }
+
+      if (destino === "postadoFinalizar") {
+        payload.turnoDaVez = "finalizado";
+        payload.posicaoNoQuadro = "finalizado";
       }
 
       if (
