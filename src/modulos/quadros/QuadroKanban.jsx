@@ -206,8 +206,8 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     } else if (destino === "naoRecebidoFinalizar") {
       comentario =
         "Feedback não recebido (cliente não respondeu ou não deu um bom feedback). Finalizado";
-    } else if (destino === "emMaos") {
-      comentario = "Feedback recebido. Postar";
+    } else if (destino === "semNecessidadeFeedbackFinalizar") {
+      comentario = "Sem necessidade de pedir feedback. Finalizado";
     } else if (destino !== "") {
       const dispensaComentario =
         turno === "financeiro" &&
