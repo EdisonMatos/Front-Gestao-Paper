@@ -199,9 +199,7 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
     }
 
     let comentario = null;
-    if (destino === "finalizar") {
-      comentario = "Serviço finalizado. Pegar feedback";
-    } else if (destino === "solicitado") {
+    if (destino === "solicitado") {
       comentario = "Feedback solicitado. Aguardar";
     } else if (destino === "emMaos") {
       comentario = "Feedback recebido. Postar";
@@ -254,6 +252,10 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
         posicaoNoQuadro: destino,
         ordemVerticalNoQuadro: 0,
       };
+
+      if (destino === "solicitado") {
+        payload.dataConclusao = new Date().toISOString();
+      }
 
       if (destino === "emMaos") {
         payload.turnoDaVez = "socialmedia";
