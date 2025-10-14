@@ -6,6 +6,7 @@ export default function QuadroSuporte() {
     emAtendimento: { nome: "Em Atendimento", tipoCard: "compacto" },
     emProgresso: { nome: "Em progresso", tipoCard: "normal" },
     aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
+    resgate: { nome: "Resgates", tipoCard: "normal" },
     ausentes: { nome: "Ausentes", tipoCard: "superCompacto" },
   };
 
