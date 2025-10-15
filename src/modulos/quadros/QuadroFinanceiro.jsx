@@ -3,7 +3,7 @@ import QuadroKanban from "./QuadroKanban";
 export default function QuadroFinanceiro() {
   const colunas = {
     backlog: { nome: "Backlog", tipoCard: "normal" },
-    suspenso: { nome: "Suspensos", tipoCard: "compacto" },
+    suspenso: { nome: "Suspensos", tipoCard: "normal" },
     enviadoComercial: { nome: "Enviado pro Comercial", tipoCard: "compacto" },
 
     aguardandoClienteAss: {
