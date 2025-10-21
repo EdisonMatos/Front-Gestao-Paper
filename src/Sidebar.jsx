@@ -347,7 +347,7 @@ export default function Sidebar() {
                     setAbaAtiva={setAbaAtiva}
                     count={servicosCounts["comercial"] || 0}
                     loading={loadingCounts}
-                    allowedRoles={["diretoria", "comercial"]}
+                    allowedRoles={["diretoria", "comercial", "suporte"]}
                   />
                 </li>
                 <li>
