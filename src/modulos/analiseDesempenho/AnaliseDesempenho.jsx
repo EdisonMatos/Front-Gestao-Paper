@@ -319,6 +319,10 @@ export default function AnaliseDesempenho() {
                   <option>Comportamento</option>
                   <option>Cultura</option>
                   <option>Processo</option>
+                  <option>Conhecimento</option>
+                  <option>Atenção</option>
+                  <option>Memória</option>
+                  <option>Determinação</option>
                 </select>
               </div>
               <div>
@@ -331,10 +335,7 @@ export default function AnaliseDesempenho() {
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md bg-background border-border"
                 >
-                  <option>Conhecimento</option>
-                  <option>Atenção</option>
-                  <option>Memória</option>
-                  <option>Determinação</option>
+                  <option>-</option>
                 </select>
               </div>
             </div>

@@ -319,6 +319,7 @@ export default function AddNovoServico({
               <option value="">Selecione</option>
               <option value="Criação de LP">Criação de LP</option>
               <option value="Manutenção de LP">Manutenção de LP</option>
+              <option value="Suspensão">Suspensão</option>
               <option value="Contrato e Faturamento">
                 Contrato e Faturamento
               </option>
