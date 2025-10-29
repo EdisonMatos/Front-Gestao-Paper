@@ -199,7 +199,7 @@ export default function ServCriacaoDeLpi({
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             placeholder="Nome completo"
-            className="p-2 border rounded bg-inputBg text-placeholder border-border"
+            className="p-2 capitalize border rounded bg-inputBg text-placeholder border-border"
             required
           />
         </div>
