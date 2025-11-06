@@ -1,5 +1,5 @@
 // components/QuadroKanban.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "react-toastify";
@@ -111,6 +111,22 @@ export default function QuadroKanban({ titulo, turno, colunas }) {
 
     return () => clearInterval(interval); // só limpa quando o componente desmontar
   }, []);
+
+  const jaMostrouAlerta = useRef(false);
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      servicos.emProgresso &&
+      servicos.emProgresso.length === 0 &&
+      !jaMostrouAlerta.current
+    ) {
+      alert(
+        "Você está sem tarefa em andamento no momento. Verifique ou comunique a diretoria."
+      );
+      jaMostrouAlerta.current = true; // impede alertas repetidos
+    }
+  }, [servicos, isLoading]);
 
   async function onDragEnd(result) {
     const { source, destination } = result;
