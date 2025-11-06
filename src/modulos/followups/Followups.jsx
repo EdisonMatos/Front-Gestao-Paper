@@ -408,7 +408,7 @@ export default function Followups() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-[1700px] overflow-x-auto">
       <div className="flex items-center justify-between mb-4 ">
         <h2 className="text-2xl font-bold text-text">Gestão de Follow-ups</h2>
         <div className="flex items-center space-x-2">

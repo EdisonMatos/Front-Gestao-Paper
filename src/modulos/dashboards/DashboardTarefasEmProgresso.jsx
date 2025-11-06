@@ -46,7 +46,7 @@ export default function DashboardTarefasEmProgresso() {
   }, {});
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-[1700px] overflow-x-auto">
       <h2 className="mb-4 text-2xl font-bold text-text">
         Tarefas em Progresso por Setor
       </h2>
