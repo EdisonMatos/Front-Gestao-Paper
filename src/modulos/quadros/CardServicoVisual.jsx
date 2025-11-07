@@ -142,6 +142,92 @@ export default function CardServicoVisual({
     return texto;
   }
 
+  // 1. Função helper para formatar a data (dd/MM/aa)
+  function formatarDataSimples(dateString) {
+    if (!dateString) return "";
+    const dataObj = new Date(dateString);
+
+    // Usamos UTC para consistência, já que os dados vêm como 'Z' (UTC)
+    const dia = String(dataObj.getUTCDate()).padStart(2, "0");
+    const mes = String(dataObj.getUTCMonth() + 1).padStart(2, "0"); // Mês é 0-indexed
+    const ano = String(dataObj.getUTCFullYear()).slice(-2); // Pega os últimos 2 dígitos
+
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  // 2. Função helper para calcular a diferença de dias (inclusivo)
+  function calcularDiferencaEmDias(dataInicioStr, dataFimStr) {
+    const umDia = 1000 * 60 * 60 * 24;
+
+    const inicio = new Date(dataInicioStr);
+    const fim = new Date(dataFimStr);
+
+    // Pega os componentes UTC para evitar problemas de fuso horário
+    const inicioUTC = Date.UTC(
+      inicio.getUTCFullYear(),
+      inicio.getUTCMonth(),
+      inicio.getUTCDate()
+    );
+    const fimUTC = Date.UTC(
+      fim.getUTCFullYear(),
+      fim.getUTCMonth(),
+      fim.getUTCDate()
+    );
+
+    // Calcula a diferença em dias e adiciona 1 para ser inclusivo
+    // (ex: dia 15 ao dia 15 = 1 dia)
+    const diffEmDias = Math.floor((fimUTC - inicioUTC) / umDia) + 1;
+
+    return diffEmDias;
+  }
+
+  function getEstiloDuracao(dias) {
+    if (dias > 60) {
+      return "text-red-500 font-bold"; // Vermelho
+    }
+    if (dias > 30) {
+      return "text-yellow-500 font-bold"; // Amarelo
+    }
+    return "text-text"; // Branco (padrão)
+  }
+
+  // 3. Lógica para gerar o texto da duração
+  let textoDuracao = null;
+  if (servico.dataContratacao) {
+    const dataInicio = servico.dataContratacao;
+
+    if (servico.dataConclusao) {
+      // Cenário 1: Concluído (Mantém a cor padrão)
+      const dataFim = servico.dataConclusao;
+      const dias = calcularDiferencaEmDias(dataInicio, dataFim);
+      const dataConclusaoFormatada = formatarDataSimples(dataFim);
+      textoDuracao = (
+        <>
+          <span className="text-text">
+            {dias} dia{dias > 1 ? "s" : ""}
+          </span>
+          <span className="opacity-70">
+            {" "}
+            (Concluído em {dataConclusaoFormatada})
+          </span>
+        </>
+      );
+    } else {
+      // Cenário 2: Em progresso (Aplica cor dinâmica)
+      const dataFim = new Date(); // Hoje
+      const dias = calcularDiferencaEmDias(dataInicio, dataFim);
+      const classeCor = getEstiloDuracao(dias); // Pega a classe de cor
+
+      textoDuracao = (
+        <>
+          <span className={classeCor}>
+            {dias} dia{dias > 1 ? "s" : ""}
+          </span>
+        </>
+      );
+    }
+  }
+
   return (
     <div
       ref={provided.innerRef}
@@ -161,6 +247,12 @@ export default function CardServicoVisual({
           <div className="text-text" style={estiloFonte}>
             <h3 className="font-semibold">{servico.nome}</h3>
             <p>{servico.cliente?.empresa || "Sem empresa"}</p>
+
+            {textoDuracao && (
+              <p className="mb-2 text-xs" style={estiloFonte}>
+                Duração: {textoDuracao}
+              </p>
+            )}
           </div>
 
           {!modoSuperCompacto && (
@@ -245,7 +337,6 @@ export default function CardServicoVisual({
           <p className="text-sm text-text opacity-80" style={estiloFonte}>
             {servico.cliente?.empresa || "Sem empresa"}
           </p>
-
           <p className="mb-4 text-xs text-text" style={estiloFonte}>
             {servico.cliente?.telefone ? (
               <a
@@ -262,7 +353,6 @@ export default function CardServicoVisual({
               servico.cliente?.representante || "Sem representante"
             )}
           </p>
-
           {linhasDescricao.length > 0 && (
             <div
               ref={descriptionRef}
@@ -298,17 +388,22 @@ export default function CardServicoVisual({
               )}
             </div>
           )}
-
-          <p className="mt-4 text-sm text-text" style={estiloFonte}>
+          {textoDuracao && (
+            <p className="mt-4 text-sm text-text" style={estiloFonte}>
+              <span className="font-bold">Duração:</span> {textoDuracao}
+            </p>
+          )}
+          <p
+            className={`text-sm text-text ${textoDuracao ? "mt-0" : "mt-4"}`} // Ajusta a margem
+            style={estiloFonte}
+          >
             <span className="font-bold">Projeto:</span>{" "}
-            {formatarDataPrazoProjetoDetalhado(dataPrazoProjetoLocal)}
-          </p>
-
+            {formatarDataPrazoProjetoDetalhado(dataPrazoProjetoLocal)}{" "}
+          </p>{" "}
           <p className="mb-4 text-sm text-text" style={estiloFonte}>
             <span className="font-bold">Tarefa:</span>{" "}
-            {formatarDataPrazo(dataProximoPrazoLocal)}
+            {formatarDataPrazo(dataProximoPrazoLocal)}{" "}
           </p>
-
           <div
             className="flex items-center gap-2 mt-2 mb-2 text-sm"
             style={estiloFonte}
@@ -361,7 +456,6 @@ export default function CardServicoVisual({
               {mostrarDirecionar ? "Ocultar Ações" : "Ações"}
             </button>
           </div>
-
           {mostrarDirecionar && (
             <AcoesCardServico
               servico={servico}
@@ -372,7 +466,6 @@ export default function CardServicoVisual({
               onAtualizarComplexidade={handleAtualizarComplexidade}
             />
           )}
-
           {!adicionandoComentario && (
             <button
               onClick={() => setAdicionandoComentario(true)}
@@ -381,7 +474,6 @@ export default function CardServicoVisual({
               Comentar
             </button>
           )}
-
           {adicionandoComentario && (
             <div className="mb-2">
               <input
@@ -411,7 +503,6 @@ export default function CardServicoVisual({
               </div>
             </div>
           )}
-
           <div className="mt-0">
             {doisMaisRecentes.map((comentario) => (
               <div
@@ -550,7 +641,6 @@ export default function CardServicoVisual({
               </div>
             )}
           </div>
-
           {(servico.posicaoNoQuadro === "aguardandoCliente" ||
             servico.posicaoNoQuadro === "solicitado") && (
             <button
