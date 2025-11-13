@@ -389,18 +389,20 @@ export default function CardServicoVisual({
             </div>
           )}
           {textoDuracao && (
-            <p className="mt-4 text-sm text-text" style={estiloFonte}>
+            <p className="mt-4 text-[12px] text-text" style={estiloFonte}>
               <span className="font-bold">Duração:</span> {textoDuracao}
             </p>
           )}
           <p
-            className={`text-sm text-text ${textoDuracao ? "mt-0" : "mt-4"}`} // Ajusta a margem
+            className={`text-[12px] text-text ${
+              textoDuracao ? "mt-0" : "mt-4"
+            }`} // Ajusta a margem
             style={estiloFonte}
           >
             <span className="font-bold">Projeto:</span>{" "}
             {formatarDataPrazoProjetoDetalhado(dataPrazoProjetoLocal)}{" "}
           </p>{" "}
-          <p className="mb-4 text-sm text-text" style={estiloFonte}>
+          <p className="mb-4 text-[12px] text-text" style={estiloFonte}>
             <span className="font-bold">Tarefa:</span>{" "}
             {formatarDataPrazo(dataProximoPrazoLocal)}{" "}
           </p>

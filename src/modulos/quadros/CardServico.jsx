@@ -168,8 +168,20 @@ export default function CardServico({
         }[complexidade]
       : "text-text";
 
+    const tempoPorComplexidade = {
+      1: "15m",
+      2: "30m",
+      3: "1h",
+      4: "2h",
+      5: "Incerto",
+    };
+
+    const tempoEstimado = tempoPorComplexidade[complexidade] || "";
+
     const renderComplexidade = (
-      <span className={complexidadeClass}>({complexidadeText})</span>
+      <span className={complexidadeClass}>
+        ({complexidadeText}) {tempoEstimado}
+      </span>
     );
 
     if (diffDias === 0) {
