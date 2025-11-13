@@ -106,6 +106,7 @@ export default function ServCriacaoDeLpi({
             <option value="">Selecione</option>
             <option value="Adv">Advogado</option>
             <option value="Cli">Cliente geral</option>
+            <option value="">Outro (descrever em Obs)</option>
           </select>
         </div>
 
@@ -117,9 +118,10 @@ export default function ServCriacaoDeLpi({
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
           >
             <option value="">Selecione</option>
-            <option value="LPi">LPi</option>
-            <option value="LPv">LPv</option>
-            <option value="Site">Site</option>
+            <option value="LPI">LPI</option>
+            <option value="LPS">LPS</option>
+            <option value="SOP">Site One Page</option>
+            <option value="">Outro (descrever em Obs)</option>
           </select>
         </div>
 
@@ -131,8 +133,9 @@ export default function ServCriacaoDeLpi({
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
           >
             <option value="">Selecione</option>
-            <option value="Ass">Assinatura</option>
             <option value="Aqu">Aquisição</option>
+            <option value="Ass">Assinatura</option>
+            <option value="">Outro (descrever em Obs)</option>
           </select>
         </div>
 
@@ -144,14 +147,12 @@ export default function ServCriacaoDeLpi({
             className="p-2 border rounded bg-inputBg text-placeholder border-border"
           >
             <option value="">Selecione</option>
-            {Array.from({ length: 20 }).map((_, idx) => {
-              const val = idx + 1;
-              return (
-                <option key={val} value={String(val)}>
-                  {val}
-                </option>
-              );
-            })}
+            <option value="3">3 dias úteis</option>
+            <option value="5">5 dias úteis</option>
+            <option value="7">7 dias úteis</option>
+            <option value="10">10 dias úteis</option>
+            <option value="15">15 dias úteis</option>
+            <option value="">Outro (descrever em Obs)</option>
           </select>
         </div>
 
@@ -165,6 +166,7 @@ export default function ServCriacaoDeLpi({
             <option value="">Selecione</option>
             <option value="Cc">Cartão de Crédito</option>
             <option value="Pix">Pix</option>
+            <option value="">Outro (descrever em Obs)</option>
           </select>
         </div>
 

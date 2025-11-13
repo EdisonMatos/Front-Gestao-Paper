@@ -109,9 +109,9 @@ export default function AcaoDirecionarServico({
         <option value="">Selecione a complexidade</option>
         <option value="1">1 - Muito simples (até 15 min)</option>
         <option value="2">2 - Simples (até 30min)</option>
-        <option value="3">3 - Moderado (Até 1h)</option>
-        <option value="4">4 - Demorada (Acima 1h)</option>
-        <option value="5">5 - Muito longa (Conversar)</option>
+        <option value="3">3 - Moderada (Até 1h)</option>
+        <option value="4">4 - Demorada (Até 2h)</option>
+        <option value="5">5 - Muito complexa (Incerto)</option>
       </select>
       {servico.dataPrazoProjeto === null && (
         <>

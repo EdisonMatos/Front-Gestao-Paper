@@ -47,11 +47,11 @@ export default function AcaoMudarComplexidade({
         className="w-full p-1 border rounded bg-inputBg text-placeholder border-border"
       >
         <option value="">Selecione a complexidade</option>
-        <option value="1">1 - Muito simples</option>
-        <option value="2">2 - Simples</option>
-        <option value="3">3 - Moderada</option>
-        <option value="4">4 - Demorada</option>
-        <option value="5">5 - Muito complexa</option>
+        <option value="1">1 - Muito simples (até 15 min)</option>
+        <option value="2">2 - Simples (até 30 min)</option>
+        <option value="3">3 - Moderada (até 1h)</option>
+        <option value="4">4 - Demorada (até 2h)</option>
+        <option value="5">5 - Muito complexa (Incerto)</option>
       </select>
 
       <div className="flex gap-2">
