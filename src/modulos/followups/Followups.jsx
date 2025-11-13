@@ -130,7 +130,9 @@ export default function Followups() {
         "feedbacks",
         "financeiro",
         "contabilidade",
+        "socialmedia",
         "marketing",
+        "comercial",
       ];
       const servicosParaFollowup = servicos.filter(
         (s) =>
