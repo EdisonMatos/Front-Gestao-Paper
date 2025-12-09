@@ -7,7 +7,7 @@ export default function QuadroTrafego() {
       nome: "Aguardar data pra envio relatório",
       tipoCard: "normal",
     },
-    aguardandoCliente: { nome: "Aguardando Diretoria", tipoCard: "compacto" },
+    // aguardandoCliente: { nome: "Aguardando Diretoria", tipoCard: "compacto" },
   };
 
   return (
