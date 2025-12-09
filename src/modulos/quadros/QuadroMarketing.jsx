@@ -3,7 +3,11 @@ import QuadroKanban from "./QuadroKanban";
 export default function QuadroMarketing() {
   const colunas = {
     backlog: { nome: "Backlog", tipoCard: "normal" },
-    emProgresso: { nome: "Em progresso", tipoCard: "normal" },
+    aguardarRelatorio: {
+      nome: "Aguardar data pra envio relatório",
+      tipoCard: "normal",
+    },
+    aguardandoCliente: { nome: "Aguardando Diretoria", tipoCard: "compacto" },
   };
 
   return (

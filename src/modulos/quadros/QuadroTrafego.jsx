@@ -3,7 +3,11 @@ import QuadroKanban from "./QuadroKanban";
 export default function QuadroTrafego() {
   const colunas = {
     backlog: { nome: "Backlog", tipoCard: "normal" },
-    aguardandoCliente: { nome: "Aguardando Cliente", tipoCard: "compacto" },
+    aguardarRelatorio: {
+      nome: "Aguardar data pra envio relatório",
+      tipoCard: "normal",
+    },
+    aguardandoCliente: { nome: "Aguardando Diretoria", tipoCard: "compacto" },
   };
 
   return (

@@ -566,7 +566,7 @@ export default function Sidebar() {
                 {abaAtiva === "trafego" && (
                   <>
                     {/* --- ABA TRÁFEGO PAGO --- */}
-                    <RotinaTrafego />
+                    {/* <RotinaTrafego /> */}
                     <PrazosTrafego />
                     <QuadroTrafego />
                   </>
